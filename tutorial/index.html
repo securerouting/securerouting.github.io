@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <title>Secure Routing -- Protect Your Infrastructure</title>
+
+    <link href="https://securerouting.net/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://securerouting.net/css/ears.css" rel="stylesheet">
+    <link href="https://securerouting.net/css/style.css" rel="stylesheet">
+
+    <script src="/js/timeline/timeline_ajax/simile-ajax-api.js?bundle=true" type="text/javascript"></script>
+    <script src="/js/timeline/timeline_js/timeline-api.js?bundle=true" type="text/javascript"></script>
+  </head>
+
+  <body>
+
+    <script src="/js/jquery.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script>
+     $(document).ready(function () {
+       $('.dropdown-toggle').dropdown();
+     });
+    </script>
+
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container-fluid">
+	<div class="navbar-header">
+	  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+	  </button>
+	  <a class="navbar-brand" href="/">Secure Routing</a>
+	</div>
+
+	<div class="collapse navbar-collapse" id="navbar-collapse">
+	  <ul class="nav navbar-nav earsnav">
+	    <!-- LEARN -->
+	    <li class="dropdown">
+	      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Learn <span class="caret"></span>
+	      </a>
+
+	      <ul class="dropdown-menu">
+		<li><a href="/sbs-guide">Step-by-Step Guide</a></li>
+		<li><a href="https://www.youtube.com/channel/UCVOrJW51e8uu6aO_qnkk6qA">Youtube Channel</a></li>
+		<li><a href="/specifications.html">Specifications</a></li>
+		<li><a href="https://datatracker.ietf.org/wg/sidr/">Join The SIDR Working Group</a></li>
+	      </ul>
+	    </li>
+
+	    <!-- TRY -->
+	    <li class="dropdown">
+	      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Try <span class="caret"></span>
+	      </a>
+
+	      <ul class="dropdown-menu">
+		<li><a href="/workshop.html"">The Demonstration Workshop</a></li>
+	      </ul>
+	    </li>
+
+	    <!-- DEPLOY -->
+	    <li class="dropdown">
+	      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Deploy <span class="caret"></span>
+	      </a>
+
+	      <!-- TRY MENU -->
+	      <ul class="dropdown-menu">
+		  <li><a href="/bird.html">Install BIRD</a></li>
+		  <li><a href="http://www-x.antd.nist.gov/bgpsrx/">Install Quagga</a></li>
+		  <li><a href="http://rpki.net">Install RPKI.NET</a></li>
+		  <li><a href="http://sourceforge.net/projects/rpstir">Install RPSTIR</a></li>
+	      </ul>
+	    </li>
+
+	    <!-- INCIDENTS BUTTON -->
+	    <li class="dropdown">
+	      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Routing Incidents<span class="caret"></span>
+	      </a>
+
+	      <!-- INCIDENTS MENU -->
+	      <ul class="dropdown-menu">
+		<li><a href="/incident">Database</a></li>
+		<li><a href="/timeline.html"">Timeline</a></li>
+	      </ul>
+	    </li>
+	  </ul>
+	</div>
+      </div>
+    </nav>
+
+    <div class="container ears-top">
+      <div class="row">
+	
+	<div class="col-md-12" role="main">
+	
+
+	  <script src="/js/d3.v3.min.js" charset="utf-8"></script>
+<div class="page-header">
+  <h1>RPKI Overview Tutorial</h1>
+</div>
+
+<p> The following tutorial shows how routes are published from the
+left side of the diagram and either accepted or rejected by a
+  receiver on the right.</p>
+
+<div class="panel panel-primary">
+  <div class="panel-heading">Interactive Demonstration</div>
+  <div class="panel-body">
+    
+    <div class="buttons">
+      <!-- 
+      <button type="button" class="btn btn-default" onClick="tut.animateAllRoutes(0)">1</button>
+      <button type="button" class="btn btn-default" onClick="tut.animateAllRoutes(1)">2</button>
+      <button type="button" class="btn btn-default" onClick="tut.animateAllRoutes(2)">3</button>
+      -->
+      <button type="button" class="btn btn-primary sr-navbutton" id="addCertificateButton"
+	      data-toggle="modal" data-target="#addCertificateModal">
+	<span class="badge rightspace">1</span> Allocate A New Resource
+      </button>
+
+      <button type="button" class="btn btn-primary sr-navbutton" id="addROAButton"
+	      data-toggle="modal" data-target="#addROAModal">
+	<span class="badge rightspace">2</span> Create A New ROA
+      </button>
+
+      <button type="button" class="btn btn-primary sr-navbutton" id="addRouteButton"
+	      data-toggle="modal" data-target="#addRouteModal">
+	<span class="badge rightspace">3</span> Add A New Route
+      </button>
+
+      <button type="button" class="btn btn-success sr-navbutton pull-right" id="helpButton"
+	      data-toggle="modal" data-target="#introModal">
+	Help
+      </button>
+    </div>
+
+    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="800"
+   height="600"
+   viewBox="0 0 799.99999 600.00002"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="rpki-diagram.svg">
+  <defs
+     id="defs4">
+    <marker
+       inkscape:stockid="Arrow1Lstart"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="marker4829"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path4573"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1;fill:#000000;fill-opacity:1"
+         transform="scale(0.8) translate(12.5,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lstart"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow1Lstart"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path4389"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         style="fill-rule:evenodd;stroke:#4bc248;stroke-width:1pt;stroke-opacity:1;fill:#4bc248;fill-opacity:1"
+         transform="scale(0.8) translate(12.5,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="marker4333"
+       style="overflow:visible;"
+       inkscape:isstock="true">
+      <path
+         id="path4335"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         style="fill-rule:evenodd;stroke:#4bc248;stroke-width:1pt;stroke-opacity:1;fill:#4bc248;fill-opacity:1"
+         transform="scale(0.8) rotate(180) translate(12.5,0)" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible;"
+       id="marker4281"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend">
+      <path
+         transform="scale(0.8) rotate(180) translate(12.5,0)"
+         style="fill-rule:evenodd;stroke:#4bc248;stroke-width:1pt;stroke-opacity:1;fill:#4bc248;fill-opacity:1"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         id="path4283" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible;"
+       id="marker4223"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend">
+      <path
+         transform="scale(0.8) rotate(180) translate(12.5,0)"
+         style="fill-rule:evenodd;stroke:#4bc248;stroke-width:1pt;stroke-opacity:1;fill:#4bc248;fill-opacity:1"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         id="path4225" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="marker4821"
+       style="overflow:visible;"
+       inkscape:isstock="true"
+       inkscape:collect="always">
+      <path
+         id="path4823"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1;fill:#000000;fill-opacity:1"
+         transform="scale(0.8) rotate(180) translate(12.5,0)" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible;"
+       id="marker4755"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend"
+       inkscape:collect="always">
+      <path
+         transform="scale(0.8) rotate(180) translate(12.5,0)"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1;fill:#000000;fill-opacity:1"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         id="path4757" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow1Lend"
+       style="overflow:visible;"
+       inkscape:isstock="true"
+       inkscape:collect="always">
+      <path
+         id="path4179"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1;fill:#000000;fill-opacity:1"
+         transform="scale(0.8) rotate(180) translate(12.5,0)" />
+    </marker>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.2666667"
+     inkscape:cx="268.1579"
+     inkscape:cy="300"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     units="px"
+     inkscape:window-width="1849"
+     inkscape:window-height="962"
+     inkscape:window-x="3"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     showguides="true" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-452.36203)">
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#4bc248;stroke-width:3;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 361.13467,891.83011 168.04592,-98.9436 0.35011,-0.20613"
+       id="path4555-6"
+       inkscape:connector-curvature="0" />
+    <g
+       id="g4510"
+       transform="translate(-24,-57.739746)">
+      <rect
+         ry="1.06977"
+         y="536.55481"
+         x="201.42834"
+         height="65.251396"
+         width="117.98883"
+         id="rect4136"
+         style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:0.29300005;fill:#008aff;fill-opacity:1;fill-rule:nonzero;stroke:#224760;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate" />
+      <text
+         sodipodi:linespacing="125%"
+         id="text4138"
+         y="560.97919"
+         x="259.32962"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:144px;line-height:125%;font-family:Sans;-inkscape-font-specification:Sans;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           style="font-size:20px"
+           y="560.97919"
+           x="259.32962"
+           id="tspan4140"
+           sodipodi:role="line">Parent or</tspan><tspan
+           style="font-size:20px"
+           id="tspan4142"
+           y="589.10419"
+           x="259.32962"
+           sodipodi:role="line">Registry</tspan></text>
+    </g>
+    <g
+       id="g4516"
+       transform="translate(-24,-56)">
+      <g
+         id="g4739"
+         transform="translate(0,-16)">
+        <rect
+           style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:0.29300005;fill:#008aff;fill-opacity:1;fill-rule:nonzero;stroke:#224760;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate"
+           id="rect4136-0"
+           width="117.98883"
+           height="65.251396"
+           x="448.54874"
+           y="550.81506"
+           ry="1.06977" />
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:144px;line-height:125%;font-family:Sans;-inkscape-font-specification:Sans;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           x="507.51019"
+           y="577.56854"
+           id="text4138-4"
+           sodipodi:linespacing="125%"><tspan
+             sodipodi:role="line"
+             x="507.51019"
+             y="577.56854"
+             id="tspan4142-0"
+             style="font-size:20px">Parent's</tspan><tspan
+             id="tspan4731"
+             sodipodi:role="line"
+             x="507.51019"
+             y="605.69354"
+             style="font-size:20px">ROA Cache</tspan></text>
+      </g>
+    </g>
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.99999994;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:7.99999998, 7.99999998;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#Arrow1Lend)"
+       d="m 296.36866,512.78661 125.49543,-0.89385"
+       id="path4170"
+       inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:144px;line-height:125%;font-family:Sans;-inkscape-font-specification:Sans;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="130.8063"
+       y="784.57611"
+       id="text4138-8"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="130.8063"
+         y="784.57611"
+         id="tspan4142-4"
+         style="font-size:20px">Your</tspan><tspan
+         sodipodi:role="line"
+         x="130.8063"
+         y="809.57611"
+         style="font-size:20px"
+         id="tspan4478">ISP</tspan><tspan
+         id="tspan4203"
+         sodipodi:role="line"
+         x="130.8063"
+         y="834.57611"
+         style="font-size:20px">AS 64500</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:144px;line-height:125%;font-family:Sans;-inkscape-font-specification:Sans;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="590.07764"
+       y="783.15204"
+       id="text4138-8-9"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="590.07764"
+         y="783.15204"
+         id="tspan4142-4-3"
+         style="font-size:20px">Distant</tspan><tspan
+         sodipodi:role="line"
+         x="590.07764"
+         y="808.15204"
+         style="font-size:20px"
+         id="tspan4478-7">ISP</tspan><tspan
+         sodipodi:role="line"
+         x="590.07764"
+         y="833.15204"
+         style="font-size:20px"
+         id="tspan4201">AS 64510</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:144px;line-height:125%;font-family:Sans;-inkscape-font-specification:Sans;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="362.90503"
+       y="846.77545"
+       id="text4521"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4523"
+         x="362.90503"
+         y="846.77545" /></text>
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#4bc248;stroke-width:3.00000024;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 188.66899,792.60785 340.15892,0 0.70867,0"
+       id="path4555"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#4bc248;stroke-width:1.99999988;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 649.32356,759.65568 58.91549,-19.52489 0,0"
+       id="path4557"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#4bc248;stroke-width:1.99999988;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 650.29006,800.13856 57.1956,0 0,0"
+       id="path4559"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#4bc248;stroke-width:2;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 649.36398,841.7806 58.28115,18.22506 0,0"
+       id="path4561"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:8.00000006, 8.00000006;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker4755)"
+       d="M 155.39454,761.32766 257.09829,546.73662"
+       id="path4747"
+       inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:144px;line-height:125%;font-family:Sans;-inkscape-font-specification:Sans;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="257.86237"
+       y="653.3429"
+       id="text4795"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4797"
+         x="257.86237"
+         y="653.3429"
+         style="font-size:22.5px">Publish</tspan><tspan
+         sodipodi:role="line"
+         x="257.86237"
+         y="681.4679"
+         id="tspan4799"
+         style="font-size:22.5px">ROA</tspan></text>
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.99999994;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:7.99999998, 7.99999998;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker4821)"
+       d="M 587.25705,760.42384 485.43151,546.19639"
+       id="path4813"
+       inkscape:connector-curvature="0" />
+    <rect
+       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:0.29300005;fill:#008aff;fill-opacity:1;fill-rule:nonzero;stroke:#224760;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate"
+       id="rect4136-6-1"
+       width="117.98883"
+       height="81.450104"
+       x="531.05029"
+       y="759.97095"
+       ry="1.3353411" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:144px;line-height:125%;font-family:Sans;-inkscape-font-specification:Sans;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="591.68628"
+       y="628.07977"
+       id="text4861"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="591.68628"
+         y="628.07977"
+         id="tspan4865"
+         style="font-size:22.5px">Fetches</tspan><tspan
+         sodipodi:role="line"
+         x="591.68628"
+         y="656.20477"
+         style="font-size:22.5px"
+         id="tspan4265">ROA</tspan><tspan
+         sodipodi:role="line"
+         x="591.68628"
+         y="684.32977"
+         style="font-size:22.5px"
+         id="tspan4267">Cache</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;line-height:125%;font-family:Sans;-inkscape-font-specification:Sans;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="659.05029"
+       y="491.11096"
+       id="cache"
+       sodipodi:linespacing="125%">ROA Cache Contents</text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;line-height:125%;font-family:Sans;-inkscape-font-specification:Sans;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="589.65161"
+       y="860.18323"
+       id="routes"
+       sodipodi:linespacing="125%">Routing Table</text>
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 567.58787,493.70281 183.9476,-0.89385 0,0"
+       id="path4219"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 529.16201,862.86482 123.35196,0 0,0"
+       id="path4221"
+       inkscape:connector-curvature="0" />
+    <rect
+       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:0.29300005;fill:#008aff;fill-opacity:1;fill-rule:nonzero;stroke:#224760;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate"
+       id="rect4136-6-1-4"
+       width="117.98883"
+       height="81.450104"
+       x="69.299324"
+       y="762.17694"
+       ry="1.3353411" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;line-height:125%;font-family:Sans;-inkscape-font-specification:Sans;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="127.12029"
+       y="859.70361"
+       id="routes-3"
+       sodipodi:linespacing="125%">Resources</text>
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 66.630712,862.38525 123.351958,0 0,0"
+       id="path4221-1"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#4bc248;stroke-width:3;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 242.37295,891.34121 -54.34549,-47.20229 -0.11323,-0.0983"
+       id="path4555-6-2"
+       inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:144px;line-height:125%;font-family:Sans;-inkscape-font-specification:Sans;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="304.45642"
+       y="914.16571"
+       id="text4138-8-6"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="304.45642"
+         y="914.16571"
+         id="tspan4142-4-7"
+         style="font-size:20px">Another</tspan><tspan
+         sodipodi:role="line"
+         x="304.45642"
+         y="939.16571"
+         style="font-size:20px"
+         id="tspan4478-5">ISP</tspan><tspan
+         id="tspan4203-3"
+         sodipodi:role="line"
+         x="304.45642"
+         y="964.16571"
+         style="font-size:20px">AS 64501</tspan></text>
+    <rect
+       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:0.29300005;fill:#008aff;fill-opacity:1;fill-rule:nonzero;stroke:#224760;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate"
+       id="rect4136-6-1-4-5"
+       width="117.98883"
+       height="81.450104"
+       x="242.94943"
+       y="891.76654"
+       ry="1.3353411" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25px;line-height:125%;font-family:Sans;-inkscape-font-specification:Sans;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="746.73291"
+       y="787.17834"
+       id="text4681"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4683"
+         x="746.73291"
+         y="787.17834"
+         style="font-size:15px">To</tspan><tspan
+         sodipodi:role="line"
+         x="746.73291"
+         y="805.92834"
+         id="tspan4687"
+         style="font-size:15px">Other</tspan><tspan
+         sodipodi:role="line"
+         x="746.73291"
+         y="824.67834"
+         id="tspan4691"
+         style="font-size:15px">Networks</tspan></text>
+    <path
+       sodipodi:type="star"
+       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:#4bc248;fill-opacity:1;fill-rule:nonzero;stroke:#4bc248;stroke-width:4.48542643;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate"
+       id="path4754"
+       sodipodi:sides="3"
+       sodipodi:cx="699.42572"
+       sodipodi:cy="738.48456"
+       sodipodi:r1="17.058489"
+       sodipodi:r2="8.5292444"
+       sodipodi:arg1="-0.5838704"
+       sodipodi:arg2="0.46332716"
+       inkscape:flatsided="false"
+       inkscape:rounded="0.01"
+       inkscape:randomized="0"
+       d="m 713.65822,729.08094 c 0.0814,0.12326 -6.53646,13.08341 -6.60249,13.21557 -0.066,0.13215 -6.45503,13.20666 -6.60249,13.21556 -0.14746,0.009 -8.06233,-12.20245 -8.14377,-12.3257 -0.0814,-0.12326 -8.20979,-12.19355 -8.14377,-12.32571 0.066,-0.13216 14.5988,-0.88096 14.74626,-0.88986 0.14746,-0.009 14.66482,-1.01311 14.74626,-0.88986 z"
+       inkscape:transform-center-x="1.6314396"
+       inkscape:transform-center-y="1.7963928"
+       transform="matrix(0.21666603,0.05861527,-0.05782902,0.21375972,601.48377,540.41264)" />
+    <path
+       sodipodi:type="star"
+       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:#4bc248;fill-opacity:1;fill-rule:nonzero;stroke:#4bc248;stroke-width:4.48542643;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate"
+       id="path4754-9"
+       sodipodi:sides="3"
+       sodipodi:cx="699.42572"
+       sodipodi:cy="738.48456"
+       sodipodi:r1="17.058489"
+       sodipodi:r2="8.5292444"
+       sodipodi:arg1="-0.5838704"
+       sodipodi:arg2="0.46332716"
+       inkscape:flatsided="false"
+       inkscape:rounded="0.01"
+       inkscape:randomized="0"
+       d="m 713.65822,729.08094 c 0.0814,0.12326 -6.53646,13.08341 -6.60249,13.21557 -0.066,0.13215 -6.45503,13.20666 -6.60249,13.21556 -0.14746,0.009 -8.06233,-12.20245 -8.14377,-12.3257 -0.0814,-0.12326 -8.20979,-12.19355 -8.14377,-12.32571 0.066,-0.13216 14.5988,-0.88096 14.74626,-0.88986 0.14746,-0.009 14.66482,-1.01311 14.74626,-0.88986 z"
+       inkscape:transform-center-x="-0.1478248"
+       inkscape:transform-center-y="0.010972768"
+       transform="matrix(0.18486754,0.12729458,-0.12558708,0.18238777,673.13705,576.24787)" />
+    <path
+       sodipodi:type="star"
+       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:#4bc248;fill-opacity:1;fill-rule:nonzero;stroke:#4bc248;stroke-width:4.48542643;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate"
+       id="path4754-1"
+       sodipodi:sides="3"
+       sodipodi:cx="699.42572"
+       sodipodi:cy="738.48456"
+       sodipodi:r1="17.058489"
+       sodipodi:r2="8.5292444"
+       sodipodi:arg1="-0.5838704"
+       sodipodi:arg2="0.46332716"
+       inkscape:flatsided="false"
+       inkscape:rounded="0.01"
+       inkscape:randomized="0"
+       d="m 713.65822,729.08094 c 0.0814,0.12326 -6.53646,13.08341 -6.60249,13.21557 -0.066,0.13215 -6.45503,13.20666 -6.60249,13.21556 -0.14746,0.009 -8.06233,-12.20245 -8.14377,-12.3257 -0.0814,-0.12326 -8.20979,-12.19355 -8.14377,-12.32571 0.066,-0.13216 14.5988,-0.88096 14.74626,-0.88986 0.14746,-0.009 14.66482,-1.01311 14.74626,-0.88986 z"
+       inkscape:transform-center-x="0.33963897"
+       inkscape:transform-center-y="-2.8763171"
+       transform="matrix(0.21931116,-0.04777588,-0.04713503,-0.21636936,590.34626,1053.5973)" />
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4255"
+       style="fill:black;stroke:none;stroke-opacity:1;stroke-width:1px;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;font-family:Sans;font-style:normal;font-weight:normal;font-size:25px;-inkscape-font-specification:Sans;font-stretch:normal;font-variant:normal;text-anchor:middle;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px"><flowRegion
+         id="flowRegion4257"><rect
+           id="rect4259"
+           width="111.31579"
+           height="97.105263"
+           x="73.421051"
+           y="291.3158" /></flowRegion><flowPara
+         id="flowPara4261" /></flowRoot>    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:8.00000006, 8.00000006;stroke-dashoffset:0;stroke-opacity:1;marker-start:url(#marker4829)"
+       d="M 110.9843,761.68862 212.68805,547.09758"
+       id="path4747-7"
+       inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:144px;line-height:125%;font-family:Sans;-inkscape-font-specification:Sans;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="96.967918"
+       y="617.05603"
+       id="text4795-5"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="96.967918"
+         y="617.05603"
+         id="tspan4799-5"
+         style="font-size:22.5px">Allocate</tspan><tspan
+         sodipodi:role="line"
+         x="96.967918"
+         y="645.18103"
+         style="font-size:22.5px"
+         id="tspan4981">Resources</tspan></text>
+  </g>
+</svg>
+
+
+    <script src="/js/svgAnimator.js"></script>
+    <script src="/js/tutorial.js"></script>
+
+    <script>
+     var tut = rpkiTutorial();
+     tut.start();
+     
+    </script>
+  </div>
+</div>
+
+<!-- Certificate -->
+<div class="modal fade" id="addCertificateModal" tabindex="-1" role="dialog" aria-labelledby="addCertificateLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="addCertificateLabel">Allocate A New IP Alloction / Resource</h4>
+      </div>
+      <div class="modal-body">
+	<form class="form-horizontal" id="#newcertform">
+	  <div class="form-group">
+            <label for="newCertificate" class="col-sm-4 control-label">Network:</label>
+	    <div class="col-sm-8">
+	      <input class="form-control" type="text" name="newCertificate" id="newCertificate" placeholder="10.0.0.0/8">
+            </div>
+	  </div>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          <button id="createCertificate" type="button" class="btn btn-primary" onClick="addACertificate(); ">Add This Certificate</button>
+	</form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ROA -->
+<div class="modal fade" id="addROAModal" tabindex="-1" role="dialog" aria-labelledby="addROALabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="addROALabel">Create A New ROA</h4>
+      </div>
+      <div class="modal-body">
+	<form class="form-horizontal" id="#newroaform">
+	  <div class="form-group">
+            <label for="newROARoute" class="col-sm-4 control-label">Resource:</label>
+	    <div class="col-sm-8">
+	      <div class="input-group" id="certificatemenu">
+		<select class="c-select" name="newROARoute" id="newROARoute">
+		  <option selected>Pick one [none available]</option>
+		</select>
+	      </div><!-- /input-group -->
+            </div>
+	  </div>
+	  <div class="form-group">
+            <label for="newROAMaxLen" class="col-sm-4 control-label">Maximum Length:</label>
+	    <div class="col-sm-8">
+	      <input class="form-control" type="text" name="newROAMaxLen" id="newROAMaxLen" placeholder="16">
+	      <!-- onchange="tut.addAnimatedROA(this.value); this.value = ''; return true;"> -->
+            </div>
+	  </div>
+	  <div class="form-group">
+            <label for="fromAS" class="col-sm-4 control-label">From AS:</label>
+	    <div class="col-sm-8">
+ 	      <div class="col-sm-8">
+		<div class="c-inputs-stacked">
+		  <label class="c-input c-radio roaas" selected>
+                    <input id="radio00" name="ROAAS" type="radio" checked="checked" value="64500">
+                    <span class="c-indicator"></span>
+		    AS 64500
+		  </label>
+		  <label class="c-input c-radio roaas">
+                    <input id="radio01" name="ROAAS" type="radio" value="64501">
+                    <span class="c-indicator"></span>
+		    AS 64501
+		  </label>
+              </div>
+            </div>
+            </div>
+	  </div>
+	</form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button id="createROA" type="button" class="btn btn-primary" onClick="addAROA(); ">Add This ROA</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Route -->
+<div class="modal fade" id="addRouteModal" tabindex="-1" role="dialog" aria-labelledby="addRouteLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="addRouteLabel">Add A New Route</h4>
+      </div>
+      <div class="modal-body">
+	<form class="form-horizontal"  id="#newrouteform">
+	  <div class="form-group">
+            <label for="newroute" class="col-sm-4 control-label">Add a new route:</label>
+	    <div class="col-sm-8">
+	      <input class="form-control" type="text" name="newroute" id="newroute" placeholder="10.0.0.0/12">
+            </div>
+	  </div>
+ 	  <div class="form-group">
+            <label for="fromAS" class="col-sm-4 control-label">From AS:</label>
+ 	    <div class="col-sm-8">
+              <div class="c-inputs-stacked">
+		<label class="c-input c-radio" selected>
+                  <input id="radio10" name="routeFromAS" type="radio" checked="checked" value="64500">
+                  <span class="c-indicator"></span>
+		  AS 64500
+		</label>
+		<label class="c-input c-radio">
+                  <input id="radio11" name="routeFromAS" type="radio" value="64501">
+                  <span class="c-indicator"></span>
+		  AS 64501
+		</label>
+              </div>
+            </div>
+	  </div>
+	</form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button id="createRoute" type="button" class="btn btn-primary" onClick="addARoute(); ">Add This Route</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Intro -->
+<div class="modal fade" id="introModal" tabindex="-1" role="dialog" aria-labelledby="introLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="introLabel">Introduction</h4>
+      </div>
+      <div class="modal-body">
+	<h3>Welcome to the RPKI Simulator</h3>
+
+	<p>On this screen, you'll find a simple network diagram.  You
+	can use it to simulate the basics of how the RPKI system
+	  works.  Try these steps to get started:</p>
+	<ol>
+	  <li>Create a new Route Origin Authorization (a ROA) for a given network block (say "10.0.0.0") with a minimum and maximum route length you want your ISP to be able to advertise.  Try, for example, using a minimum length of 12 and a maximum of 16.</li>
+	  <li>Create a new route for your network, such as "10.0.0.0/14" and watch it propegate and become valid at the distant ISP.</li>
+	  <li>Create a route that doesn't match the ROA properties, such as a length which is too long (try "10.0.0.0/24").  Note how it becomes invalid.</li>
+	  <li>Add more ROAS and routes and notice their effects</li>
+	</ol>
+	<p>Have fun!</p>
+      </div>
+      <div class="modal-footer">
+        <button id="introLearnMore" type="button" class="btn btn-primary" data-dismiss="modal">Learn about the RPKI</button>
+        <button type="button" class="btn btn-primary GotIt" data-dismiss="modal">Let Me Play!</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RPKI Overview -->
+<div class="modal fade" id="overviewModal" tabindex="-1" role="dialog" aria-labelledby="overviewLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="overviewLabel">How do we secure routes with RPKI?</h4>
+      </div>
+      <div class="modal-body">
+	<h3>RPKI Pieces</h3>
+
+	<p>Let's talk about the basics of the RPKI:</p>
+	<dl class="definitions">
+	  <dt>Border Gateway Protocol (BGP):</dt>
+	  <dd>The internet protocol that lets ASes advertise routes.</dd>
+
+	  <dt>Autonomous System (AS):</dt>
+	  <dd>A unique numeric identifier given to ISPs.</dd>
+
+	  <dt>Route Origin Authorization (a ROA):</dt>
+	  <dd>A cryptographically signed object that authorizes a given Autonomous System (AS) to advertize a network prefix.</dd>
+	</dl>
+
+	<p>Anyone can send routes to address blocks to the internet.  ROAs let organizations authorize who is allowed to send routes.</p>
+      </div>
+      <div class="modal-footer">
+        <button id="overviewLearnMore" type="button" class="btn btn-primary" data-dismiss="modal">Learn about route validation states</button>
+        <button type="button" class="btn btn-primary GotIt" data-dismiss="modal">Got it!</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ROA Validation -->
+<div class="modal fade" id="validationModal" tabindex="-1" role="dialog" aria-labelledby="validationLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="validationLabel">How do we secure routes with RPKI?</h4>
+      </div>
+      <div class="modal-body">
+	<h3>Route Validation States</h3>
+
+	<p>When an ISP validates a route aganist it's cache of ROAs,
+	it will put the route into one of three categories:</p>
+	<dl class="definitions">
+	  <dt>Unknown:</dt>
+	  <dd>There was no ROAs that covered the address space in the route.
+	    <br />In our tutorial screens, <span style="color: orange;">Unknown routes will be shown in orange.</span>
+	  </dd>
+
+	  <dt>Valid:</dt>
+	  <dd>A ROA was found covering the address space, and the route met the requirements
+	    <br />In our tutorial screens, <span style="color: green;">Valid routes will be shown in green.</span>
+</dd>
+
+	  <dt>Invalid:</dt>
+	  <dd>A ROA was found covering the address spcae, but did not match against the received route.
+	    <br />In our tutorial screens, <span style="color: red;">Invalid routes will be shown in Red.</span>
+</dd>
+	</dl>
+
+	<p>ISPs can use these three states to make decisions, such as whether to accept a route or not.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary GotIt" data-dismiss="modal">Got it!</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<script>
+
+ $('#newroute').bind("keypress", {},
+		     function(event) { if (event.keyCode === 13) { $('#createRoute').click(); return false; } });
+
+ function addACertificate() {
+   var certificate = $('#newCertificate').val();
+
+   tut.addCertificate(certificate);
+
+   // hide and reset the form again
+   $('#addCertificateModal').modal('hide');
+   $('#newCertificate').val("");
+
+   return true;
+ }
+
+ function addARoute() {
+   var route = $('#newroute').val();
+   var fromAS = $('input[name="routeFromAS"]:checked').val();
+   
+   tut.addAnimatedRoute(route, fromAS);
+
+   // hide and reset the form again
+   $('#addRouteModal').modal('hide');
+   $('#newroute').val("");
+
+   return true;
+ }
+ 
+ function addAROA() {
+   var roaAS = $('input[name="ROAAS"]:checked').val();
+   var route = $('#newROARoute option:selected').text();
+
+   var parts = tut.splitNetBlock(route);
+   var length = parts[1];
+   route = parts[0];
+
+   tut.addAnimatedROA(route, length, roaAS,
+		      $('#newROAMaxLen').val());
+
+   // hide and reset the form again
+   $('#addROAModal').modal('hide');
+   tut.createCertificateMenu();
+   $('#newROAMaxLen').val("");
+
+   return true;
+ }
+
+ //
+ // path: intro -> overview -> validation
+ //
+
+ var haveStarted = false;
+ function startInitialExample() {
+   if (haveStarted) {
+     return;
+   }
+   haveStarted = true;
+
+   tut.addCertificate('192.168.1.1/16');
+   setTimeout(function() { tut.addAnimatedROA('192.168.1.1', 16, '64500', 24); }, 1500);
+   setTimeout(function() { tut.addAnimatedRoute('192.168.1.1/16', '64500'); }, 5000);
+   console.log("init");
+ }
+
+ function showOverview() {
+   $('#introModal').modal('hide');
+   $('#overviewModal').modal('show');
+   $('#overviewLearnMore').bind("click", {}, showValidation);
+ }
+
+ function showValidation() {
+   $('#overviewModal').modal('hide');
+   $('#validationModal').modal('show');
+ }
+
+ $('#introModal').modal('show');
+ $('#introLearnMore').bind("click", {}, showOverview);
+
+ $('#GotIt').bind("click", {}, startInitialExample);
+ $('#overviewLearnMore').bind("click", {}, showValidation);
+
+ $('#GotIt').bind("click", {}, startInitialExample);
+
+ // bind all GotIt buttons to starting the initial example
+ $('.GotIt').bind("click", {}, startInitialExample);
+
+</script>
+
+
+	</div>
+
+	
+      </div>
+    </div>
+  </body>
+
+  <script type="application/ld+json">
+   {
+     "@context": "http://schema.org",
+     "@type": "Organization",
+     "url": "https://securerouting.net",
+     "logo": "https://securerouting.net/images/secure-routing-cloud.svg"
+   }
+  </script>
+  <script type="application/ld+json">
+   {
+     "@context": "http://schema.org",
+     "@type": "Organization",
+     "url": "https://securerouting.net",
+     "name": "Secure Routing",
+     "sameAs" : [
+       "https://www.youtube.com/channel/UCVOrJW51e8uu6aO_qnkk6qA"
+     ],
+   }
+  </script>
+</html>
+
