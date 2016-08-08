@@ -102,297 +102,87 @@
 	<div class="col-md-9" role="main">
 	
 
-	  <div class="page-header">
-  <h1>BGP Routing Incidents</h1>
-</div>
-<div class="panel panel-default">
-  <div class="panel-heading">Known BGP Incidents
-    <a class="btn btn-primary pull-right" role="button" href="/incident/new" >Add New</a></div>
+	  <div class="panel panel-default">
+  <div class="panel-heading">
+    BGP Incident: 
+    <a href="/incident/26/edit" class="btn btn-primary pull-right" role="button">Edit</a>
+  </div>
   <div class="panel-body">
     <table class="table " id="incidenttable">
-      <thead>
-	<tr><th>Summary</th><th>Start</th><th>End</th>
-	  
-	</tr>
-      </thead>
       <tbody>
-	
 	<tr>
-	  <td><a href="/incident/18">AS7007 announces many specific prefixes</a></td>
-          <td>1997-04-25 11:30:00
-          </td>
-          <td>Unknown
-          </td>
-	  
+	  <tr><th>Summary:</th><td>AS4826 leaking 2000 routes</td></tr>
+	  <tr><th>Start:</th><td>2014-11-13 00:00:00</td></tr>
+	  <tr><th>End:</th><td>Unknown</td></tr>
+	  <tr><th>Details:</th><td><p>We&#39;re seeing ~2000+ routes leaking at Any2 LA, originating from AS4826.
+
+Our traceroutes to Microsoft were going to LA-&gt;New Zealand and back O_o. We
+filtered them out, but thought other folks should know just in case.
+
+I also did call their NOC &amp; send them a copy of my notes - just thought I&#39;d
+throw this out there!</p></td></tr>
 	</tr>
-	
-	<tr>
-	  <td><a href="/incident/31">Con Edison (AS27506) steals much of the internet&#39;s traffic</a></td>
-          <td>2006-01-22 00:00:00
-          </td>
-          <td>2006-01-22 00:00:00
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/32">Unauthorized L-root servers release bad routes</a></td>
-          <td>2007-11-01 00:00:00
-          </td>
-          <td>Unknown
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/16">Pakistan Telecom takes out Youtube</a></td>
-          <td>2008-02-24 10:30:00
-          </td>
-          <td>2008-02-24 13:00:00
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/22">China networks take 15% of the word&#39;s traffic</a></td>
-          <td>2010-04-08 00:00:00
-          </td>
-          <td>2010-04-08 00:00:00
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/4">Multiple Banking Addresses Hijacked</a></td>
-          <td>2013-07-24 00:00:00
-          </td>
-          <td>Unknown
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/14">Bitcoin money stolen via a BGP hijack</a></td>
-          <td>2014-03-22 00:00:00
-          </td>
-          <td>Unknown
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/17">Turkey hijacks DNS via BGP</a></td>
-          <td>2014-03-29 09:00:00
-          </td>
-          <td>Unknown
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/21">INDOSAT Thailand announces many routes</a></td>
-          <td>2014-04-02 18:26:00
-          </td>
-          <td>Unknown
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/11">ISPs in Poland hijack ISPs in Brazil</a></td>
-          <td>2014-08-06 03:16:00
-          </td>
-          <td>2014-08-28 00:00:00
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/8">Korea Meterological hijacks the US National Climatic Data Center</a></td>
-          <td>2014-08-20 00:00:00
-          </td>
-          <td>Unknown
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/9">Hijack back of routes hijacked away</a></td>
-          <td>2014-08-20 00:00:00
-          </td>
-          <td>Unknown
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/10">Sprint hijacks Telesmart</a></td>
-          <td>2014-09-09 13:56:00
-          </td>
-          <td>2014-09-09 15:56:00
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/12">AS13110 hijacks the US department of defense</a></td>
-          <td>2014-09-10 00:14:00
-          </td>
-          <td>2014-09-10 00:31:00
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/13">AS57807 announces space from AS57807</a></td>
-          <td>2014-09-10 01:00:00
-          </td>
-          <td>2014-09-11 14:13:00
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/25">Spammers hijack address space to send spam</a></td>
-          <td>2014-09-17 00:00:00
-          </td>
-          <td>Unknown
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/26">AS4826 leaking 2000 routes</a></td>
-          <td>2014-11-13 00:00:00
-          </td>
-          <td>Unknown
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/15">Syrian national Telecommunications Establishment hijacks</a></td>
-          <td>2014-12-09 08:37:00
-          </td>
-          <td>Unknown
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/6">Digitial United gets hijacked by Technologii svyazi</a></td>
-          <td>2014-12-12 00:00:00
-          </td>
-          <td>2015-01-16 00:00:00
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/5">Petersburg Internet Network IP-squatted</a></td>
-          <td>2015-01-07 09:15:00
-          </td>
-          <td>2015-01-07 10:43:00
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/7">AS44050 announces unused address space</a></td>
-          <td>2015-01-08 00:00:00
-          </td>
-          <td>Unknown
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/19">Rerouting of UK traffic (167 prefixes)</a></td>
-          <td>2015-03-07 02:37:00
-          </td>
-          <td>Unknown
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/23">Rerouting of UK traffic through Ukraine (167 prefixes)</a></td>
-          <td>2015-03-07 02:37:00
-          </td>
-          <td>Unknown
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/20">Routing Leak briefly takes down Google</a></td>
-          <td>2015-03-12 08:58:00
-          </td>
-          <td>Unknown
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/33">Bangladesh Fiber@Home Route Mis-origination</a></td>
-          <td>2015-06-30 03:37:00
-          </td>
-          <td>2015-06-30 00:00:00
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/27">AS7514 misoriginates prefixes</a></td>
-          <td>2015-07-17 00:00:00
-          </td>
-          <td>2015-07-17 00:00:00
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/24">Prefix hijacking by AS20115</a></td>
-          <td>2015-09-29 00:00:00
-          </td>
-          <td>Unknown
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/28">Routes leaked by AS393742 via AS16397</a></td>
-          <td>2015-09-30 00:00:00
-          </td>
-          <td>Unknown
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/29">Wrong use of 100.64.0.0/10</a></td>
-          <td>2015-10-02 00:00:00
-          </td>
-          <td>Unknown
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/30">Route leaks from AS9498 (BHARTI Airtel)?</a></td>
-          <td>2015-11-06 00:00:00
-          </td>
-          <td>Unknown
-          </td>
-	  
-	</tr>
-	
       </tbody>
       <tfoot>
       </tfoot>
     </table>
   </div>
 </div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">Affected ASes <a class="btn btn-primary pull-right" role="button" href="/incident/26/as/new">Add AS</a></div>
+  <div class="panel-body">
+     
+    <table class="table " id="references">
+      <thead>
+	<tr><th>AS</th><th>How Affected</th>
+	  
+	</tr>
+      </thead>
+      <tbody>
+	
+	<tr><td><a href="http://bgp.he.net/AS4826">4826</a></td><td>AS leaking the routes</td>
+	  
+	  
+	</tr>
+	
+      </tbody>
+    </table>
+    
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">References <a class="btn btn-primary pull-right" role="button" href="/incident/26/ref/new">Add Reference</a></div>
+  <div class="panel-body">
+     
+    <table class="table " id="references">
+      <thead>
+	<tr><th>Summary</th><th>Link</th>
+	  
+	</tr>
+      </thead>
+      <tbody>
+	
+	<tr><td>NANOG thread</td><td><a href="https://mailman.nanog.org/pipermail/nanog/2014-November/071408.html">https://mailman.nanog.org/pipermail/nanog/2014-November/071408.html</a></td>
+	  
+	</tr>
+	
+      </tbody>
+    </table>
+    
+  </div>
+</div>
+
+
+<div class="panel panel-default">
+  <div class="panel-heading">Affected AS 'Route Views' Connection Map</div>
+  <div class="panel-body">
+    <img class="img-responsive" src="/route/graph/4826?otherASes=">
+    <p><em>(note: not all connections may be shown for big graphs)</em></p>
+  </div>
+</div>
+
 
 
 	</div>

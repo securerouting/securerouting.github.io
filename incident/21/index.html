@@ -102,297 +102,106 @@
 	<div class="col-md-9" role="main">
 	
 
-	  <div class="page-header">
-  <h1>BGP Routing Incidents</h1>
-</div>
-<div class="panel panel-default">
-  <div class="panel-heading">Known BGP Incidents
-    <a class="btn btn-primary pull-right" role="button" href="/incident/new" >Add New</a></div>
+	  <div class="panel panel-default">
+  <div class="panel-heading">
+    BGP Incident: 
+    <a href="/incident/21/edit" class="btn btn-primary pull-right" role="button">Edit</a>
+  </div>
   <div class="panel-body">
     <table class="table " id="incidenttable">
-      <thead>
-	<tr><th>Summary</th><th>Start</th><th>End</th>
-	  
-	</tr>
-      </thead>
       <tbody>
-	
 	<tr>
-	  <td><a href="/incident/18">AS7007 announces many specific prefixes</a></td>
-          <td>1997-04-25 11:30:00
-          </td>
-          <td>Unknown
-          </td>
-	  
+	  <tr><th>Summary:</th><td>INDOSAT Thailand announces many routes</td></tr>
+	  <tr><th>Start:</th><td>2014-04-02 18:26:00</td></tr>
+	  <tr><th>End:</th><td>Unknown</td></tr>
+	  <tr><th>Details:</th><td><p>From nanog on the same day:
+
+&gt; So I setup BGPMON for my prefixes and got an alert about someone in
+&gt; Thailand announcing my prefix.  Everything looks fine to me and I&#39;ve
+&gt; checked a bunch of different Looking Glasses and everything announcing
+&gt; correctly.
+&gt;
+&gt; I am assuming I should be contacting the provider about their
+&gt; misconfiguration and announcing my prefixes and get them to fix it.  Any
+&gt; other recommendations?
+&gt;
+&gt; Is there a way I can verify what they are announcing just to make sure they
+&gt; are still doing it?
+&gt;
+&gt; Here is the alert for reference:
+&gt;
+&gt; Your prefix:          8.37.93.0/24:
+&gt;
+&gt; Update time:          2014-04-02 18:26 (UTC)
+&gt;
+&gt; Detected by #peers:   2
+&gt;
+&gt; Detected prefix:      8.37.93.0/24
+&gt;
+&gt; Announced by:         AS4761 (INDOSAT-INP-AP INDOSAT Internet Network
+&gt; Provider,ID)
+&gt;
+&gt; Upstream AS:          AS4651 (THAI-GATEWAY The Communications Authority of
+&gt; Thailand(CAT),TH)
+&gt;
+&gt; ASpath:               18356 9931 4651 4761
+
+and followed up with:
+
+I&#39;m seeing the same hijack of prefixes by multiple networks under my
+watch, at 18:40 UTC and 19:06 UTC.</p></td></tr>
 	</tr>
-	
-	<tr>
-	  <td><a href="/incident/31">Con Edison (AS27506) steals much of the internet&#39;s traffic</a></td>
-          <td>2006-01-22 00:00:00
-          </td>
-          <td>2006-01-22 00:00:00
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/32">Unauthorized L-root servers release bad routes</a></td>
-          <td>2007-11-01 00:00:00
-          </td>
-          <td>Unknown
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/16">Pakistan Telecom takes out Youtube</a></td>
-          <td>2008-02-24 10:30:00
-          </td>
-          <td>2008-02-24 13:00:00
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/22">China networks take 15% of the word&#39;s traffic</a></td>
-          <td>2010-04-08 00:00:00
-          </td>
-          <td>2010-04-08 00:00:00
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/4">Multiple Banking Addresses Hijacked</a></td>
-          <td>2013-07-24 00:00:00
-          </td>
-          <td>Unknown
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/14">Bitcoin money stolen via a BGP hijack</a></td>
-          <td>2014-03-22 00:00:00
-          </td>
-          <td>Unknown
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/17">Turkey hijacks DNS via BGP</a></td>
-          <td>2014-03-29 09:00:00
-          </td>
-          <td>Unknown
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/21">INDOSAT Thailand announces many routes</a></td>
-          <td>2014-04-02 18:26:00
-          </td>
-          <td>Unknown
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/11">ISPs in Poland hijack ISPs in Brazil</a></td>
-          <td>2014-08-06 03:16:00
-          </td>
-          <td>2014-08-28 00:00:00
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/8">Korea Meterological hijacks the US National Climatic Data Center</a></td>
-          <td>2014-08-20 00:00:00
-          </td>
-          <td>Unknown
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/9">Hijack back of routes hijacked away</a></td>
-          <td>2014-08-20 00:00:00
-          </td>
-          <td>Unknown
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/10">Sprint hijacks Telesmart</a></td>
-          <td>2014-09-09 13:56:00
-          </td>
-          <td>2014-09-09 15:56:00
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/12">AS13110 hijacks the US department of defense</a></td>
-          <td>2014-09-10 00:14:00
-          </td>
-          <td>2014-09-10 00:31:00
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/13">AS57807 announces space from AS57807</a></td>
-          <td>2014-09-10 01:00:00
-          </td>
-          <td>2014-09-11 14:13:00
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/25">Spammers hijack address space to send spam</a></td>
-          <td>2014-09-17 00:00:00
-          </td>
-          <td>Unknown
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/26">AS4826 leaking 2000 routes</a></td>
-          <td>2014-11-13 00:00:00
-          </td>
-          <td>Unknown
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/15">Syrian national Telecommunications Establishment hijacks</a></td>
-          <td>2014-12-09 08:37:00
-          </td>
-          <td>Unknown
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/6">Digitial United gets hijacked by Technologii svyazi</a></td>
-          <td>2014-12-12 00:00:00
-          </td>
-          <td>2015-01-16 00:00:00
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/5">Petersburg Internet Network IP-squatted</a></td>
-          <td>2015-01-07 09:15:00
-          </td>
-          <td>2015-01-07 10:43:00
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/7">AS44050 announces unused address space</a></td>
-          <td>2015-01-08 00:00:00
-          </td>
-          <td>Unknown
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/19">Rerouting of UK traffic (167 prefixes)</a></td>
-          <td>2015-03-07 02:37:00
-          </td>
-          <td>Unknown
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/23">Rerouting of UK traffic through Ukraine (167 prefixes)</a></td>
-          <td>2015-03-07 02:37:00
-          </td>
-          <td>Unknown
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/20">Routing Leak briefly takes down Google</a></td>
-          <td>2015-03-12 08:58:00
-          </td>
-          <td>Unknown
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/33">Bangladesh Fiber@Home Route Mis-origination</a></td>
-          <td>2015-06-30 03:37:00
-          </td>
-          <td>2015-06-30 00:00:00
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/27">AS7514 misoriginates prefixes</a></td>
-          <td>2015-07-17 00:00:00
-          </td>
-          <td>2015-07-17 00:00:00
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/24">Prefix hijacking by AS20115</a></td>
-          <td>2015-09-29 00:00:00
-          </td>
-          <td>Unknown
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/28">Routes leaked by AS393742 via AS16397</a></td>
-          <td>2015-09-30 00:00:00
-          </td>
-          <td>Unknown
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/29">Wrong use of 100.64.0.0/10</a></td>
-          <td>2015-10-02 00:00:00
-          </td>
-          <td>Unknown
-          </td>
-	  
-	</tr>
-	
-	<tr>
-	  <td><a href="/incident/30">Route leaks from AS9498 (BHARTI Airtel)?</a></td>
-          <td>2015-11-06 00:00:00
-          </td>
-          <td>Unknown
-          </td>
-	  
-	</tr>
-	
       </tbody>
       <tfoot>
       </tfoot>
     </table>
   </div>
 </div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">Affected ASes <a class="btn btn-primary pull-right" role="button" href="/incident/21/as/new">Add AS</a></div>
+  <div class="panel-body">
+     
+    <table class="table " id="references">
+      <thead>
+	<tr><th>AS</th><th>How Affected</th>
+	  
+	</tr>
+      </thead>
+      <tbody>
+	
+	<tr><td><a href="http://bgp.he.net/AS4761">4761</a></td><td>ISP doing the announcements (INDOSAT-INP-AP INDOSAT Internet Network Provider,ID))</td>
+	  
+	  
+	</tr>
+	
+	<tr><td><a href="http://bgp.he.net/AS4651">4651</a></td><td>The upstream doing the announcement (THAI-GATEWAY The Communications Authority of Thailand(CAT),TH)</td>
+	  
+	  
+	</tr>
+	
+      </tbody>
+    </table>
+    
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">References <a class="btn btn-primary pull-right" role="button" href="/incident/21/ref/new">Add Reference</a></div>
+  <div class="panel-body">
+    
+  </div>
+</div>
+
+
+<div class="panel panel-default">
+  <div class="panel-heading">Affected AS 'Route Views' Connection Map</div>
+  <div class="panel-body">
+    <img class="img-responsive" src="/route/graph/4761?otherASes=4651">
+    <p><em>(note: not all connections may be shown for big graphs)</em></p>
+  </div>
+</div>
+
 
 
 	</div>
