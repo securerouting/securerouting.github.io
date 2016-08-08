@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <title>Secure Routing -- Protect Your Infrastructure</title>
+
+    <link href="https://securerouting.net/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://securerouting.net/css/ears.css" rel="stylesheet">
+    <link href="https://securerouting.net/css/style.css" rel="stylesheet">
+
+    <script src="/js/timeline/timeline_ajax/simile-ajax-api.js?bundle=true" type="text/javascript"></script>
+    <script src="/js/timeline/timeline_js/timeline-api.js?bundle=true" type="text/javascript"></script>
+  </head>
+
+  <body>
+
+    <script src="/js/jquery.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script>
+     $(document).ready(function () {
+       $('.dropdown-toggle').dropdown();
+     });
+    </script>
+
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container-fluid">
+	<div class="navbar-header">
+	  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+	  </button>
+	  <a class="navbar-brand" href="/">Secure Routing</a>
+	</div>
+
+	<div class="collapse navbar-collapse" id="navbar-collapse">
+	  <ul class="nav navbar-nav earsnav">
+	    <!-- LEARN -->
+	    <li class="dropdown">
+	      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Learn <span class="caret"></span>
+	      </a>
+
+	      <ul class="dropdown-menu">
+		<li><a href="/sbs-guide">Step-by-Step Guide</a></li>
+		<li><a href="https://www.youtube.com/channel/UCVOrJW51e8uu6aO_qnkk6qA">Youtube Channel</a></li>
+		<li><a href="/specifications">Specifications</a></li>
+		<li><a href="https://datatracker.ietf.org/wg/sidr/">Join The SIDR Working Group</a></li>
+	      </ul>
+	    </li>
+
+	    <!-- TRY -->
+	    <li class="dropdown">
+	      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Try <span class="caret"></span>
+	      </a>
+
+	      <ul class="dropdown-menu">
+		<li><a href="/workshop">The Demonstration Workshop</a></li>
+	      </ul>
+	    </li>
+
+	    <!-- DEPLOY -->
+	    <li class="dropdown">
+	      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Deploy <span class="caret"></span>
+	      </a>
+
+	      <!-- TRY MENU -->
+	      <ul class="dropdown-menu">
+		  <li><a href="/bird">Install BIRD</a></li>
+		  <li><a href="http://www-x.antd.nist.gov/bgpsrx/">Install Quagga</a></li>
+		  <li><a href="http://rpki.net">Install RPKI.NET</a></li>
+		  <li><a href="http://sourceforge.net/projects/rpstir">Install RPSTIR</a></li>
+	      </ul>
+	    </li>
+
+	    <!-- INCIDENTS BUTTON -->
+	    <li class="dropdown">
+	      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Routing Incidents<span class="caret"></span>
+	      </a>
+
+	      <!-- INCIDENTS MENU -->
+	      <ul class="dropdown-menu">
+		<li><a href="/incident">Database</a></li>
+		<li><a href="/timeline">Timeline</a></li>
+	      </ul>
+	    </li>
+	  </ul>
+	</div>
+      </div>
+    </nav>
+
+    <div class="container ears-top">
+      <div class="row">
+	
+	<div class="col-md-9" role="main">
+	
+
+	  <div class="page-header">
+  <h1>BGP Routing Incidents</h1>
+</div>
+<div class="panel panel-default">
+  <div class="panel-heading">Known BGP Incidents
+    <a class="btn btn-primary pull-right" role="button" href="/incident/new" >Add New</a></div>
+  <div class="panel-body">
+    <table class="table " id="incidenttable">
+      <thead>
+	<tr><th>Summary</th><th>Start</th><th>End</th>
+	  
+	</tr>
+      </thead>
+      <tbody>
+	
+	<tr>
+	  <td><a href="/incident/18">AS7007 announces many specific prefixes</a></td>
+          <td>1997-04-25 11:30:00
+          </td>
+          <td>Unknown
+          </td>
+	  
+	</tr>
+	
+	<tr>
+	  <td><a href="/incident/31">Con Edison (AS27506) steals much of the internet&#39;s traffic</a></td>
+          <td>2006-01-22 00:00:00
+          </td>
+          <td>2006-01-22 00:00:00
+          </td>
+	  
+	</tr>
+	
+	<tr>
+	  <td><a href="/incident/32">Unauthorized L-root servers release bad routes</a></td>
+          <td>2007-11-01 00:00:00
+          </td>
+          <td>Unknown
+          </td>
+	  
+	</tr>
+	
+	<tr>
+	  <td><a href="/incident/16">Pakistan Telecom takes out Youtube</a></td>
+          <td>2008-02-24 10:30:00
+          </td>
+          <td>2008-02-24 13:00:00
+          </td>
+	  
+	</tr>
+	
+	<tr>
+	  <td><a href="/incident/22">China networks take 15% of the word&#39;s traffic</a></td>
+          <td>2010-04-08 00:00:00
+          </td>
+          <td>2010-04-08 00:00:00
+          </td>
+	  
+	</tr>
+	
+	<tr>
+	  <td><a href="/incident/4">Multiple Banking Addresses Hijacked</a></td>
+          <td>2013-07-24 00:00:00
+          </td>
+          <td>Unknown
+          </td>
+	  
+	</tr>
+	
+	<tr>
+	  <td><a href="/incident/14">Bitcoin money stolen via a BGP hijack</a></td>
+          <td>2014-03-22 00:00:00
+          </td>
+          <td>Unknown
+          </td>
+	  
+	</tr>
+	
+	<tr>
+	  <td><a href="/incident/17">Turkey hijacks DNS via BGP</a></td>
+          <td>2014-03-29 09:00:00
+          </td>
+          <td>Unknown
+          </td>
+	  
+	</tr>
+	
+	<tr>
+	  <td><a href="/incident/21">INDOSAT Thailand announces many routes</a></td>
+          <td>2014-04-02 18:26:00
+          </td>
+          <td>Unknown
+          </td>
+	  
+	</tr>
+	
+	<tr>
+	  <td><a href="/incident/11">ISPs in Poland hijack ISPs in Brazil</a></td>
+          <td>2014-08-06 03:16:00
+          </td>
+          <td>2014-08-28 00:00:00
+          </td>
+	  
+	</tr>
+	
+	<tr>
+	  <td><a href="/incident/8">Korea Meterological hijacks the US National Climatic Data Center</a></td>
+          <td>2014-08-20 00:00:00
+          </td>
+          <td>Unknown
+          </td>
+	  
+	</tr>
+	
+	<tr>
+	  <td><a href="/incident/9">Hijack back of routes hijacked away</a></td>
+          <td>2014-08-20 00:00:00
+          </td>
+          <td>Unknown
+          </td>
+	  
+	</tr>
+	
+	<tr>
+	  <td><a href="/incident/10">Sprint hijacks Telesmart</a></td>
+          <td>2014-09-09 13:56:00
+          </td>
+          <td>2014-09-09 15:56:00
+          </td>
+	  
+	</tr>
+	
+	<tr>
+	  <td><a href="/incident/12">AS13110 hijacks the US department of defense</a></td>
+          <td>2014-09-10 00:14:00
+          </td>
+          <td>2014-09-10 00:31:00
+          </td>
+	  
+	</tr>
+	
+	<tr>
+	  <td><a href="/incident/13">AS57807 announces space from AS57807</a></td>
+          <td>2014-09-10 01:00:00
+          </td>
+          <td>2014-09-11 14:13:00
+          </td>
+	  
+	</tr>
+	
+	<tr>
+	  <td><a href="/incident/25">Spammers hijack address space to send spam</a></td>
+          <td>2014-09-17 00:00:00
+          </td>
+          <td>Unknown
+          </td>
+	  
+	</tr>
+	
+	<tr>
+	  <td><a href="/incident/26">AS4826 leaking 2000 routes</a></td>
+          <td>2014-11-13 00:00:00
+          </td>
+          <td>Unknown
+          </td>
+	  
+	</tr>
+	
+	<tr>
+	  <td><a href="/incident/15">Syrian national Telecommunications Establishment hijacks</a></td>
+          <td>2014-12-09 08:37:00
+          </td>
+          <td>Unknown
+          </td>
+	  
+	</tr>
+	
+	<tr>
+	  <td><a href="/incident/6">Digitial United gets hijacked by Technologii svyazi</a></td>
+          <td>2014-12-12 00:00:00
+          </td>
+          <td>2015-01-16 00:00:00
+          </td>
+	  
+	</tr>
+	
+	<tr>
+	  <td><a href="/incident/5">Petersburg Internet Network IP-squatted</a></td>
+          <td>2015-01-07 09:15:00
+          </td>
+          <td>2015-01-07 10:43:00
+          </td>
+	  
+	</tr>
+	
+	<tr>
+	  <td><a href="/incident/7">AS44050 announces unused address space</a></td>
+          <td>2015-01-08 00:00:00
+          </td>
+          <td>Unknown
+          </td>
+	  
+	</tr>
+	
+	<tr>
+	  <td><a href="/incident/19">Rerouting of UK traffic (167 prefixes)</a></td>
+          <td>2015-03-07 02:37:00
+          </td>
+          <td>Unknown
+          </td>
+	  
+	</tr>
+	
+	<tr>
+	  <td><a href="/incident/23">Rerouting of UK traffic through Ukraine (167 prefixes)</a></td>
+          <td>2015-03-07 02:37:00
+          </td>
+          <td>Unknown
+          </td>
+	  
+	</tr>
+	
+	<tr>
+	  <td><a href="/incident/20">Routing Leak briefly takes down Google</a></td>
+          <td>2015-03-12 08:58:00
+          </td>
+          <td>Unknown
+          </td>
+	  
+	</tr>
+	
+	<tr>
+	  <td><a href="/incident/33">Bangladesh Fiber@Home Route Mis-origination</a></td>
+          <td>2015-06-30 03:37:00
+          </td>
+          <td>2015-06-30 00:00:00
+          </td>
+	  
+	</tr>
+	
+	<tr>
+	  <td><a href="/incident/27">AS7514 misoriginates prefixes</a></td>
+          <td>2015-07-17 00:00:00
+          </td>
+          <td>2015-07-17 00:00:00
+          </td>
+	  
+	</tr>
+	
+	<tr>
+	  <td><a href="/incident/24">Prefix hijacking by AS20115</a></td>
+          <td>2015-09-29 00:00:00
+          </td>
+          <td>Unknown
+          </td>
+	  
+	</tr>
+	
+	<tr>
+	  <td><a href="/incident/28">Routes leaked by AS393742 via AS16397</a></td>
+          <td>2015-09-30 00:00:00
+          </td>
+          <td>Unknown
+          </td>
+	  
+	</tr>
+	
+	<tr>
+	  <td><a href="/incident/29">Wrong use of 100.64.0.0/10</a></td>
+          <td>2015-10-02 00:00:00
+          </td>
+          <td>Unknown
+          </td>
+	  
+	</tr>
+	
+	<tr>
+	  <td><a href="/incident/30">Route leaks from AS9498 (BHARTI Airtel)?</a></td>
+          <td>2015-11-06 00:00:00
+          </td>
+          <td>Unknown
+          </td>
+	  
+	</tr>
+	
+      </tbody>
+      <tfoot>
+      </tfoot>
+    </table>
+  </div>
+</div>
+
+
+	</div>
+
+	
+	<div class="col-md-3 visible-lg-block visible-md-block sr-right-side" role="complementary">
+  <h3 class="rightmenuheader"><span>Learn How To Securely:</span></h3>
+
+  <div class="rightmenu hidden-print panel-group" id="rightmenugroup" role="tablist" aria-multiselectable="true">
+
+    <!-- PUBLISH -->
+    <div class="panel panel-primary">
+      <div class="panel-heading" role="tab" id="publishHeading">
+	<h4 class="panel-title">
+          <a role="button" data-toggle="collapse" data-parent="#rightmenugroup" href="#publishroutes" aria-expanded="true" aria-controls="publishroutes">
+	    Publish Routes
+	    <span class="pull-right glyphicon glyphicon-cloud-upload"></span>
+          </a>
+	</h4>
+      </div>
+      <div id="publishroutes" class="panel-collapse collapse" role="tabpanel" aria-labelledby="publishHeading">
+	<div class="panel-body">
+	  <div class="subaka"><p>(AKA "Originate")</p></div>
+
+	  	  <div class="panel panel-simple sr-learn">
+	    <div class="panel-heading">Learn <span class="pull-right glyphicon glyphicon-education"></span></div>
+	    <div class="panel-body">
+	      <ul>
+		<li class="rightnav"><strong>Watch</strong> the videos in our<a class="sr-link" href="https://www.youtube.com/channel/UCVOrJW51e8uu6aO_qnkk6qA">Secure Routing Youtube Channel</a></li>
+		<li class="rightnav"><strong>Join</strong> the IETF's  <a class="sr-link" href="https://datatracker.ietf.org/wg/sidr/">SIDR Working Group</a></li>
+		<li class="rightnav" id="li-specifications"><strong>Read</strong>  <a class="sr-link" href="/specifications">The RPKI and BGPSEC specifications</a></li>
+	      </ul>
+	    </div>
+	  </div>
+
+	  <div class="panel panel-simple sr-try">
+	    <div class="panel-heading">Try<span class="pull-right glyphicon glyphicon-flag"></span></div>
+	    <div class="panel-body">
+	      <ul>
+		<li class="rightnav"><strong>Download</strong> and try our  <a class="sr-link" href="/workshop">virtual workshop tutorial</a></li>
+	      </ul>
+	    </div>
+	  </div>
+
+	  <div class="panel panel-simple sr-deploy">
+	    <div class="panel-heading">Deploy<span class="pull-right glyphicon glyphicon-send"></span></div>
+	    <div class="panel-body">
+	      <ul>
+		<li class="rightnav" id="li-bird"><strong>Download and Install</strong> the <a class="sr-link" href="/tools/bird">BGP Security extended version of the BIRD routing daemon</a></li>
+		<li class="rightnav" id="li-RPKIViz"><strong>Download and Install</strong> the <a class="sr-link" href="/tools/RPKIViz">RPKIViz resource status visualization tool</a></li>
+		<li class="rightnav" id="li-mapresources"><strong>Download and Install</strong> the <a class="sr-link" href="/tools/mapresources">mapresources inventory management tool</a></li>
+	      </ul>
+	    </div>
+	  </div>
+
+
+	</div>
+      </div>
+    </div>
+
+    <!-- RECEIVE -->
+    <div class="panel panel-primary">
+      <div class="panel-heading" role="tab" id="receiveHeading">
+	<h4 class="panel-title">
+          <a class="collapsed" role="button" data-toggle="collapse" data-parent="#rightmenugroup" href="#receiveroutes" aria-expanded="false" aria-controls="receiveroutes">
+	    Receive Routes
+	    <span class="pull-right glyphicon glyphicon-cloud-download"></span>
+          </a>
+	</h4>
+      </div>
+      <div id="receiveroutes" class="panel-collapse collapse" role="tabpanel" aria-labelledby="receiveHeading">
+	<div class="panel-body">
+	  <div class="subaka"><p>(AKA "Relying Party")</p></div>
+
+	  	  <div class="panel panel-simple sr-learn">
+	    <div class="panel-heading">Learn <span class="pull-right glyphicon glyphicon-education"></span></div>
+	    <ul>
+	      <li class="rightnav" id="li-sbs"><strong>Read</strong> our <a class="sr-link" href="/sbs-guide">Step-by-Step guide for rpki.net</a></li>
+	      <li class="rightnav"><strong>Watch</strong> the videos in our <a class="sr-link" href="https://www.youtube.com/channel/UCVOrJW51e8uu6aO_qnkk6qA">Secure Routing Youtube Channel</a></li>
+	      <li class="rightnav"><strong>Read</strong> <a class="sr-link" href="/materials/BGPSEC-Need-Hardaker.pdf">a presentation about the need for BGPSEC</a></li>
+	      <li class="rightnav"><strong>Read</strong> <a class="sr-link" href="/specifications">The RPKI and BGPSEC specifications</a></li>
+	      <li class="rightnav"><strong>Join</strong> the IETF's <a class="sr-link" href="https://datatracker.ietf.org/wg/sidr/">SIDR Working Group</a></li>
+	    </ul>
+	  </div>
+
+	  <div class="panel panel-simple sr-try">
+	    <div class="panel-heading">Try<span class="pull-right glyphicon glyphicon-flag"></span></div>
+	    <div class="panel-body">
+	      <ul>
+		<li class="rightnav" id="li-workshop"><strong>Download</strong> and try our <a class="sr-link" href="/workshop">virtual workshop tutorial</a></li>
+		<li class="rightnav" id="li-eom"><strong>Download and Try</strong> the <a class="sr-link" href="/tools/eom">Emulation and Monitoring</a> test environment</li>
+	      </ul>
+	    </div>
+	  </div>
+
+	  <div class="panel panel-simple sr-deploy">
+	    <div class="panel-heading">Deploy<span class="pull-right glyphicon glyphicon-send"></span></div>
+	    <div class="panel-body">
+	      <ul>
+		<li class="rightnav" id="li-bird"><strong>Download and Install</strong> the <a class="sr-link" href="/tools/bird">BGP Security extended version of the BIRD routing daemon</a></li>
+		<li class="rightnav"><strong>Download and Install</strong> the <a class="sr-link" href="http://www-x.antd.nist.gov/bgpsrx/">BGP Security extended version of the Quagga router</a></li>
+		<li class="rightnav" id="li-rpki-monitor"><strong>Download and Install</strong> the <a class="sr-link" href="/tools/rpki-monitor">The RPKI Operational Monitor</a></li>
+	      </ul>
+	    </div>
+	  </div>
+
+
+	</div>
+      </div>
+    </div>
+
+    <!-- ALLOCATE -->
+    <div class="panel panel-primary">
+      <div class="panel-heading" role="tab" id="allocateHeading">
+	<h4 class="panel-title">
+          <a class="collapsed" role="button" data-toggle="collapse" data-parent="#rightmenugroup" href="#allocate" aria-expanded="false" aria-controls="allocate">
+	    Allocate Resources
+	    <span class="pull-right glyphicon glyphicon-globe"></span>
+          </a>
+	</h4>
+      </div>
+      <div id="allocate" class="panel-collapse collapse" role="tabpanel" aria-labelledby="allocateHeading">
+	<div class="panel-body">
+	  <div class="subaka"><p>(AKA "Registry")</p></div>
+
+	  	  <div class="panel panel-simple sr-learn">
+	    <div class="panel-heading">Learn <span class="pull-right glyphicon glyphicon-education"></span></div>
+	    <div class="panel-body">
+	      <ul>
+		<li class="rightnav"><strong>Watch</strong> the videos in our <a class="sr-link" href="https://www.youtube.com/channel/UCVOrJW51e8uu6aO_qnkk6qA">Secure Routing Youtube Channel</a></li>
+	      </ul>
+	    </div>
+	  </div>
+
+	  <div class="panel panel-simple sr-try">
+	    <div class="panel-heading">Try<span class="pull-right glyphicon glyphicon-flag"></span></div>
+	    <div class="panel-body">
+	      <ul>
+		<li class="rightnav"><strong>Download</strong> and try our <a class="sr-link" href="/workshop">virtual workshop tutorial</a></li>
+	      </ul>
+	    </div>
+	  </div>
+
+	  <div class="panel panel-simple sr-deploy">
+	    <div class="panel-heading">Deploy<span class="pull-right glyphicon glyphicon-send"></span></div>
+	    <div class="panel-body">
+	      <ul>
+		<li class="rightnav"><strong>Download and Install</strong> the <a class="sr-link" href="http://rpki.net">RPKI.NET RPKI management suite</a></li>
+		<li class="rightnav"><strong>Download and Install</strong> the <a class="sr-link" href="https://github.com/bgpsecurity/rpstir">RPSTIR RPKI management suite</a></li>
+	      </ul>
+	    </div>
+	  </div>
+
+
+	</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+ /* manually collapse the others on open of a single to fix bootstrap */
+ var myGroup = $('#rightmenugroup');
+ myGroup.on('show','.collapse', function() {
+   myGroup.find('.in').collapse('hide');
+ });
+
+
+/* open the current one */
+
+
+
+
+</script>
+
+	
+      </div>
+    </div>
+  </body>
+
+  <script type="application/ld+json">
+   {
+     "@context": "http://schema.org",
+     "@type": "Organization",
+     "url": "https://securerouting.net",
+     "logo": "https://securerouting.net/images/secure-routing-cloud.svg"
+   }
+  </script>
+  <script type="application/ld+json">
+   {
+     "@context": "http://schema.org",
+     "@type": "Organization",
+     "url": "https://securerouting.net",
+     "name": "Secure Routing",
+     "sameAs" : [
+       "https://www.youtube.com/channel/UCVOrJW51e8uu6aO_qnkk6qA"
+     ],
+   }
+  </script>
+</html>
+

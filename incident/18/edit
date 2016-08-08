@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <title>Secure Routing -- Protect Your Infrastructure</title>
+
+    <link href="https://securerouting.net/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://securerouting.net/css/ears.css" rel="stylesheet">
+    <link href="https://securerouting.net/css/style.css" rel="stylesheet">
+
+    <script src="/js/timeline/timeline_ajax/simile-ajax-api.js?bundle=true" type="text/javascript"></script>
+    <script src="/js/timeline/timeline_js/timeline-api.js?bundle=true" type="text/javascript"></script>
+  </head>
+
+  <body>
+
+    <script src="/js/jquery.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script>
+     $(document).ready(function () {
+       $('.dropdown-toggle').dropdown();
+     });
+    </script>
+
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container-fluid">
+	<div class="navbar-header">
+	  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+	  </button>
+	  <a class="navbar-brand" href="/">Secure Routing</a>
+	</div>
+
+	<div class="collapse navbar-collapse" id="navbar-collapse">
+	  <ul class="nav navbar-nav earsnav">
+	    <!-- LEARN -->
+	    <li class="dropdown">
+	      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Learn <span class="caret"></span>
+	      </a>
+
+	      <ul class="dropdown-menu">
+		<li><a href="/sbs-guide">Step-by-Step Guide</a></li>
+		<li><a href="https://www.youtube.com/channel/UCVOrJW51e8uu6aO_qnkk6qA">Youtube Channel</a></li>
+		<li><a href="/specifications">Specifications</a></li>
+		<li><a href="https://datatracker.ietf.org/wg/sidr/">Join The SIDR Working Group</a></li>
+	      </ul>
+	    </li>
+
+	    <!-- TRY -->
+	    <li class="dropdown">
+	      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Try <span class="caret"></span>
+	      </a>
+
+	      <ul class="dropdown-menu">
+		<li><a href="/workshop">The Demonstration Workshop</a></li>
+	      </ul>
+	    </li>
+
+	    <!-- DEPLOY -->
+	    <li class="dropdown">
+	      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Deploy <span class="caret"></span>
+	      </a>
+
+	      <!-- TRY MENU -->
+	      <ul class="dropdown-menu">
+		  <li><a href="/bird">Install BIRD</a></li>
+		  <li><a href="http://www-x.antd.nist.gov/bgpsrx/">Install Quagga</a></li>
+		  <li><a href="http://rpki.net">Install RPKI.NET</a></li>
+		  <li><a href="http://sourceforge.net/projects/rpstir">Install RPSTIR</a></li>
+	      </ul>
+	    </li>
+
+	    <!-- INCIDENTS BUTTON -->
+	    <li class="dropdown">
+	      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Routing Incidents<span class="caret"></span>
+	      </a>
+
+	      <!-- INCIDENTS MENU -->
+	      <ul class="dropdown-menu">
+		<li><a href="/incident">Database</a></li>
+		<li><a href="/timeline">Timeline</a></li>
+	      </ul>
+	    </li>
+	  </ul>
+	</div>
+      </div>
+    </nav>
+
+    <div class="container ears-top">
+      <div class="row">
+	
+	<div class="col-md-9" role="main">
+	
+
+	  <div class="panel panel-default">
+  <div class="panel-heading">Add a new routing incident</div>
+  <div class="panel-body">
+    <form action="/incident" method="post" role="form">
+      <div class="input-group">
+        <span class="input-group-addon">Submission Password<br /><em>(Ask an administrator for it)</em></span>
+	<input name="password" id="password" type="password" class="form-control" placeholder="???" value=""/>
+	
+        </span>
+      </div>
+      <br />
+
+      <div class="input-group">
+        <span class="input-group-addon">Summary</span>
+	<input name="summary" id="summary" type="text" class="form-control"
+	       placeholder="short description" value="AS7007 announces many specific prefixes"/>
+	
+        </span>
+      </div>
+      <div class="input-group">
+        <span class="input-group-addon">Start Date <em>(if known)</em></span>
+	<input name="eventStart" id="eventStart" type="text" class="form-control"
+	       placeholder="2014-06-06" value="1997-04-25 11:30:00" />
+	
+        </span>
+      </div>
+      <div class="input-group">
+        <span class="input-group-addon">End Date <em>(if known)</em></span>
+	<input name="eventEnd" id="eventEnd" type="text" class="form-control"
+	       placeholder="2014-06-07 14:00:05"  value=""/>
+	
+        </span>
+      </div>
+      <div class="input-group">
+        <span class="input-group-addon">Description</span>
+	<textarea name="description" id="description" type="" class="form-control" rows=10
+		  placeholder="A longer description">At about 11:30am (this is when we saw it), they started redistributing
+more specifics for many (thousands) of CIDR routes to Sprintlink [1239 1790]
+but the routes were announced - AND the routes were injected with an
+origin AS of 7007, hiding the AS_PATH the routes had (and the customer
+involved).</textarea>
+	
+        </span>
+      </div>
+
+      
+
+      <input type="hidden" name="incidentid" value="18" />
+
+      
+
+      <br />
+      <p><button type="submit" class="btn btn-primary" >Submit</button>
+      </p>
+    </form>
+  </div>
+</div>
+
+
+	</div>
+
+	
+	<div class="col-md-3 visible-lg-block visible-md-block sr-right-side" role="complementary">
+  <h3 class="rightmenuheader"><span>Learn How To Securely:</span></h3>
+
+  <div class="rightmenu hidden-print panel-group" id="rightmenugroup" role="tablist" aria-multiselectable="true">
+
+    <!-- PUBLISH -->
+    <div class="panel panel-primary">
+      <div class="panel-heading" role="tab" id="publishHeading">
+	<h4 class="panel-title">
+          <a role="button" data-toggle="collapse" data-parent="#rightmenugroup" href="#publishroutes" aria-expanded="true" aria-controls="publishroutes">
+	    Publish Routes
+	    <span class="pull-right glyphicon glyphicon-cloud-upload"></span>
+          </a>
+	</h4>
+      </div>
+      <div id="publishroutes" class="panel-collapse collapse" role="tabpanel" aria-labelledby="publishHeading">
+	<div class="panel-body">
+	  <div class="subaka"><p>(AKA "Originate")</p></div>
+
+	  	  <div class="panel panel-simple sr-learn">
+	    <div class="panel-heading">Learn <span class="pull-right glyphicon glyphicon-education"></span></div>
+	    <div class="panel-body">
+	      <ul>
+		<li class="rightnav"><strong>Watch</strong> the videos in our<a class="sr-link" href="https://www.youtube.com/channel/UCVOrJW51e8uu6aO_qnkk6qA">Secure Routing Youtube Channel</a></li>
+		<li class="rightnav"><strong>Join</strong> the IETF's  <a class="sr-link" href="https://datatracker.ietf.org/wg/sidr/">SIDR Working Group</a></li>
+		<li class="rightnav" id="li-specifications"><strong>Read</strong>  <a class="sr-link" href="/specifications">The RPKI and BGPSEC specifications</a></li>
+	      </ul>
+	    </div>
+	  </div>
+
+	  <div class="panel panel-simple sr-try">
+	    <div class="panel-heading">Try<span class="pull-right glyphicon glyphicon-flag"></span></div>
+	    <div class="panel-body">
+	      <ul>
+		<li class="rightnav"><strong>Download</strong> and try our  <a class="sr-link" href="/workshop">virtual workshop tutorial</a></li>
+	      </ul>
+	    </div>
+	  </div>
+
+	  <div class="panel panel-simple sr-deploy">
+	    <div class="panel-heading">Deploy<span class="pull-right glyphicon glyphicon-send"></span></div>
+	    <div class="panel-body">
+	      <ul>
+		<li class="rightnav" id="li-bird"><strong>Download and Install</strong> the <a class="sr-link" href="/tools/bird">BGP Security extended version of the BIRD routing daemon</a></li>
+		<li class="rightnav" id="li-RPKIViz"><strong>Download and Install</strong> the <a class="sr-link" href="/tools/RPKIViz">RPKIViz resource status visualization tool</a></li>
+		<li class="rightnav" id="li-mapresources"><strong>Download and Install</strong> the <a class="sr-link" href="/tools/mapresources">mapresources inventory management tool</a></li>
+	      </ul>
+	    </div>
+	  </div>
+
+
+	</div>
+      </div>
+    </div>
+
+    <!-- RECEIVE -->
+    <div class="panel panel-primary">
+      <div class="panel-heading" role="tab" id="receiveHeading">
+	<h4 class="panel-title">
+          <a class="collapsed" role="button" data-toggle="collapse" data-parent="#rightmenugroup" href="#receiveroutes" aria-expanded="false" aria-controls="receiveroutes">
+	    Receive Routes
+	    <span class="pull-right glyphicon glyphicon-cloud-download"></span>
+          </a>
+	</h4>
+      </div>
+      <div id="receiveroutes" class="panel-collapse collapse" role="tabpanel" aria-labelledby="receiveHeading">
+	<div class="panel-body">
+	  <div class="subaka"><p>(AKA "Relying Party")</p></div>
+
+	  	  <div class="panel panel-simple sr-learn">
+	    <div class="panel-heading">Learn <span class="pull-right glyphicon glyphicon-education"></span></div>
+	    <ul>
+	      <li class="rightnav" id="li-sbs"><strong>Read</strong> our <a class="sr-link" href="/sbs-guide">Step-by-Step guide for rpki.net</a></li>
+	      <li class="rightnav"><strong>Watch</strong> the videos in our <a class="sr-link" href="https://www.youtube.com/channel/UCVOrJW51e8uu6aO_qnkk6qA">Secure Routing Youtube Channel</a></li>
+	      <li class="rightnav"><strong>Read</strong> <a class="sr-link" href="/materials/BGPSEC-Need-Hardaker.pdf">a presentation about the need for BGPSEC</a></li>
+	      <li class="rightnav"><strong>Read</strong> <a class="sr-link" href="/specifications">The RPKI and BGPSEC specifications</a></li>
+	      <li class="rightnav"><strong>Join</strong> the IETF's <a class="sr-link" href="https://datatracker.ietf.org/wg/sidr/">SIDR Working Group</a></li>
+	    </ul>
+	  </div>
+
+	  <div class="panel panel-simple sr-try">
+	    <div class="panel-heading">Try<span class="pull-right glyphicon glyphicon-flag"></span></div>
+	    <div class="panel-body">
+	      <ul>
+		<li class="rightnav" id="li-workshop"><strong>Download</strong> and try our <a class="sr-link" href="/workshop">virtual workshop tutorial</a></li>
+		<li class="rightnav" id="li-eom"><strong>Download and Try</strong> the <a class="sr-link" href="/tools/eom">Emulation and Monitoring</a> test environment</li>
+	      </ul>
+	    </div>
+	  </div>
+
+	  <div class="panel panel-simple sr-deploy">
+	    <div class="panel-heading">Deploy<span class="pull-right glyphicon glyphicon-send"></span></div>
+	    <div class="panel-body">
+	      <ul>
+		<li class="rightnav" id="li-bird"><strong>Download and Install</strong> the <a class="sr-link" href="/tools/bird">BGP Security extended version of the BIRD routing daemon</a></li>
+		<li class="rightnav"><strong>Download and Install</strong> the <a class="sr-link" href="http://www-x.antd.nist.gov/bgpsrx/">BGP Security extended version of the Quagga router</a></li>
+		<li class="rightnav" id="li-rpki-monitor"><strong>Download and Install</strong> the <a class="sr-link" href="/tools/rpki-monitor">The RPKI Operational Monitor</a></li>
+	      </ul>
+	    </div>
+	  </div>
+
+
+	</div>
+      </div>
+    </div>
+
+    <!-- ALLOCATE -->
+    <div class="panel panel-primary">
+      <div class="panel-heading" role="tab" id="allocateHeading">
+	<h4 class="panel-title">
+          <a class="collapsed" role="button" data-toggle="collapse" data-parent="#rightmenugroup" href="#allocate" aria-expanded="false" aria-controls="allocate">
+	    Allocate Resources
+	    <span class="pull-right glyphicon glyphicon-globe"></span>
+          </a>
+	</h4>
+      </div>
+      <div id="allocate" class="panel-collapse collapse" role="tabpanel" aria-labelledby="allocateHeading">
+	<div class="panel-body">
+	  <div class="subaka"><p>(AKA "Registry")</p></div>
+
+	  	  <div class="panel panel-simple sr-learn">
+	    <div class="panel-heading">Learn <span class="pull-right glyphicon glyphicon-education"></span></div>
+	    <div class="panel-body">
+	      <ul>
+		<li class="rightnav"><strong>Watch</strong> the videos in our <a class="sr-link" href="https://www.youtube.com/channel/UCVOrJW51e8uu6aO_qnkk6qA">Secure Routing Youtube Channel</a></li>
+	      </ul>
+	    </div>
+	  </div>
+
+	  <div class="panel panel-simple sr-try">
+	    <div class="panel-heading">Try<span class="pull-right glyphicon glyphicon-flag"></span></div>
+	    <div class="panel-body">
+	      <ul>
+		<li class="rightnav"><strong>Download</strong> and try our <a class="sr-link" href="/workshop">virtual workshop tutorial</a></li>
+	      </ul>
+	    </div>
+	  </div>
+
+	  <div class="panel panel-simple sr-deploy">
+	    <div class="panel-heading">Deploy<span class="pull-right glyphicon glyphicon-send"></span></div>
+	    <div class="panel-body">
+	      <ul>
+		<li class="rightnav"><strong>Download and Install</strong> the <a class="sr-link" href="http://rpki.net">RPKI.NET RPKI management suite</a></li>
+		<li class="rightnav"><strong>Download and Install</strong> the <a class="sr-link" href="https://github.com/bgpsecurity/rpstir">RPSTIR RPKI management suite</a></li>
+	      </ul>
+	    </div>
+	  </div>
+
+
+	</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+ /* manually collapse the others on open of a single to fix bootstrap */
+ var myGroup = $('#rightmenugroup');
+ myGroup.on('show','.collapse', function() {
+   myGroup.find('.in').collapse('hide');
+ });
+
+
+/* open the current one */
+
+
+
+
+</script>
+
+	
+      </div>
+    </div>
+  </body>
+
+  <script type="application/ld+json">
+   {
+     "@context": "http://schema.org",
+     "@type": "Organization",
+     "url": "https://securerouting.net",
+     "logo": "https://securerouting.net/images/secure-routing-cloud.svg"
+   }
+  </script>
+  <script type="application/ld+json">
+   {
+     "@context": "http://schema.org",
+     "@type": "Organization",
+     "url": "https://securerouting.net",
+     "name": "Secure Routing",
+     "sameAs" : [
+       "https://www.youtube.com/channel/UCVOrJW51e8uu6aO_qnkk6qA"
+     ],
+   }
+  </script>
+</html>
+
