@@ -1,0 +1,133 @@
+
+/*
+ * These give uniform headers.
+ */
+h1
+{
+	display: block;
+	font-size: 1.5em;
+	margin-top: 0.83em;
+	margin-bottom: 0.83em;
+	margin-left: 0;
+	margin-right: 0;
+	font-weight: bold;
+}
+h2
+{
+	display: block;
+	font-size: 1.5em;
+	margin-top: 0.83em;
+	margin-bottom: 0.83em;
+	margin-left: 0;
+	margin-right: 0;
+	font-weight: bold;
+}
+h3
+{
+	display: block;
+	font-size: 1.5em;
+	margin-top: 0.83em;
+	margin-bottom: 0.83em;
+	margin-left: 0;
+	margin-right: 0;
+	font-weight: bold;
+}
+h4
+{
+	display: block;
+	font-size: 1.5em;
+	margin-top: 0.83em;
+	margin-bottom: 0.83em;
+	margin-left: 0;
+	margin-right: 0;
+	font-weight: bold;
+}
+h5
+{
+	display: block;
+	font-size: 1.5em;
+	margin-top: 0.83em;
+	margin-bottom: 0.83em;
+	margin-left: 0;
+	margin-right: 0;
+	font-weight: bold;
+}
+h6
+{
+	display: block;
+	font-size: 1.5em;
+	margin-top: 0.83em;
+	margin-bottom: 0.83em;
+	margin-left: 0;
+	margin-right: 0;
+	font-weight: bold;
+}
+
+/*
+ * This aligns table cell contents at the top of the cell.
+ */
+td
+{
+	vertical-align:	top;
+	word-wrap:	normal;
+}
+
+/*
+ * This removes bullets from lists in a table of contents.
+ */
+ul.toc li    
+{
+	list-style: none;
+}
+
+/*
+ * This gives us a formatted blob of TODO text.
+ */
+todo
+{
+	display: block;
+	font-style: italic;
+}
+todo:before
+{
+	content: "TODO:  ";
+}
+
+/*
+ * These are to provide a unified method of formatting specific types
+ * of thingies in the SBS documentation.
+ */
+arg	{ font-style: italic;	}
+call	{ font-style: italic;	}
+class	{ font-style: italic;	}
+cmd	{ font-weight: bold;	}
+config	{ font-style: italic;	}
+file	{ font-weight: bold;	}
+module	{ font-weight: bold;	}
+obj	{ font-style: italic;	}
+opt	{ font-style: italic;	}
+path	{ font-weight: bold;	}
+rpki	{ font-weight: bold;	}
+subr	{ font-style: italic;	}
+syscall	{ font-style: italic;	}
+
+/*
+ * This is used for indenting return codes in man pages.
+ */
+manrc 
+{
+	display: block;
+        padding-left: 2em;
+}
+
+/*
+ * This makes sure table cells aren't rammed up against the left
+ * and right borders.
+ */
+td
+{
+	padding-left: 1em;
+	padding-right: 1em;
+}
+
+</style>

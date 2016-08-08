@@ -1,0 +1,134 @@
+
+.input-group-addon {
+    width: 15em;
+}
+
+.input-group {
+    width: 100%;
+}
+
+.center {
+    text-align:center;
+    width:100%;
+}
+
+.center:first-child {
+    margin:auto;
+    text-align:left;
+}
+
+div.aka {
+    font-size: .8em;
+    font-style: italic;
+}
+
+div.panel-ltd, div.main-container > div.sr-learn {
+    height: 21em;
+}
+
+div.panel-ltd, div.main-container > div.sr-try {
+    height: 11em;
+}
+
+div.panel-ltd, div.main-container > div.sr-deploy {
+    height: 15em;
+}
+
+/* Right side panel attributes */
+
+div.xsr-right-side {
+    margin-top: 80px;
+}
+
+div.panel-simple {
+    margin-bottom: 0px;
+}
+
+div.panel-simple div.panel-heading {
+    font-size: 1.25em;
+    padding-bottom: 0em;
+    padding-top: 0em;
+    padding: 0em;
+    font-style: bold;
+    border-style: solid;
+    border-width: 0px 0px 1px 0px;
+    border-color: #ccf;
+}
+
+div.panel-simple div.panel-body {
+    font-size: 1em;
+    padding-top: 0em;
+    padding-bottom: 0em;
+    padding: 0em;
+}
+
+div.subaka {
+    font-size: 1em;
+    font-style: italic;
+    margin-left: .5em;
+    margin-right: auto;
+    width: 100%;
+    display: block;
+    text-align: right;
+}
+
+div.rightmenu .panel .panel-heading {
+    font-size: 1.25em;
+}
+
+div.rightmenu .panel .panel-body {
+    padding-top: .5em;
+    padding-bottom: .5em;
+}
+
+.rightmenuheader {
+    margin-bottom: 1em;
+    border-style: solid;
+    border-width: 0px 0px 2px 0px;
+    border-color: #337ab7;
+}
+
+.thisbullet {
+    list-style-image: url('/images/bullet.png');
+    /* background-color: #eee; */
+}
+
+#rightmenugroup li a {
+    font-style: italic;
+}
+
+#rightmenugroup li.thisbullet a {
+    font-weight: bold;
+}
+
+.sr-download {
+    font-size: 1.5em;
+    padding-right: 1em;
+    margin-left: 2em;
+}
+
+span.sr-downloadicon {
+    margin-right: 1em;
+}
+
+a.sr-link {
+    display: block;
+}
+
+.rightnav {
+    padding: .25em .5em;
+}
+
+.sr-navbutton {
+    margin: 0em 0em 0em 1em;
+    font-weight: bold;
+}
+
+dl.definitions > dd {
+    margin-left: 2em;
+    margin-bottom: 1em;
+}
+
+span.rightspace {
+    margin-right: .5em;
+}

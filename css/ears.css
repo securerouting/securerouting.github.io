@@ -1,0 +1,69 @@
+/* body { padding-top: 90px; } */
+
+div.slogan { 
+  font-style: italic;
+  text-align: center;
+  padding-top: .5em;
+}
+
+.logo { 
+  vertical-algin: middle;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+a.toplink {
+	margin-top: 0px;
+	margin-bottom: 0px;
+	padding: 0px 5px 0px 5px;
+	padding-top: 0px;
+}
+
+div.earsbanner {
+	padding-bottom: 0px;
+	margin-bottom: 0px;
+	margin-top: 10px;
+}
+
+div.panel-heading {
+    font-size: 1.5em;
+}
+
+div.jumbotron {
+    background-color:transparent !important;
+}
+
+.indent, .indent1 {
+    margin-left: 1em;
+}
+
+.indent2 {
+    margin-left: 2em;
+}
+
+.indent4 {
+    margin-left: 4em;
+}
+
+body {
+    padding-top: 30px;
+}
+
+a.navbar-brand:link, a.navbar-brand:hover, a.navbar-brand:visited, a.navbar-brand:active {
+    color: #fff;
+}
+
+div.ears-top {
+    margin-top: 30px;
+}
+
+div.panel-primary > div.panel-heading > a:link,
+div.panel-primary > div.panel-heading > a:hover,
+div.panel-primary > div.panel-heading > a:visited,
+div.panel-primary > div.panel-heading > a:active
+{
+    color: #fff;
+    text-decoration: underline;
+}
+    
