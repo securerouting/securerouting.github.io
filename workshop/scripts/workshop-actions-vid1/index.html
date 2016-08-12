@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <title>Secure Routing -- Protect Your Infrastructure</title>
+
+    <link href="http://localhost:3000/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://localhost:3000/css/ears.css" rel="stylesheet">
+    <link href="http://localhost:3000/css/style.css" rel="stylesheet">
+
+    <script src="/js/timeline/timeline_ajax/simile-ajax-api.js?bundle=true" type="text/javascript"></script>
+    <script src="/js/timeline/timeline_js/timeline-api.js?bundle=true" type="text/javascript"></script>
+  </head>
+
+  <body>
+
+    <script src="/js/jquery.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script>
+     $(document).ready(function () {
+       $('.dropdown-toggle').dropdown();
+     });
+    </script>
+
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container-fluid">
+	<div class="navbar-header">
+	  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+	  </button>
+	  <a class="navbar-brand" href="/">Secure Routing</a>
+	</div>
+
+	<div class="collapse navbar-collapse" id="navbar-collapse">
+	  <ul class="nav navbar-nav earsnav">
+	    <!-- LEARN -->
+	    <li class="dropdown">
+	      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Learn <span class="caret"></span>
+	      </a>
+
+	      <ul class="dropdown-menu">
+		<li><a href="/sbs-guide">Step-by-Step Guide</a></li>
+		<li><a href="https://www.youtube.com/channel/UCVOrJW51e8uu6aO_qnkk6qA">Youtube Channel</a></li>
+		<li><a href="/specifications">Specifications</a></li>
+		<li><a href="https://datatracker.ietf.org/wg/sidr/">Join The SIDR Working Group</a></li>
+	      </ul>
+	    </li>
+
+	    <!-- TRY -->
+	    <li class="dropdown">
+	      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Try <span class="caret"></span>
+	      </a>
+
+	      <ul class="dropdown-menu">
+		<li><a href="/workshop">The Demonstration Workshop</a></li>
+	      </ul>
+	    </li>
+
+	    <!-- DEPLOY -->
+	    <li class="dropdown">
+	      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Deploy <span class="caret"></span>
+	      </a>
+
+	      <!-- TRY MENU -->
+	      <ul class="dropdown-menu">
+		  <li><a href="/bird">Install BIRD</a></li>
+		  <li><a href="http://www-x.antd.nist.gov/bgpsrx/">Install Quagga</a></li>
+		  <li><a href="http://rpki.net">Install RPKI.NET</a></li>
+		  <li><a href="http://sourceforge.net/projects/rpstir">Install RPSTIR</a></li>
+	      </ul>
+	    </li>
+
+	    <!-- INCIDENTS BUTTON -->
+	    <li class="dropdown">
+	      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Routing Incidents<span class="caret"></span>
+	      </a>
+
+	      <!-- INCIDENTS MENU -->
+	      <ul class="dropdown-menu">
+		<li><a href="/incident">Database</a></li>
+		<li><a href="/timeline">Timeline</a></li>
+	      </ul>
+	    </li>
+	  </ul>
+	</div>
+      </div>
+    </nav>
+
+    <div class="container ears-top">
+      <div class="row">
+	
+	<div class="col-md-12" role="main">
+	
+
+	  <div class="page-header">
+  <h1>RPKI Workshop Demonstration #1<br>
+    Architecture Overview</h1>
+</div>
+
+<div class="container">
+<p>
+
+RPKI.NET provides an administrative interface for managing the RPKI.NET system.
+The <a href="https://www.youtube.com/watch?v=vVVJGKIcU-s">RPKI Workshop
+Demonstration #1: Architecture Overview</a> video gives an overview of the
+architecture of the RPKI.NET workshop.
+The chart on this page is intended to be used with this video.
+
+<p>
+
+<b>Notes:</b>
+<ol>
+
+<li>
+This video does not use the RPKI Workshop system at all; it discusses the
+architecture of the RPKI Workshop system.  However, the RPKI Workshop system
+will be used in later videos.  Instructions for downloading and setting up
+the RPKI Workshop VM may be found in the Workshop Demonstration #2 video,
+<a href="https://www.youtube.com/watch?v=zkYmciQarc8">Installation and Setup</a>.
+
+<p>
+
+<li>
+The chart divides the video into a set of topics and subtopics.  Each subtopic
+is provided with a "Time Mark" to show where in the video the subtopic is
+discussed.
+
+<p>
+
+<li>
+The Time Marks are approximate.  Most will be a couple seconds prior to the
+actual discussion of each subtopic.  This will hopefully provide a little
+context for the subtopic prior to it actually being discussed.
+
+<p>
+
+</ol>
+
+<br><br>
+
+<table border=1 align=center class="table">
+
+<tr>
+  <th>Topic</th>
+  <th>Time Mark</th>
+  <th>Subtopic</th>
+</tr>
+
+
+<tr>
+  <td class=topic rowspan=2>Introduction</td>
+  <td class=timer>0:00</td>
+  <td class=subtopic>&nbsp;</td>
+</tr>
+
+<tr>
+  <td class=timer>0:35</td>
+  <td class=subtopic>System set-up</td>
+</tr>
+
+<tr>
+  <td class=topic rowspan=8>Host Machine</td>
+  <td class=timer>0:50</td>
+  <td class=subtopic>Host Machine diagram</td>
+</tr>
+
+<tr>
+  <td class=timer>0:55</td>
+  <td class=subtopic>VM (RPKI workshop image)</td>
+</tr>
+
+<tr>
+  <td class=timer>1:10</td>
+  <td class=subtopic>2 Primary Routers:<br>
+    <table class="table">
+      <tr><th width=20>&nbsp;</th><th>Router</th><th>ASN</th><th>Eth0</th></tr>
+      <tr><td>&nbsp;</td><td>B0</td><td>65533</td><td>10.0.3.10</tr></td>
+      <tr><td>&nbsp;</td><td>B1</td><td>65534</td><td>10.0.3.11</tr></td>
+    </table>
+  </td>
+</tr>
+
+<tr>
+  <td class=timer>1:42</td>
+  <td class=subtopic>Virtual routers in Linux Containers</td>
+</tr>
+
+<tr>
+  <td class=timer>2:09</td>
+  <td class=subtopic>Student Router R0 (or Laboratory-User Router R0):<br>
+    <table class="table">
+      <tr><th width=20>&nbsp;</th><th>Router</th><th>ASN</th><th>Eth0</th><th>Has</th></tr>
+      <tr><td>&nbsp;</td><td>R0</td><td>65001</td><td>10.0.3.12</td><td>192.168.0.0/24</td></tr>
+    </table>
+  </td>
+</tr>
+
+<tr>
+  <td class=timer>2:45</td>
+  <td class=subtopic>Additional Student Routers:<br>
+  <table class="table">
+    <tr><th width=20>&nbsp;</th><th>Router</th><th>ASN</th><th>Eth0</th><th>Has</th></tr>
+    <tr><td>&nbsp;</td><td>R1</td><td>65002</td><td>10.0.3.13</td><td>192.168.1.0/24</td></tr>
+    <tr><td>&nbsp;</td><td colspan=4 align=left><i>R2 ... R14</i></td></tr>
+    <tr><td>&nbsp;</td><td>R15</td><td>65016</td><td>10.0.3.27</td><td>192.168.15.0/24</td></tr>
+    <tr><td>&nbsp;</td><td>R16</td><td>65017</td><td>10.0.3.28</td><td>192.168.16.0/24</td></tr>
+  </table>
+  </th>
+</tr>
+
+<tr>
+  <td class=timer>3:16</td>
+  <td class=subtopic><i>rpki.net</i> management interface and <i>sshd</i></td>
+</tr>
+
+<tr>
+  <td class=timer>3:33</td>
+  <td class=subtopic>Connecting other machines to RPKI on the Host Machine<br>
+    (port forwarding to the Host Machine)</td>
+</tr>
+
+<tr>
+  <td class=topic rowspan=5>RPKI Workshop<br>"Fake" Resource Tree</td>
+  <td class=timer>4:15</td>
+  <td class=subtopic>Fake IANA root (Has: 0.0.0.0/0)</td>
+</tr>
+
+<tr>
+  <td class=timer>4:27</td>
+  <td class=subtopic>Workshop Allocation (Has: 192.168.0.0/16)</td>
+</tr>
+
+<tr>
+  <td class=timer>4:41</td>
+  <td class=subtopic>User-specified Allocations to Workshop</td>
+</tr>
+
+<tr>
+  <td class=timer>4:49</td>
+  <td class=subtopic>First Standard Allocation to Workshop:<br>
+    <table class="table">
+      <tr><th width=20>&nbsp;</th><th>User</th><th>Router</th><th>Has</th></tr>
+      <tr><td>&nbsp;</td><td>labuser00</td><td>R0</td><td>192.168.0.0/24</td></tr>
+    </table>
+  </td>
+</tr>
+
+<tr>
+  <td class=timer>5:10</td>
+  <td class=subtopic>All Standard Allocations to Workshop:<br>
+    <table class="table">
+      <tr><th width=20>&nbsp;</th><th>User</th><th>Router</th><th>Has</th></tr>
+      <tr><td>&nbsp;</td><td>labuser00</td><td>R0</td><td>192.168.0.0/24</td></tr>
+      <tr><td>&nbsp;</td><td>labuser01</td><td>R1</td><td>192.168.1.0/24</td></tr>
+      <tr><td>&nbsp;</td><td colspan=4 align=left><i>R2 ... R15</i></td></tr>
+      <tr><td>&nbsp;</td><td>labuser16</td><td>R16</td><td>192.168.16.0/24</td></tr>
+    </table>
+  </td>
+</tr>
+
+<tr>
+  <td class=topic>Things to Do</td>
+  <td class=timer>5:24</td>
+  <td class=subtopic>Several tasks that may be done with the RPKI Workshop</td>
+</tr>
+
+</table>
+</div>
+
+<br><br>
+
+<hr>
+
+This document is prepared under Contract Number HSHQDC-14-C-B0035 for DHS
+S&amp;T CSD
+<p>
+Copyright &copy; 2016, Parsons, Inc.<br>
+All rights reserved.
+
+
+	</div>
+
+	
+      </div>
+    </div>
+  </body>
+
+  <script type="application/ld+json">
+   {
+     "@context": "http://schema.org",
+     "@type": "Organization",
+     "url": "https://securerouting.net",
+     "logo": "https://securerouting.net/images/secure-routing-cloud.svg"
+   }
+  </script>
+  <script type="application/ld+json">
+   {
+     "@context": "http://schema.org",
+     "@type": "Organization",
+     "url": "https://securerouting.net",
+     "name": "Secure Routing",
+     "sameAs" : [
+       "https://www.youtube.com/channel/UCVOrJW51e8uu6aO_qnkk6qA"
+     ],
+   }
+  </script>
+</html>
+

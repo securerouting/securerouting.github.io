@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <title>Secure Routing -- Protect Your Infrastructure</title>
+
+    <link href="http://localhost:3000/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://localhost:3000/css/ears.css" rel="stylesheet">
+    <link href="http://localhost:3000/css/style.css" rel="stylesheet">
+
+    <script src="/js/timeline/timeline_ajax/simile-ajax-api.js?bundle=true" type="text/javascript"></script>
+    <script src="/js/timeline/timeline_js/timeline-api.js?bundle=true" type="text/javascript"></script>
+  </head>
+
+  <body>
+
+    <script src="/js/jquery.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script>
+     $(document).ready(function () {
+       $('.dropdown-toggle').dropdown();
+     });
+    </script>
+
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container-fluid">
+	<div class="navbar-header">
+	  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+	  </button>
+	  <a class="navbar-brand" href="/">Secure Routing</a>
+	</div>
+
+	<div class="collapse navbar-collapse" id="navbar-collapse">
+	  <ul class="nav navbar-nav earsnav">
+	    <!-- LEARN -->
+	    <li class="dropdown">
+	      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Learn <span class="caret"></span>
+	      </a>
+
+	      <ul class="dropdown-menu">
+		<li><a href="/sbs-guide">Step-by-Step Guide</a></li>
+		<li><a href="https://www.youtube.com/channel/UCVOrJW51e8uu6aO_qnkk6qA">Youtube Channel</a></li>
+		<li><a href="/specifications">Specifications</a></li>
+		<li><a href="https://datatracker.ietf.org/wg/sidr/">Join The SIDR Working Group</a></li>
+	      </ul>
+	    </li>
+
+	    <!-- TRY -->
+	    <li class="dropdown">
+	      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Try <span class="caret"></span>
+	      </a>
+
+	      <ul class="dropdown-menu">
+		<li><a href="/workshop">The Demonstration Workshop</a></li>
+	      </ul>
+	    </li>
+
+	    <!-- DEPLOY -->
+	    <li class="dropdown">
+	      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Deploy <span class="caret"></span>
+	      </a>
+
+	      <!-- TRY MENU -->
+	      <ul class="dropdown-menu">
+		  <li><a href="/bird">Install BIRD</a></li>
+		  <li><a href="http://www-x.antd.nist.gov/bgpsrx/">Install Quagga</a></li>
+		  <li><a href="http://rpki.net">Install RPKI.NET</a></li>
+		  <li><a href="http://sourceforge.net/projects/rpstir">Install RPSTIR</a></li>
+	      </ul>
+	    </li>
+
+	    <!-- INCIDENTS BUTTON -->
+	    <li class="dropdown">
+	      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Routing Incidents<span class="caret"></span>
+	      </a>
+
+	      <!-- INCIDENTS MENU -->
+	      <ul class="dropdown-menu">
+		<li><a href="/incident">Database</a></li>
+		<li><a href="/timeline">Timeline</a></li>
+	      </ul>
+	    </li>
+	  </ul>
+	</div>
+      </div>
+    </nav>
+
+    <div class="container ears-top">
+      <div class="row">
+	
+	<div class="col-md-12" role="main">
+	
+
+	  <div class="page-header">
+  <h1>RPKI Workshop Demonstration #3<br>
+    Interface Overview</h1>
+</div>
+
+<div class="container">
+<p>
+
+The <a href="https://www.youtube.com/watch?v=9nNCfp-InZk"> RPKI Workshop
+Demonstration #3: Interface Overview</a> video gives an overview of the
+RPKI.NET graphical interface.  This GUI provides an administrative interface
+for managing the RPKI.NET system.  The charts on this page are intended to
+be used with this video.
+
+<p>
+
+<b>Notes:</b>
+<ol>
+
+<li>
+It is assumed the user will be running these commands on a local copy of the
+RPKI Workshop virtual machine.  Instructions for downloading and setting up
+the RPKI Workshop VM may be found in the Workshop Demonstration #2 video,
+<a href="https://www.youtube.com/watch?v=zkYmciQarc8">Installation and Setup</a>.
+
+<p>
+
+<li>
+Most user names are specific to that VM and won't be used in a production
+environment.  Similarly, the address ranges are purely for the sake of
+example.
+
+<p>
+
+<li>
+The tasks are broken down into a number of sub-tasks.  Each sub-task is then
+divided into a number of steps.  The GUI actions for each step are provided
+with a "Time Mark" to show where in the video each step takes place.
+
+<p>
+
+<li>
+The video is demonstrating how to use the GUI.  Consequently, there will be
+some steps that are repetitive and won't necessarily be needed every time the
+sub-task or task is performed.
+
+<p>
+
+<li>
+The Time Marks are approximate.  Most will be a couple seconds prior to the
+actual action taken in each step.  This will hopefully provide a little
+context for the step prior to it actually being performed.
+
+<p>
+
+<li>
+The commands are all run in a web browser that is connected to the RPKI.NET
+administrative GUI.
+<br>
+
+<p>
+
+<li>
+For part of this video, we'll be using the "labuser08" GUI account.  There are
+other pre-defined users in the workshop VM -- "labuser00" through "labuser16".
+
+</ol>
+
+<br><br>
+
+<table class="table" border=1 align=center>
+
+<tr>
+  <th>Task</th>
+  <th>Sub-Task</th>
+  <th>Time Mark</th>
+  <th>Page in GUI</th>
+  <th>Thing to Click</th>
+  <th>Text to Enter</th>
+</tr>
+
+
+<tr>
+  <td class="task" rowspan="4">Login&nbsp;to&nbsp;RPKI.NET&nbsp;GUI<br>(labuser08)</td>
+  <td class="subtask">Provide login data for labuser08</td>
+  <td class="timer">0:10</td>
+  <td class="guipage" rowspan="4">Login</td>
+  <td class="widgetin"></td>
+  <td class="kbdin"></td>
+</tr>
+
+<tr>
+  <td class="subtask"-field>enter user</td>
+  <td class="timer">0:20</td>
+  <td class="widgetin"></td>
+  <td class="kbdin">labuser08</td>
+</tr>
+
+<tr>
+  <td class="subtask"-field>enter password</td>
+  <td class="timer">0:25</td>
+  <td class="widgetin"></td>
+  <td class="kbdin">labuser08</td>
+
+</tr>
+
+<tr>
+  <td class="subtask">&nbsp;</td>
+  <td class="timer">0:28</td>
+  <td class="widgetin">"Login" button</td>
+  <td class="kbdin"></td>
+</tr>
+
+<tr>
+  <td class="task" rowspan="11">Tour of Dashboard</td>
+  <td class="subtask">Resources section</td>
+  <td class="timer">0:55</td>
+  <td class="guipage" rowspan="11">labuser08's dashboard</td>
+  <td class="widgetin"></td>
+  <td class="kbdin"></td>
+</tr>
+
+<tr>
+  <td class="subtask">RPKI Workshop "Fake" Resource Tree diagram</td>
+  <td class="timer">1:15</td>
+  <td class="widgetin"></td>
+  <td class="kbdin"></td>
+</tr>
+
+<tr>
+  <td class="subtask">Unallocated Resources section</td>
+  <td class="timer">1:32</td>
+  <td class="widgetin"></td>
+  <td class="kbdin"></td>
+</tr>
+
+<tr>
+  <td class="subtask">ROAs section</td>
+  <td class="timer">1:50</td>
+  <td class="widgetin"></td>
+  <td class="kbdin"></td>
+</tr>
+
+<tr>
+  <td class="subtask">Ghostbusters section</td>
+  <td class="timer">2:23</td>
+  <td class="widgetin"></td>
+  <td class="kbdin"></td>
+</tr>
+
+<tr>
+  <td class="subtask">Router Certificate Requests section</td>
+  <td class="timer">2:43</td>
+  <td class="widgetin"></td>
+  <td class="kbdin"></td>
+</tr>
+
+<tr>
+  <td class="subtask">Children section</td>
+  <td class="timer">2:50</td>
+  <td class="widgetin"></td>
+  <td class="kbdin"></td>
+</tr>
+
+<tr>
+  <td class="subtask">Parents section</td>
+  <td class="timer">3:00</td>
+  <td class="widgetin"></td>
+  <td class="kbdin"></td>
+</tr>
+
+<tr>
+  <td class="subtask">Repositories section</td>
+  <td class="timer">3:05</td>
+  <td class="widgetin"></td>
+  <td class="kbdin"></td>
+</tr>
+
+<tr>
+  <td class="subtask">top-left menu of commands</td>
+  <td class="timer">3:10</td>
+  <td class="widgetin"></td>
+  <td class="kbdin"></td>
+</tr>
+
+<tr>
+  <td class="subtask">&nbsp;</td>
+  <td class="timer">3:26</td>
+  <td class="widgetin">"workshop" link in Parent section</td>
+  <td class="kbdin"></td>
+</tr>
+
+<tr>
+  <td class="task">Logout&nbsp;of&nbsp;RPKI.NET&nbsp;GUI<br>(labuser08)</td>
+  <td class="subtask">&nbsp;</td>
+  <td class="timer">3:38</td>
+  <td class="guipage"> Parent: workshop</td>
+  <td class="widgetin">"Log Out" link in top stripe</td>
+  <td class="kbdin"></td>
+</tr>
+
+<tr>
+  <td class="task" rowspan="4">Login&nbsp;to&nbsp;RPKI.NET&nbsp;GUI<br>(root)</td>
+  <td class="subtask">Provide login data for root</td>
+  <td class="timer">3:42</td>
+  <td class="guipage" rowspan="4">Login</td>
+  <td class="widgetin"></td>
+  <td class="kbdin"></td>
+</tr>
+
+<tr>
+  <td class="subtask"-field>enter user</td>
+  <td class="timer">3:46</td>
+  <td class="widgetin"></td>
+  <td class="kbdin"></td>
+root
+</tr>
+
+<tr>
+  <td class="subtask"-field>enter password</td>
+  <td class="timer">3:48</td>
+  <td class="widgetin"></td>
+  <td class="kbdin">rpkiworkshop</td>
+
+</tr>
+
+<tr>
+  <td class="subtask">&nbsp;</td>
+  <td class="timer">3:49</td>
+  <td class="widgetin">"Login" button</td>
+  <td class="kbdin"></td>
+</tr>
+
+<tr>
+  <td class="task" rowspan="4">Using Handles</td>
+  <td class="subtask">List of user handles displayed</td>
+  <td class="timer">3:51</td>
+  <td class="guipage" rowspan="2">Handle List</td>
+  <td class="widgetin"></td>
+  <td class="kbdin"></td>
+</tr>
+
+<tr>
+  <td class="subtask">Change to user labuser08</td>
+  <td class="timer">3:55</td>
+  <td class="widgetin">"labuser08" link</td>
+  <td class="kbdin"></td>
+</tr>
+
+<tr>
+  <td class="subtask">Select a new identity to use</td>
+  <td class="timer">4:08</td>
+  <td class="guipage">labuser08's dashboard</td>
+  <td class="widgetin">"select identity" link in top-left menu</td>
+  <td class="kbdin"></td>
+</tr>
+
+<tr>
+  <td class="subtask">Switch to workshop user</td>
+  <td class="timer">4:13</td>
+  <td class="guipage">Handle List</td>
+  <td class="widgetin">"workshop" link</td>
+  <td class="kbdin"></td>
+</tr>
+
+<tr>
+  <td class="task" rowspan="3">Resource Discussion</td>
+  <td class="subtask"></td>
+  <td class="timer">4:18</td>
+  <td class="guipage" rowspan="4">workshop's dashboard</td>
+  <td class="widgetin"></td>
+  <td class="kbdin"></td>
+</tr>
+
+<tr>
+  <td class="subtask">workshop's allocated resources in Children section</td>
+  <td class="timer">4:40</td>
+  <td class="widgetin"></td>
+  <td class="kbdin"></td>
+</tr>
+
+<tr>
+  <td class="subtask">"IANA" is workshop's parent</td>
+  <td class="timer">4:52</td>
+  <td class="widgetin"></td>
+  <td class="kbdin"></td>
+</tr>
+
+<tr>
+  <td class="task" rowspan="2">Switch User<br>(IANA)</td>
+  <td class="subtask">&nbsp;</td>
+  <td class="timer">4:55</td>
+  <td class="widgetin">"select identity" link in top-left menu</td>
+  <td class="kbdin"></td>
+</tr>
+
+<tr>
+  <td class="subtask">&nbsp;</td>
+  <td class="timer">4:57</td>
+  <td class="guipage">Handle List</td>
+  <td class="widgetin">"IANA" link</td>
+  <td class="kbdin"></td>
+</tr>
+
+<tr>
+  <td class="task" rowspan="3">Resource Discussion</td>
+  <td class="subtask">IANA's Resources and Unallocated Resources</td>
+  <td class="timer">4:59</td>
+  <td class="guipage" rowspan="3">IANA's dashboard</td>
+  <td class="widgetin"></td>
+  <td class="kbdin"></td>
+</tr>
+
+<tr>
+
+  <td class="subtask">&nbsp;</td>
+  <td class="timer">5:13</td>
+  <td class="widgetin"></td>
+  <td class="kbdin"></td>
+</tr>
+
+<tr>
+  <td class="subtask">workshop environment's network diagram</td>
+  <td class="timer">5:21</td>
+  <td class="widgetin"></td>
+  <td class="kbdin"></td>
+</tr>
+
+<tr>
+  <td class="task" rowspan="18">Quagga Interface</td>
+  <td class="subtask">Create terminal window</td>
+  <td class="timer">5:47</td>
+  <td class="guipage" rowspan="18">terminal window</td>
+  <td class="widgetin"></td>
+  <td class="kbdin"></td>
+</tr>
+
+<tr>
+  <td class="subtask">Login to Quagga as r8</td>
+  <td class="timer">5:50</td>
+  <td class="widgetin"></td>
+  <td class="kbdin">ssh&nbsp;r8@trusty</td>
+</tr>
+
+<tr>
+  <td class="subtask"-field>enter login password</td>
+  <td class="timer">5:56</td>
+  <td class="widgetin"></td>
+  <td class="kbdin">fnord</td>
+
+</tr>
+
+<tr>
+  <td class="subtask"-field>enter Quagga password</td>
+  <td class="timer">6:00</td>
+  <td class="widgetin"></td>
+<td class="kbdin">
+  fnord</td>
+</tr>
+
+<tr>
+  <td class="subtask">Show BGP Neighbors</td>
+  <td class="timer">6:09</td>
+  <td class="widgetin"></td>
+<td class="kbdin">
+  show&nbsp;bgp&nbsp;neighbors</td>
+</tr>
+
+<tr>
+  <td class="subtask"-field>show neighbor at 10.0.3.10</td>
+  <td class="timer">6:15</td>
+  <td class="widgetin"></td>
+  <td class="kbdin"></td>
+</tr>
+
+<tr>
+  <td class="subtask"-field>show neighbor at 10.0.3.11, with AS 65533</td>
+  <td class="timer">6:23</td>
+  <td class="widgetin"></td>
+  <td class="kbdin"></td>
+</tr>
+
+<tr>
+  <td class="subtask">Show BGP Summary</td>
+  <td class="timer">6:33</td>
+  <td class="widgetin"></td>
+<td class="kbdin">
+  show&nbsp;ip&nbsp;bgp</td>
+</tr>
+
+<tr>
+  <td class="subtask">Explain entries in table's rows:</td>
+  <td class="timer">6:45</td>
+  <td class="widgetin"></td>
+  <td class="kbdin"></td>
+</tr>
+
+<tr>
+  <td class="subtask"-field>identity - unique Quagga key</td>
+  <td class="timer">6:49</td>
+  <td class="widgetin"></td>
+  <td class="kbdin"></td>
+</tr>
+
+<tr>
+  <td class="subtask"-field>validation-status field</td>
+  <td class="timer">6:52</td>
+  <td class="widgetin"></td>
+  <td class="kbdin"></td>
+</tr>
+
+<tr>
+  <td class="subtask"-field>network block</td>
+  <td class="timer">6:59</td>
+  <td class="widgetin"></td>
+  <td class="kbdin"></td>
+</tr>
+
+<tr>
+  <td class="subtask"-field>next hop in path</td>
+  <td class="timer">7:06</td>
+  <td class="widgetin"></td>
+  <td class="kbdin"></td>
+</tr>
+
+<tr>
+  <td class="subtask"-field>metric and path</td>
+  <td class="timer">7:16</td>
+  <td class="widgetin"></td>
+  <td class="kbdin"></td>
+</tr>
+
+<tr>
+  <td class="subtask"-field>origin code</td>
+  <td class="timer">7:31</td>
+  <td class="widgetin"></td>
+  <td class="kbdin"></td>
+</tr>
+
+<tr>
+  <td class="subtask"-field>validation status</td>
+  <td class="timer">7:42</td>
+  <td class="widgetin"></td>
+  <td class="kbdin"></td>
+</tr>
+
+<tr>
+  <td class="subtask"-field>valid and invalid entries</td>
+  <td class="timer">8:41</td>
+  <td class="widgetin"></td>
+  <td class="kbdin"></td>
+</tr>
+
+</table>
+</div>
+
+<br><br>
+
+<hr>
+
+This document is prepared under Contract Number HSHQDC-14-C-B0035 for DHS
+S&amp;T CSD
+<p>
+Copyright &copy; 2016, Parsons, Inc.<br>
+All rights reserved.
+
+<br><br><br><br>
+
+
+	</div>
+
+	
+      </div>
+    </div>
+  </body>
+
+  <script type="application/ld+json">
+   {
+     "@context": "http://schema.org",
+     "@type": "Organization",
+     "url": "https://securerouting.net",
+     "logo": "https://securerouting.net/images/secure-routing-cloud.svg"
+   }
+  </script>
+  <script type="application/ld+json">
+   {
+     "@context": "http://schema.org",
+     "@type": "Organization",
+     "url": "https://securerouting.net",
+     "name": "Secure Routing",
+     "sameAs" : [
+       "https://www.youtube.com/channel/UCVOrJW51e8uu6aO_qnkk6qA"
+     ],
+   }
+  </script>
+</html>
+
