@@ -67,3 +67,17 @@ div.panel-primary > div.panel-heading > a:active
     text-decoration: underline;
 }
     
+.actions td.descr { background-color: black; }
+.actions td.descr { background-color: LightSkyBlue; }
+.actions td.guipage { background-color: LightSkyBlue; }
+.actions td.guipage { background-color: LightSkyBlue; text-align: center }
+.actions td.kbdin { background-color: yellow; }
+.actions td.subtask { background-color: PaleVioletRed; }
+.actions td.subtask-field { background-color: PaleVioletRed; padding-left: 1.5em }
+.actions td.subtopic { background-color: PaleVioletRed; }
+.actions td.task { background-color: LightCyan; }
+.actions td.task { background-color: LightCyan; text-align: center }
+.actions td.task-field { background-color: LightCyan; padding-left: 1.5em }
+.actions td.timer { background-color: LightGreen; text-align: center }
+.actions td.topic { background-color: LightSkyBlue; text-align: center}
+.actions td.widgetin { background-color: tan; }
