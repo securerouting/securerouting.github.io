@@ -1,0 +1,2787 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <title>Secure Routing -- Protect Your Infrastructure</title>
+
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/ears.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+
+    <script src="/js/jquery.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script>
+     $(document).ready(function () {
+       $('.dropdown-toggle').dropdown();
+     });
+    </script>
+
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container-fluid">
+	<div class="navbar-header">
+	  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+	  </button>
+	  <a class="navbar-brand" href="/">Secure Routing</a>
+	</div>
+
+	<div class="collapse navbar-collapse" id="navbar-collapse">
+	  <ul class="nav navbar-nav earsnav">
+	    <!-- LEARN -->
+	    <li class="dropdown">
+	      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Learn <span class="caret"></span>
+	      </a>
+
+	      <ul class="dropdown-menu">
+		<li><a href="/sbs-guide">Step-by-Step Guide</a></li>
+		<li><a href="https://www.youtube.com/channel/UCVOrJW51e8uu6aO_qnkk6qA">Youtube Channel</a></li>
+		<li><a href="/specifications.html">Specifications</a></li>
+		<li><a href="https://datatracker.ietf.org/wg/sidr/">Join The SIDR Working Group</a></li>
+	      </ul>
+	    </li>
+
+	    <!-- TRY -->
+	    <li class="dropdown">
+	      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Try <span class="caret"></span>
+	      </a>
+
+	      <ul class="dropdown-menu">
+		<li><a href="/workshop.html"">The Demonstration Workshop</a></li>
+	      </ul>
+	    </li>
+
+	    <!-- DEPLOY -->
+	    <li class="dropdown">
+	      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Deploy <span class="caret"></span>
+	      </a>
+
+	      <!-- TRY MENU -->
+	      <ul class="dropdown-menu">
+		  <li><a href="/bird.html">Install BIRD</a></li>
+		  <li><a href="http://www-x.antd.nist.gov/bgpsrx/">Install Quagga</a></li>
+		  <li><a href="http://rpki.net">Install RPKI.NET</a></li>
+		  <li><a href="http://sourceforge.net/projects/rpstir">Install RPSTIR</a></li>
+	      </ul>
+	    </li>
+
+	    <!-- INCIDENTS BUTTON -->
+	    <li class="dropdown">
+	      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Routing Incidents<span class="caret"></span>
+	      </a>
+
+	      <!-- INCIDENTS MENU -->
+	      <ul class="dropdown-menu">
+		<li><a href="/incident">Database</a></li>
+		<li><a href="/timeline.html"">Timeline</a></li>
+	      </ul>
+	    </li>
+	  </ul>
+	</div>
+      </div>
+    </nav>
+
+    <div class="container ears-top">
+      <div class="row">
+	
+	<div class="col-md-12" role="main">
+	
+
+	  <div class="page-header">
+  <h1><a href="/sbs-guide">Routing Security Step-by-Step Guide</a></h1>
+</div>
+
+<div class="panel panel-pribary">
+  <div class="panel-heading">Configuration Guide</div>
+<div class="panel-body">
+
+<link href="/css/sbs-guide.css" rel="stylesheet">
+
+<!*****************************************************************************>
+
+<table border=0>
+<tr>
+
+<td width="50%">
+
+<a name="sect-intro"></a>
+<h2>1 Introduction</h2>
+
+After installing the <rpki>rpki.net</rpki> software (as described in
+the <a href="install">Installation Guide</a>)
+the software must be configured to ensure proper execution.  Much of the
+configuration is handled at install time and uses a set of standard defaults.
+The defaults are acceptable for most installations, but they should be
+examined to confirm that they meet the requirements of that installation.
+
+<p>
+
+It is assumed that the vast majority of <rpki>rpki.net</rpki> installations
+will be Relying Parties, with only a relatively small number of installations
+also acting as Certification Authorities.  For this reason, the initial
+version of the Configuration Guide focuses on the RP software.  The
+Certification-Authority part of the Configuration Guide will be expanded
+in due course.
+
+<p>
+
+This document is prepared under Contract Number HSHQDC-14-C-B0035 for
+DHS S&amp;T CSD
+
+<p>
+
+<!*********************************************************>
+
+<a name="rp-moving-forward"></a>
+<h3>1.1 How to Proceed?</h3>
+
+<p>
+
+Three questions will give broad answers to what must be done next to
+configure your <rpki>rpki.net</rpki> system.
+
+<ol>
+<li>Must I configure the Relying-Party tools?<p>
+You must configure the Relying-Party tools if you operate routers and want
+to use RPKI data to help secure them.
+
+<p>
+
+Most installations will only need to configure the Relying-Party tools.
+
+<p>
+
+<li>Must I configure the Configuration-Authority tools?<p>
+You must configure the Configuration-Authority tools if you control RPKI
+resources and need software to let you request certificates, issue ROAs,
+or issue certificates to others.
+
+<p>
+
+Configuration Authorities are usually Relying Parties as well, so you will
+probably want to start by configuring the Relying-Party tools.  After doing
+so, the CA tools should be configured.
+
+<p>
+
+<li>What is the topology of my Configuration-Authority?<p>
+If you are running the Configuration-Authority tools, you must decide how
+to distribute the CA tools on your network.  The CA tools may run on a
+single host or they may be distributed on more than one host.  This will
+determine the settings of various parameters in the CA <file>rpki.conf</file>
+configuration file.
+
+<p>
+
+</ol>
+
+<p>
+
+The remaining sections in this Guide provide further details and instructions
+for configuring the software for the different types of RPKI systems.
+
+<p>
+
+<!*****************************************************************************>
+
+<td width="50%">
+<h1>Table of Contents</h1>
+<p>
+
+<ul class="toc">
+<li><a href="#sect-intro">1 Introduction</a>
+<ul class="toc">
+<li><a href="#rp-moving-forward">1.1 How to Proceed?</a>
+</ul>
+<p>
+
+<li><a href="#sect-rp">2 Setting Up a Relying Party System</a>
+<ul class="toc">
+<li><a href="#rp-configs">2.1 Files and Directories</a>
+<ul class="toc">
+<li><a href="#rp-configs-rpki-conf">2.1.1 <file>rcynic.conf</file> Configuration File</a>
+<li><a href="#rp-configs-trust-anchors">2.1.2 Trust Anchors and Trust Anchor Locators</a>
+<li><a href="#rp-configs-select-tas">2.1.3 Selecting Trust Anchors</a>
+</ul>
+<p>
+
+<li><a href="#rp-rcynic">2.2 <cmd>rcynic</cmd> Configuration</a>
+<ul class="toc">
+<li><a href="#rp-rcynic-cron">2.2.1 Running <cmd>rcynic</cmd> from <cmd>cron()</cmd></a>
+<li><a href="#rp-rcynic-chroot">2.2.2 Running <cmd>rcynic</cmd> in a <syscall>chroot()</syscall> Environment</a>
+<ul class="toc">
+<li><a href="#rp-rcynic-chroot-mkjail">2.2.2.1 Creating the <syscall>chroot</syscall> Jail Environment</a>
+<li><a href="#rp-rcynic-chroot-mksbins">2.2.2.2 Building Static Binaries</a>
+<li><a href="#rp-rcynic-chroot-syslogs">2.2.2.3 <cmd>syslog</cmd> from <syscall>chroot</syscall>ed Environments</a>
+</ul>
+</ul>
+<p>
+
+<li><a href="#rp-rpki-rtr">2.3 <cmd>rpki-rtr</cmd> Configuration</a>
+<ul class="toc">
+<li><a href="#rp-rpki-rtr-postproc">2.3.1 Post-processing of <cmd>rcynic</cmd> Output</a>
+<li><a href="#rp-rpki-rtr-listener">2.3.2 <cmd>rpki-rtr</cmd>'s Listener</a>
+<ul class="toc">
+<li><a href="#rp-rpki-rtr-listener-inetd">2.3.2.1 <cmd>rpki-rtr</cmd>'s Listener with <cmd>inetd</cmd></a>
+<li><a href="#rp-rpki-rtr-listener-sshd">2.3.2.2 <cmd>rpki-rtr</cmd>'s Listener with <cmd>sshd</cmd></a>
+<li><a href="#rp-rpki-rtr-listener-generic">2.3.2.3 <cmd>rpki-rtr</cmd>'s Listener with Generic Support</a>
+<li><a href="#rp-rpki-rtr-listener-other">2.3.2.4 <cmd>rpki-rtr</cmd>'s Listener with Other Programs</a>
+</ul>
+</ul>
+<p>
+
+<li><a href="#rp-cron-wrapper">2.4 Setting Up a Local <cmd>cron</cmd> Wrapper</a>
+<li><a href="#rp-hierarchical-rsync">2.5 Running a Hierarchical <cmd>rsync</cmd> Configuration</a>
+</ul>
+<p>
+
+<li><a href="#sect-ca">3 Setting Up a Configuration Authority System</a>
+<ul class="toc">
+<li><a href="#ca-configs">3.1 Files and Directories</a>
+<ul class="toc">
+<li><a href="#ca-rpki-conf">3.1.1 <file>rpki.conf</file> Configuration File</a>
+<ul class="toc">
+<li><a href="#ca-rpki-conf-daemons">3.1.1.1 Execution Flags</a>
+<li><a href="#ca-rpki-conf-autoconf">3.1.1.2 <arg>[autoconf]</arg> Entries</a>
+<li><a href="#ca-rpki-conf-myrpki">3.1.1.3 <arg>[myrpki]</arg> Entries</a>
+<li><a href="#ca-rpki-conf-rpkid">3.1.1.4 <arg>[rpkid]</arg> Entries</a>
+<li><a href="#ca-rpki-conf-irdbd">3.1.1.5 <arg>[irdbd]</arg> Entries</a>
+<li><a href="#ca-rpki-conf-pubd">3.1.1.6 <arg>[pubd]</arg> Entries</a>
+<li><a href="#ca-rpki-conf-rootd">3.1.1.7 <arg>[rootd]</arg> Entries</a>
+<li><a href="#ca-rpki-conf-web_portal">3.1.1.8 <arg>[web_portal]</arg> Entries</a>
+</ul>
+<li><a href="#ca-root-certs">3.1.2 Root Certificates</a>
+<li><a href="#ca-mysql-db">3.1.3 MySQL Database Configuration</a>
+<ul class="toc">
+<li><a href="#ca-mysql-db-auto">3.1.3.1 Automated Database Configuration</a>
+<li><a href="#ca-mysql-db-mano">3.1.3.2 Manual Database Configuration</a>
+</ul>
+<li><a href="#ca-rsyncd-conf">3.1.4 <file>rsyncd.conf</file> Configuration File</a>
+</ul>
+<p>
+<li><a href="#ca-irdbd">3.2 <cmd>irdbd</cmd> Configuration</a>
+<li><a href="#ca-pubd">3.3 <cmd>pubd</cmd> Configuration</a>
+<ul class="toc">
+<li><a href="#ca-pubd-same-server">3.3.1 Running <cmd>pubd</cmd> on the Same Server</a>
+<li><a href="#ca-pubd-diff-server">3.3.2 Running <cmd>pubd</cmd> on a Different Server</a>
+</ul>
+<p>
+<li><a href="#ca-rootd">3.4 <cmd>rootd</cmd> Configuration</a>
+<li><a href="#ca-rpkid">3.5 <file>rpkid</file> Configuration</a>
+<ul class="toc">
+<li><a href="#ca-rpkid-same-server">3.5.1 Running <cmd>rpkid</cmd> on the Same Server</a>
+<li><a href="#ca-rpkid-diff-server">3.5.2 Running <cmd>rpkid</cmd> on a Different Server</a>
+</ul>
+<p>
+
+<li><a href="#ca-data-init">3.6 Initialization of Certification Authority Data</a>
+<li><a href="#ca-web-interface">3.7 Web Interface Configuration</a>
+<ul>
+<li><a href="#ca-webint-config"> 3.7.1 Configuring the Web Portal</a>
+<li><a href="#ca-webint-superuser"> 3.7.2 Creating a Web Portal Superuser</a>
+<li><a href="#ca-webint-errors"> 3.7.3 Error Notifications via Email</a>
+<li><a href="#ca-webint-cronjobs"> 3.7.4 Cron Jobs for the Web Portal</a>
+<ul>
+<li><a href="#ca-webint-cronjobs-snapshots"> 3.7.4.1 Importing Routing Table Snapshots</a>
+<li><a href="#ca-webint-cronjobs-roas"> 3.7.4.2 Importing ROAs</a>
+<li><a href="#ca-webint-cronjobs-expchk"> 3.7.4.3 Expiration Checking</a>
+</ul>
+<li><a href="#ca-webint-verify">
+<li><a href="#ca-webint-superuser"> 3.7.5 Verify the Web Portal is Working</a>
+<li><a href="#ca-webint-diffuser"> 3.7.6 Running the Web Portal as a Different User</a>
+</ul>
+
+</ul>
+
+</tr>
+</table>
+
+<p>
+
+<!*****************************************************************************>
+
+<a name="sect-rp"></a>
+<h2>2 Setting Up a Relying Party System</h2>
+
+<p>
+
+There are two central Relying-Party tools:  <cmd>rcynic</cmd> and
+<cmd>rpki-rtr</cmd>.  These programs distribute, manage, and reference
+RPKI objects, such as configuration files, certificates, and trust anchors.
+
+<p>
+
+<ul>
+<li><cmd>rcynic</cmd> is the primary validation program and checks syntax,
+signatures, expiration times, and conformance to the profiles for RPKI
+objects.  The other Relying-Party tools use the output from <cmd>rcynic</cmd>.
+<p>
+<li><cmd>rpki-rtr</cmd> provides the <i>rpki-rtr</i> protocol.
+</ul>
+
+<p>
+
+A third tool, <cmd>rcynic-cron</cmd> runs as a <cmd>cron</cmd> job and
+executes <cmd>rcynic</cmd> and <cmd>rpki-rtr</cmd> periodically.
+
+<p>
+
+Configuration of these objects and the software tools is described in this
+section.
+
+<p>
+
+<!*********************************************************>
+
+<a name="rp-configs"></a>
+<h3>2.1 Files and Directories</h3>
+
+<p>
+
+The <rpki>rpki.net</rpki> software requires a configuration file and manages
+a number of files and directories.  Setting up this environment is a large
+part of configuring the Relying-Party software.  While much of it is done
+automatically by the installation process, there are portions that should be
+checked to ensure they are set properly.
+
+<p>
+
+<!*************************************>
+
+<a name="rp-configs-rpki-conf"></a>
+<h4>2.1.1 <file>rcynic.conf</file> Configuration File</h4>
+
+<p>
+
+The <file>rcynic.conf</file> configuration file is central to the
+functioning of the <rpki>rpki.net</rpki> Relying-Party software.  In
+particular, the file controls how and where <cmd>rcynic</cmd> fetches
+and stores data, and thus where <cmd>rpki-rtr</cmd> looks for data.
+Operational fine-tuning of other aspects of the Relying-Party software
+may be handled by way of this configuration file.
+
+<p>
+
+It is imperative that this file be set up properly in order for the
+<rpki>rpki.net</rpki> software to work as expected.  It should also be
+checked periodically to ensure that it hasn't been changed (inadvertently
+or maliciously) and that it still meets local requirements.  The
+<cmd>rcynicchk</cmd> command can assist with validating the configuration
+file.
+
+<p>
+
+<file>rcynic.conf</file> is an OpenSSL-style configuration file.  The default
+name for the configuration is "rcynic.conf", but this can be overridden with
+the <arg>-c</arg> option on the command line.  <cmd>rcynic</cmd>'s
+configuration parameters are in a section called "<arg>[rcynic]</arg>", the
+OpenSSL library configuration parameters can be set in this file as well.
+
+<p>
+
+A default version of this file is created when the <rpki>rpki.net</rpki>
+software is installed.  There are 27 options that may defined in
+<file>rcynic.conf</file>.  Most configuration parameters are optional and
+have reasonable defaults.  Generally speaking, the values in the default
+version of the file should be sufficient for most installations.  However,
+the default version should be checked to ensure that it meets local
+requirements.
+
+<p>
+
+The following fields <u>must</u> be checked for validity in the local
+environment:
+
+<ul>
+<li><arg>authenticated</arg> - directory for <cmd>rcynic</cmd>-validated
+objects.  Ensure that this directory exists and may be written by
+<cmd>rcynic</cmd>'s user.
+<p>
+
+<li><arg>lockfile</arg> - <cmd>rcynic</cmd>'s lock file.
+<p>
+
+<li><arg>log-level</arg> - logging level.
+<p>
+
+<li><arg>rsync-program</arg> - path to the <cmd>rsync</cmd> program.
+<p>
+
+<li><arg>trust-anchor</arg> - path to one RPKI Trust Anchor file.
+<p>
+
+<li><arg>trust-anchor-directory</arg> - the directory that will hold RPKI
+Trust Anchor and Trust Anchor Locator files.
+<p>
+
+<li><arg>trust-anchor-locator</arg> - path to one RPKI Trust Anchor Locator
+file.
+<p>
+
+<li><arg>unauthenticated</arg> - directory where <cmd>rcynic</cmd> will
+store unauthenticated data.
+<p>
+
+</ul>
+
+<p>
+
+Values do not need to be given to each of <arg>trust-anchor</arg>,
+<arg>trust-anchor-directory</arg>, and <arg>trust-anchor-locator</arg>.  It
+depends on how the local installation intends to manage its Trust Anchors.
+However, the fields that will be used must be set up properly.
+
+<p>
+
+More information about these configuration fields and the
+<file>rcynic.conf</file> configuration file in general may be found
+in the <a href="config-reference#rcynic.conf">Configuration
+File Reference</a>.
+
+<p>
+
+<!*************************************>
+
+<a name="rp-configs-trust-anchors"></a>
+<h4>2.1.2 Trust Anchors and Trust Anchor Locators</h4>
+
+<p>
+
+Trust Anchors (TAs) are represented as DER-formatted self-signed X.509
+certificates.
+
+<p>
+
+A Trust Anchor Locator (TALs) is a file in the format specified in
+<a href="http://www.rfc-editor.org/info/rfc6490">RFC-6490</a>
+, consisting of the <cmd>rsync</cmd> URI of the Trust Anchor
+followed by the Base64 encoding of the Trust Anchor's public key.
+
+<p>
+
+Either TAs or TALs (or a mix of both) can be used by the Relying-Party
+software.  The <file>cynic.conf</file> contains fields that specify the files
+or directories in which to find TAs and TALs.  The <cmd>make-tal.sh</cmd>
+script if you need to generate your own TAL for a Trust Anchor.
+
+<p>
+
+<table>
+<tr>
+<th width="200">Configuration Field
+<th>Description
+
+<tr>
+<td><arg>trust-anchor</arg>
+<td>This field specifies a Trust Anchor by naming the local file containing
+the TA.
+<p>
+
+<tr>
+<td><arg>trust-anchor-locator</arg>
+<td>This field specifies a Trust Anchor Locator by naming a local file
+containing the file containing the TAL.
+<p>
+
+<tr>
+<td><arg>trust-anchor-directory</arg>
+<td>This field specifies a directory containing Trust Anchors and or Trust
+Anchor Locators.  Files in the given will be processed as TAs if their names
+have the "<file>.cer</file>" extension, while while files will be handled as
+TALs if their names have the "<file>.tal</file>" extension.
+<p>
+
+</table>
+
+<p>
+
+Example of a minimal <file>rcynic.conf</file> configuration file specifying
+nothing but Trust Anchor Locators:
+
+<pre>
+    [rcynic]
+
+        trust-anchor-locator.0 = trust-anchors/apnic.tal
+        trust-anchor-locator.1 = trust-anchors/ripe.tal
+        trust-anchor-locator.2 = trust-anchors/afrinic.tal
+        trust-anchor-locator.3 = trust-anchors/lacnic.tal
+</pre>
+
+Eventually, this should all be collapsed into a single Trust Anchor,
+at which point the above configuration could become something like:
+
+<pre>
+    [rcynic]
+
+        trust-anchor-locator = trust-anchors/iana.tal
+</pre>
+
+<p>
+
+In practice, TALs are more common than TAs, as they reduce the amount
+of locally configured data.  TALs also allow the TA itself to be updated
+without requiring reconfiguration of validators like <cmd>rcynic</cmd>.
+
+<p>
+
+Trust Anchors do not need to be self-signed, but many programs
+(including OpenSSL) assume that they will be.  The
+<arg>allow-non-self-signed-trust-anchor</arg> field in the
+<file>rcynic.conf</file> may be set if you need to use a non-self-signed
+Trust Anchor.  Be aware that the results, while technically correct,
+may not be useful.
+
+<p>
+
+<!*************************************>
+
+<a name="rp-configs-select-tas"></a>
+<h4>2.1.3 Selecting Trust Anchors</h4>
+
+Validation in the RPKI system requires a set of Trust Anchors to use as a
+starting point when checking certificate chains.  By definition, Trust Anchors
+can only be selected by the Relying Party.
+
+<p>
+
+A default set of Trust Anchors is supplied with the <rpki>rpki.net</rpki>
+system.  The default Trust Anchors are installed as part of the normal
+installation process and these may be used if they suit your needs.
+However, the default set can be overridden if your installation has
+different requirements; see the <cmd>rcynic</cmd> documentation for details.
+
+<p>
+
+As of this writing, there is no single global Trust Anchor for the RPKI
+system, so you have to provide separate Trust Anchors for each Regional
+Internet Registry (RIR) which is publishing RPKI data.  The
+<rpki>rpki.net</rpki> installation process installs the TAs it knows about.
+
+<p>
+
+ARIN's trust anchor locator is absent from the default set of Trust Anchors.
+This is the direct result of a deliberate policy decision by ARIN to require
+anyone using their Trust Anchor to jump through legal hoops.  If ARIN changes
+this policy, their Trust Anchor Locator with be included along with those of
+the other RIRs.
+
+<p>
+
+Remember: It's only a Trust Anchor if you trust it.  That decision can only
+be made by you.
+
+<p>
+
+<!*********************************************************>
+
+<a name="rp-rcynic"></a>
+<h3>2.2 <cmd>rcynic</cmd> Configuration</h3>
+
+<p>
+
+<cmd>rcynic</cmd> is the primary validation program and checks syntax,
+signatures, expiration times, and conformance to the profiles for RPKI
+objects.  The other Relying-Party tools use the output from <cmd>rcynic</cmd>.
+
+<p>
+
+There are two methods of running <cmd>rcynic</cmd>.  Each installation must
+select the one that works best for them:
+
+<ul>
+<li>run from <cmd>cron</cmd> via <cmd>rcynic-cron</cmd>  (default method)
+<li>run <cmd>rcynic</cmd> in a <syscall>chroot()</syscall> jail environment
+</ul>
+
+<p>
+
+These methods are described below.
+
+<p>
+
+<!*************************************>
+
+<a name="rp-rcynic-cron"></a>
+<h4>2.2.1 Running <cmd>rcynic</cmd> from <cmd>cron()</cmd></h4>
+
+<p>
+
+The default configuration created by used in <rpki>rpki.net</rpki>'s software
+install process and the various packaging systems will run <cmd>rcynic</cmd>
+from <cmd>cron</cmd> using the <cmd>rcynic-cron</cmd> wrapper script.
+
+<p>
+
+An installation may have additional requirements that aren't handled by
+<cmd>rcynic-cron</cmd>, and a home-grown wrapper may be needed.  See the
+instructions for <a href="#rp-cron-wrapper">setting up your own
+<cmd>cron</cmd> jobs</a> if you need different functionality than
+<cmd>rcynic-cron</cmd> provides.
+
+<p>
+
+See the instructions for setting up
+<a href="#rp-hierarchical-rsync">hierarchical <cmd>rsync</cmd></a> if
+you need to build a complex topology of <cmd>rcynic</cmd> validators.
+
+<p>
+
+<!*************************************>
+
+<a name="rp-rcynic-chroot"></a>
+<h4>2.2.2 Running <cmd>rcynic</cmd> in a <syscall>chroot()</syscall> Environment</h4>
+
+<p>
+
+<cmd>rcynic</cmd> has the ability to do all of its work in a
+<syscall>chroot()</syscall> jail.  This used to be the default configuration,
+but this proved impractical to integrate properly with platform-specific
+packaging systems (e.g., FreeBSD <cmd>ports</cmd> or Ubuntu's
+<cmd>apt-get</cmd>).  This behavior can still be used, if needed,
+by installing from source and using the <arg>--enable-rcynic-jail</arg>
+option to <cmd>configure</cmd>.
+
+<p>
+
+This section describes the process of setting up <cmd>rcynic</cmd> in
+a <syscall>chroot</syscall>ed environment.  The installation scripts that ship
+with <cmd>rcynic</cmd> attempt to do this automatically when requested for the
+supported platforms.  However, the process is somewhat finicky, so some
+explanation is in order.  If you're running on one of the supported platforms,
+the following steps may be handled for you by the <file>Makefiles</file>,
+but you may still want to understand this process.
+
+<p>
+
+<cmd>rcynic</cmd> itself does not include any direct support for running
+<syscall>chroot</syscall>ed.  It is designed to be (relatively) easy to run
+in a <syscall>chroot</syscall> jail.
+
+<p>
+
+To enable <syscall>chroot</syscall> support during installation, you should
+install from source and use the <opt>--enable-rcynic-jail</opt> option to
+<cmd>./configure</cmd>.
+
+<p>
+
+<cmd>rcynic-cron</cmd> includes support for running
+<syscall>chroot</syscall>ed.  To use it, specify the <opt>--chroot</opt>
+option on <cmd>rcynic-cron</cmd>'s command line.  This will cause
+<cmd>rcynic-cron</cmd> to run <cmd>rcynic</cmd> in the
+<syscall>chroot</syscall>ed environment.  In order for this to work,
+<cmd>rcynic-cron</cmd> itself must run as root, since only root can
+issue the <syscall>chroot()</syscall> system call.  When run as root,
+<cmd>rcynic-cron</cmd> takes care of changing the user ID of each
+process it starts to the unprivileged <i>rcynic</i> user.
+
+<p>
+
+<!*****************>
+
+<a name="rp-rcynic-chroot-mkjail"></a>
+<h5>2.2.2.1 Creating the <syscall>chroot</syscall> Jail Environment</h5>
+
+By far the most complicated part of setting up <cmd>rcynic</cmd> to run in
+a <syscall>chroot</syscall> jail is setting the jail itself.  The underlying
+principal is simple and obvious:  a process running in the jail can't use
+files outside the jail.  The difficulty is that the list of files that needs
+to be in the jail is system-dependent, can be rather long, and sometimes can
+only be discovered by trial and error.
+
+<p>
+
+Set-up requirements:
+<ul>
+<li>You'll either need statically linked copies of <cmd>rcynic</cmd> and
+<cmd>rsync</cmd>, or you'll need to figure out which shared libraries these
+programs need (try using the <cmd>ldd</cmd> command).  Here we assume
+statically linked binaries, because that's simpler, but be warned that
+statically linked binaries are not even possible on some platforms, whether
+due to conscious decisions on the part of operating system vendors or due to
+hidden use of dynamic loading by other libraries at runtime.  Once again, the
+<file>Makefiles</file> attempt to do the correct thing for your environment
+if they know what it is, but they might get it wrong.
+
+<p>
+
+<li>You may find that the dynamic loader looks in a different place than
+you (and the <file>Makefiles</file>) would expect when running within the
+<syscall>chroot</syscall> jail.  For example, you might think that library
+<path>/usr/local/lib/libfoo.so</path> being installed into a jail named
+<path>/var/rcynic</path> should go into
+<path>/var/rcynic/usr/local/lib/libfoo.so</path>, but we've seen cases
+where the dynamic loader ended up expecting to find it in
+<path>/var/rcynic/lib/libfoo.so</path>.  Getting this right may require
+some trial and error testing.
+
+<p>
+
+<li>You'll need a <syscall>chroot</syscall> wrapper program.  As mentioned
+above, <cmd>rcynic-cron</cmd> can act as that wrapper program.  This is
+recommended because it works the same way on all platforms and doesn't require
+additional external programs.  Otherwise, you'll have to find a suitable
+wrapper program.  Your platform may already have one (.e.g., FreeBSD has
+<cmd>/usr/sbin/chroot</cmd>).  If it doesn't, you can download Wietse Venema's
+<cmd>chrootuid</cmd> program from <a
+href="ftp://ftp.porcupine.org/pub/security/chrootuid1.3.tar.gz">ftp://ftp.porcupine.org/pub/security/chrootuid1.3.tar.gz</a>.
+
+</ul>
+
+<p>
+
+<b>Warning</b>: The <cmd>chroot</cmd> program included in at least some
+GNU/Linux distributions is not adequate to this task.  You need a wrapper that
+knows how to drop privileges after performing the <syscall>chroot()</syscall>
+operation itself.  If in doubt, use <cmd>chrootuid</cmd>.
+
+<p>
+
+Absolute pathnames are used throughout these set-up instructions.  This is not
+an accident.  Programs running in jails under <cmd>cron</cmd> should not make
+assumptions about the current working directory or environment variable
+settings, and programs running in <syscall>chroot</syscall> jails would need
+different PATH settings anyway.  It is safest to specify the full paths..
+
+<p>
+
+Unfortunately, the precise details of setting up a proper
+<syscall>chroot</syscall> jail vary wildly from one system to another, so
+the following instructions may not be a precise match for the preferred
+way of doing this on your platform.  Please feel free to contribute scripts
+for other platforms.
+
+<p>
+
+<ol>
+
+<li>Build the static binaries.<br>
+You might want to test them at this stage too, although you can defer that
+until after you've got the jail built.
+<p>
+
+<li>Create a userid under which to run <cmd>rcynic</cmd>.<br>
+Here we'll assume that's a user named <i>rcynic</i>, whose default group is
+also named <i>rcynic</i>.  Do not add any other userids to the <i>rcynic</i>
+group unless you really know what you are doing.
+<p>
+
+<li>Build the jail environment.<br>
+You'll need, at minimum, a directory in which to put the binaries, a
+subdirectory tree that's writable by the userid which will be running
+<cmd>rcynic</cmd> and <cmd>rsync</cmd>, your trust anchors, and whatever
+device inodes the various libraries need on your system.  Most likely the
+devices that matter will be <path>/dev/null</path>, <path>/dev/random</path>,
+and <path>/dev/urandom</path>; if you're running a FreeBSD system with
+<cmd>devfs</cmd>, you do this by mounting and configuring a <cmd>devfs</cmd>
+instance in the jail, on other platforms you probably use the <cmd>mknod</cmd>
+program or something similar.
+
+<p style="padding-left: 5em; padding-right: 5em;">
+
+Important: Other than the directories that you want <cmd>rcynic</cmd> and
+<cmd>rsync</cmd> to be able to modify, nothing in the initial jail setup
+should be writable by the <i>rcynic</i> userid.  In particular,
+<cmd>rcynic</cmd> and <cmd>rsync</cmd> should not be allowed to modify:
+their own binary images, any of the configuration files, or your trust
+anchors.  It's simplest just to have root own all the files and directories
+that <cmd>rcynic</cmd> and <cmd>rsync</cmd> are not allowed to modify, and
+make sure that the permissions for all of those directories and files make
+them writable only by root.
+
+<p>
+
+The following instructions will create a sample jail environment.  It is
+assumed that <path>/var/rcynic</path> will hold the jail.
+
+<ol>
+
+<li>Create the jail hierarchy.<br>
+The following commands create a sample jail tree.
+
+<pre>
+    $ mkdir /var/rcynic
+    $ mkdir /var/rcynic/bin
+    $ mkdir /var/rcynic/data
+    $ mkdir /var/rcynic/dev
+    $ mkdir /var/rcynic/etc
+    $ mkdir /var/rcynic/etc/trust-anchors
+</pre>
+
+<p>
+
+<li>Copy Trust Anchors into jail.<br>
+
+Trust anchors must be copied into <path>/var/rcynic/etc/trust-anchors</path>.
+
+<p>
+
+<li>Copy <cmd>rcynic</cmd> and <cmd>rsync</cmd> into jail.<br>
+
+Copy the statically linked <cmd>rcynic</cmd> and <cmd>rsync</cmd> into
+<path>/var/rcynic/bin</path>.
+
+<p>
+
+<li>Copy system files into jail.<br>
+Copy <path>/etc/resolv.conf</path> and <path>/etc/localtime</path>
+(if it exists) into <path>/var/rcynic/etc</path>.
+
+<p>
+
+<li>Create <file>rcynic.conf</file>.<br>
+Create an <cmd>rcynic</cmd> configuration file as
+<path>/var/rcynic/etc/rcynic.conf</path>.  Path names in this
+file must match the jail setup; more on this below.
+
+<p>
+
+<li>Set required jail ownerships.<br>
+The following commands will set owner, group, and file permissions for
+several directories.
+<pre>
+    $ chmod -R go-w /var/rcynic
+    $ chown -R root:wheel /var/rcynic
+    $ chown -R rcynic:rcynic /var/rcynic/data
+</pre>
+
+<p>
+
+<li><cmd>devfs</cmd> mounts.<br>
+If you're using <cmd>devfs</cmd>, arrange for it to be mounted at
+<path>/var/rcynic/dev</path>; otherwise, create whatever device inodes
+you need in <path>/var/rcynic/dev</path> and make sure that they have
+sane permissions.  It is probably safe to assume that whatever permissions
+are used in your system <path>/dev</path> directory may be considered sane.
+
+<p>
+
+<li>Configure <file>rcynic.conf</file>.
+Edit <file>rcynic.conf</file> to match this configuration:
+
+<pre>
+    [rcynic]
+
+    rsync-program           = /bin/rsync
+    authenticated           = /data/authenticated
+    unauthenticated         = /data/unauthenticated
+    xml-summary             = /data/rcynic.xml
+    trust-anchor-directory  = /etc/trust-anchors
+</pre>
+
+</ol>
+
+<li>Testing the Jail.<br>
+Once this is all set up, <cmd>rcynic</cmd> may be tested in the jail.
+Test it from the command line first.  If that works, it should be able
+to be run under <cmd>cron</cmd>.
+
+<p>
+
+<cmd>chroot</cmd>, <i>chrootuid</i>, and other programs of this type are
+usually intended to be run by <i>root</i>, and should not be <i>setuid</i>
+programs unless you really know what you are doing.
+
+<p>
+
+Sample test command line:
+
+<pre>
+    # /usr/local/bin/chrootuid /var/rcynic rcynic /bin/rcynic -s -c /etc/rcynic.conf
+</pre>
+
+</ol>
+
+<p>
+
+<!*****************>
+
+<a name="rp-rcynic-chroot-mksbins"></a>
+<h5>2.2.2.2 Building Static Binaries</h5>
+
+<p>
+
+On FreeBSD, building a statically linked <cmd>rsync</cmd> is easy: one just
+sets the environment variable <opt>LDFLAGS='-static'</opt> before building
+<cmd>rsync</cmd> and the right thing will happen.  Since this is really just
+GNU <cmd>configure</cmd> picking up the environment variable, the same trick
+should work on those platforms that support <opt>-static</opt>.  Also, some
+platforms are missing some or all of the non-shared libraries needed to link
+the resulting binary.
+
+<p>
+
+For simplicity, we've taken the same approach with <cmd>rcynic</cmd>.  This
+command will work:
+
+<pre>
+    $ make LDFLAGS='-static'
+</pre>
+
+This isn't necessary on platforms where we know that static linking
+works -- the default is static linking where supported.
+
+<p>
+
+<!*****************>
+
+<a name="rp-rcynic-chroot-syslogs"></a>
+<h5>2.2.2.3 <cmd>syslog</cmd> from <syscall>chroot</syscall>ed Environments</h5>
+
+<p>
+
+Depending on how the <syscall>syslog()</syscall> library call and the
+<cmd>syslog</cmd> daemon are implemented on your platform, <cmd>syslog</cmd>
+may not work properly with <cmd>rcynic</cmd> in a <syscall>chroot</syscall>
+jail.  On FreeBSD, the easiest way to fix this is to add the following lines
+to <path>/etc/rc.conf</path>:
+
+<pre>
+    altlog_proglist="named rcynic"
+    rcynic_chrootdir="/var/rcynic"
+    rcynic_enable="YES"
+</pre>
+
+<p>
+
+This tells <cmd>syslog</cmd> to listen on an additional PF_UNIX socket within
+<cmd>rcynic</cmd>'s <syscall>chroot</syscall> jail.
+
+<p>
+
+(Depending on the system, the actual daemon name may be something like
+<cmd>syslogd</cmd> or <cmd>rsyslogd</cmd>.)
+
+<p>
+
+
+<p>
+
+<!*********************************************************>
+
+<a name="rp-rpki-rtr"></a>
+<h3>2.3 <cmd>rpki-rtr</cmd> Configuration</h3>
+
+<p>
+
+<cmd>rpki-rtr</cmd> is an implementation of the RPKI-router protocol defined
+in RFC-6810.  <cmd>rpki-rtr</cmd> depends on <cmd>rcynic</cmd> to collect and
+validate the RPKI data.  <cmd>rpki-rtr</cmd> provides that data to routers
+that must do prefix origin authentication.  Data are sent to routers in a
+lightweight format.
+
+<p>
+
+<cmd>rpki-rtr</cmd> is an intermediary between <cmd>rcynic</cmd>, a
+post-processor, and a listener.  These three other entities must be installed
+and configured.  The software installation <em>should</em> set up
+<cmd>rcynic</cmd> and a post-processor.  The listener must be installed
+manually.
+
+<p>
+
+<!*************************************>
+
+<a name="rp-rpki-rtr-postproc"></a>
+<h4>2.3.1 Post-processing of <cmd>rcynic</cmd> Output</h4>
+
+<p>
+
+If you are using <cmd>rcynic-cron</cmd> to run <cmd>rcynic</cmd> and
+<cmd>rpki-rtr</cmd>, then post-processing is already being handled and
+you can skip the rest of this section.
+
+<p>
+
+If a non-standard <cmd>cron</cmd> job is running <cmd>rcynic</cmd> and
+<cmd>rpki-rtr</cmd>, then you must set up post-processing of
+<cmd>rcynic</cmd> output.  Post-processing can be handled by adding something
+like this (with correct pathnames) to your local <cmd>cron</cmd> job:
+
+<pre>
+    /usr/local/bin/rpki-rtr cronjob /var/rcynic/data/authenticated /var/rcynic/rpki-rtr
+</pre>
+
+<p>
+
+The <cmd>rpki-rtr cronjob</cmd> command must have write access to a
+directory in which it can store processed versions of the data received
+from <cmd>rcynic</cmd>.  In the example above, the directory
+<path>/var/rcynic/rpki-rtr</path> must be writable by the user ID executing
+the <cmd>cron</cmd> job.
+
+<p>
+
+As part of the configuration process, execute the <cmd>rpki-rtr cronjob</cmd>
+command at least once before configuring the <cmd>rpki-rtr server</cmd>.
+This allows the <cmd>rpki-rtr server</cmd> executions to run smoothly.
+
+<p>
+
+<!*************************************>
+
+<a name="rp-rpki-rtr-listener"></a>
+<h4>2.3.2 <cmd>rpki-rtr</cmd>'s Listener</h4>
+
+<p>
+
+A server listener must be set up that invokes <cmd>rpki-rtr server</cmd>.
+The choice of server listener to use depends on the network protocol being
+used to transport this protocol.  <cmd>rpki-rtr</cmd> is happy to run under
+<cmd>inetd</cmd>, <cmd>xinetd</cmd>, <cmd>sshd</cmd>, or a home-grown
+service.  <cmd>rpki-rtr</cmd> operates fairly simply, just reading from
+<opt>stdin</opt> and writing to <opt>stdout</opt>.
+
+<p>
+
+<cmd>rpki-rtr server</cmd> server should be run as a non-privileged user.
+Some installations may prefer to set up a separate UNIX userid for this purpose.
+
+<p>
+
+<cmd>rpki-rtr server</cmd> takes an optional argument specifying the path to
+its data directory.  If this argument is omitted, <cmd>rpki-rtr server</cmd>
+uses the directory in which it is run.
+
+<p>
+
+The details of how to set up a listener vary depending on the network protocol
+and the operating system on which it is run.  Below are three examples,
+running under <cmd>inetd</cmd> (on FreeBSD), running under <cmd>sshd</cmd>, or
+running as a free-standing server using <cmd>rpki-rtr</cmd> listener.
+
+<p>
+
+<!*****************>
+
+<a name="rp-rpki-rtr-listener-inetd"></a>
+<h5>2.3.2.1 <cmd>rpki-rtr</cmd>'s Listener with <cmd>inetd</cmd></h5>
+
+<p>
+
+Running under <cmd>inetd</cmd> with plain TCP is insecure and should only be
+done for testing, but you can also run it with TCP-MD5 or TCP-AO, or over
+IPsec.  The <cmd>inetd</cmd> configuration is generally the same, the details
+of how you set up TCP-MD5, TCP-AO, or IPsec are platform specific.
+
+<p>
+
+To run under <cmd>inetd</cmd>, you need to:
+
+<ol>
+<li>Add an entry to <path>/etc/services</path> defining a symbolic name for
+the port, if one doesn't exist already.  At present, there is no well-known
+port defined for this protocol.  This example will use port 42420 and
+the symbolic name <cmd>rpki-rtr</cmd>.
+
+<p>
+
+Add this entry to <path>/etc/services</path>:
+
+<pre>
+    rpki-rtr          42420/tcp
+</pre>
+
+<p>
+
+<li>Add the service line to /etc/inetd.conf:
+
+<pre>
+    rpki-rtr stream tcp nowait nobody /usr/local/bin/rpki-rtr rpki-rtr server /var/rcynic/rpki-rtr
+</pre>
+
+</ol>
+
+<p>
+
+This assumes that you want the server to run as user <i>nobody</i>, which is
+generally a safe choice.  A new non-privileged user could be created for this
+purpose.  DO NOT run the server as root; it shouldn't do anything bad, but it
+is a network server that doesn't need root access, therefore it shouldn't
+have root access.
+
+<p>
+
+<!*****************>
+
+<a name="rp-rpki-rtr-listener-sshd"></a>
+<h5>2.3.2.2 <cmd>rpki-rtr</cmd>'s Listener with <cmd>sshd</cmd></h5>
+
+<p>
+
+To run <cmd>rpki-rtr</cmd> server under <cmd>sshd</cmd>, the following steps
+must be followed:
+
+<ol>
+
+<li>Decide whether to run a new instance of <cmd>sshd</cmd> on a separate
+port or use the standard port.  <cmd>rpki-rtr</cmd> doesn't care, but some
+people seem to think that it's somehow more secure to run this service on a
+different port.  Setting up <cmd>sshd</cmd> in general is beyond the scope
+of this documentation, but most likely you can copy the bulk of your
+configuration from the standard configuration.
+
+<p>
+
+<li>Configure <cmd>sshd</cmd> to know about the <cmd>rpki-rtr</cmd>
+subsystem.  Add something like this to your <file>sshd.conf</file>:
+
+<pre>
+    Subsystem rpki-rtr /usr/local/bin/rpki-rtr
+</pre>
+
+<p>
+
+<li>Configure the userid(s) you expect SSH clients to use to connect to the
+server.  For operational use you almost certainly do NOT want this user to
+have a normal shell, instead you should configure its shell to be the server
+(e.g., <path>/usr/local/bin/rpki-rtr</path>) and its home directory to be the
+<cmd>rpki-rtr</cmd> data directory (e.g., <path>/var/rcynic/rpki-rtr</path>.)
+If you're using passwords to authenticate instead of SSH keys, which is
+<u>not</u> recommended, you will always need to set the password(s) here
+when configuring the userid(s).
+
+<p>
+
+<li>Configure the <path>.ssh/authorized_keys</path> file for your clients; if
+you're using the example values given above, this would be
+<path>/var/rcynic/rpki-rtr/.ssh/authorized_keys</path>.  You can have multiple
+SSH clients using different keys all logging in as the same SSH user, you just
+have to list all of the SSH keys here.  You may want to consider using a
+<opt>command=parameter</opt> in the key line (see the <cmd>sshd(8)</cmd> man
+page) to lock down the SSH keys listed here so that they can only be used to
+run the <cmd>rpki-rtr</cmd> service.
+
+</ol>
+
+<p>
+
+If you're running a separate <cmd>sshd</cmd> for this purpose, you might
+also want to add an <file>AuthorizedKeysFile</file> entry pointing at this
+<file>authorized_keys</file> file.  This ensures that the server will only
+use this <file>authorized_keys</file> file regardless of what other user
+accounts might exist on the machine:
+
+<pre>
+    AuthorizedKeysFile /var/rcynic/rpki-rtr/.ssh/authorized_keys
+</pre>
+
+<p>
+
+There's a sample <file>sshd.conf</file> in the <rpki>rpki.net</rpki> source
+directory.  You will have to modify it to suit your environment.  The most
+important part is the Subsystem line, which runs the <cmd>server.sh</cmd>
+script as the <i>rpki-rtr</i> service, as required by the protocol
+specification.
+
+<p>
+
+<!*****************>
+
+<a name="rp-rpki-rtr-listener-generic"></a>
+<h5>2.3.2.3 <cmd>rpki-rtr</cmd>'s Listener with Generic Support</h5>
+
+<p>
+
+<cmd>rpki-rtr</cmd> listener is a free-standing plain TCP server which just
+listens on a TCP socket then forks a child process running <cmd>rpki-rtr</cmd>
+server.
+
+<p>
+
+All of the caveats regarding plain TCP apply to <cmd>rpki-rtr</cmd> listener.
+
+<p>
+
+<cmd>rpki-rtr</cmd> listener takes one required argument, the TCP port number
+on which to listen; it also accepts a second argument which specifies the
+<cmd>rcynic</cmd> output directory, like <cmd>rpki-rtr</cmd> server.
+
+<pre>
+    /usr/local/bin/rpki-rtr listener 42420 /var/rcynic/rpki-rtr
+</pre>
+
+<p>
+
+<!*****************>
+
+<a name="rp-rpki-rtr-listener-other"></a>
+<h5>2.3.2.4 <cmd>rpki-rtr</cmd>'s Listener with Other Programs</h5>
+
+<p>
+
+You can also run this code under other such network service programs.  These
+include such programs as <cmd>xinetd</cmd>, <cmd>faucet</cmd> (from netpipes),
+or <cmd>stunnel</cmd>.  Other than a few lines that might need to be modified
+to log the connection peer properly, the program really doesn't care.
+
+<p>
+
+You should, however, care whether the channel you have chosen is secure; it
+doesn't make a lot of sense to go to all the trouble of checking RPKI data
+then let the bad guys feed bad data into your routers anyway because you were
+running the <cmd>rpki-rtr</cmd> link over an unsecured TCP connection.
+
+<p>
+
+<!*********************************************************>
+
+<a name="rp-cron-wrapper"></a>
+<h3>2.4 Setting Up a Local <cmd>cron</cmd> Wrapper</h3>
+
+<p>
+
+<cmd>rcynic</cmd> is designed to be run by the <cmd>cron</cmd> daemon.
+Consequently, most of the other Relying-Party tools are also designed to
+run under <cmd>cron</cmd>, so that they can make use of <cmd>rcynic</cmd>'s
+output immediately after it finishes a validation run.
+
+<p>
+
+<cmd>rcynic-cron</cmd> runs the basic set of Relying-Party tools:
+<cmd>rcynic</cmd>, <cmd>rcynic-html</cmd>, and <cmd>rpki-rtr</cmd>.
+Nothing else must be done if this suffices for your purposes.
+This section is a discussion of alternative approaches.
+
+<p>
+
+The tools to be run by a <cmd>cron</cmd> wrapper depend on how you intend to
+use the Relying-Party tools.  This section assumes a typical case in RPKI
+data are gathered and validated prior to the results being sent to routers
+using the <cmd>rpki-rtr</cmd> protocol.  This section also assumes that the
+<rpki>rpki.net</rpki> software has been installed in the default locations.
+
+<p>
+
+The exact sequence for invoking <cmd>rcynic</cmd> itself varies depending both
+on whether or not the command is being run in a <syscall>chroot</syscall> jail.
+It also depends on the platform on which <cmd>rcynic</cmd> is running, as the
+<syscall>chroot</syscall> utilities on different platforms behave slightly
+differently.  (Using a <syscall>chroot</syscall> jail used to be the default
+for <cmd>rcynic</cmd>, but it turned out that many users found the set-up
+involved to be too complex.)
+
+<p>
+
+If you're not using <cmd>rcynic-cron</cmd>, it's probably simplest to write
+a short wrapper shell script which calls the tools you want in the correct
+order.  That is what will be shown here.
+
+<p>
+
+Once you've written this wrapper, add an entry in your <file>crontab</file>
+to have it run at some appropriate interval.  Running the wrapper hourly,
+or perhaps every six hours, should be sufficient, depending on your
+installation's needs.  The wrapper should be run at least once per day.
+It probably should not be run more frequently than once per hour, unless
+you really know what you are doing.  Please do not just arrange for the
+script to run on the hour, instead pick some random minute value within
+the hour as the start time for your script.  This helps help spread the
+load on the repository servers.
+
+<p>
+
+An appropriate set of repository directory must be created for use by the
+Relying-Party tools.  These commands will create the directory and set its
+ownership appropriately.
+
+<pre>
+    # mkdir /var/rcynic/rpki-rtr
+    # chown rcynic /var/rcynic/rpki-rtr
+</pre>
+
+<p>
+
+On FreeBSD or Mac OSX, this wrapper script might look like this:
+
+<pre>
+    #!/bin/sh -
+    /usr/sbin/chroot -u rcynic -g rcynic /var/rcynic /bin/rcynic -c /etc/rcynic.conf || exit
+    /var/rcynic/bin/rcynic-html /var/rcynic/data/rcynic.xml /usr/local/www/data/rcynic
+    /usr/bin/su -m rcynic -c '/usr/local/bin/rpki-rtr cronjob /var/rcynic/data/authenticated /var/rcynic/rpki-rtr'
+</pre>
+
+On GNU/Linux systems, the script might look like this if you use the
+<cmd>chrootuid</cmd> program:
+
+<pre>
+    #!/bin/sh -
+    /usr/bin/chrootuid /var/rcynic rcynic /bin/rcynic -c /etc/rcynic.conf || exit
+    /var/rcynic/bin/rcynic-html /var/rcynic/data/rcynic.xml /var/www/rcynic
+    /usr/bin/su -m rcynic -c '/usr/local/bin/rpki-rtr cronjob /var/rcynic/data/authenticated /var/rcynic/rpki-rtr'
+</pre>
+
+If you use the <cmd>chroot</cmd> program instead of <cmd>chrootuid</cmd>,
+change the line that invokes <cmd>rcynic</cmd> to:
+
+<pre>
+    /usr/sbin/chroot --userspec rcynic:rcynic /var/rcynic /bin/rcynic -c /etc/rcynic.conf || exit
+</pre>
+
+<p>
+
+<!*********************************************************>
+
+<a name="rp-hierarchical-rsync"></a>
+<h3>2.5 Running a Hierarchical <cmd>rsync</cmd> Configuration</h3>
+
+Having every relying party on the Internet contact every publication service
+is not terribly efficient.  In many cases, it may make more sense to use a
+hierarchical configuration in which a few "gatherer" Relying Parties contact
+the publication servers directly, while a collection of other Relying Parties
+get their raw data from the gatherers.
+
+<p>
+
+  Note:
+      The Relying Parties in this configuration still perform their own
+      validation, they just let the gatherers do the work of collecting the
+      unvalidated data for them.
+
+<p>
+
+A gatherer in a configuration like this would look just like a stand-alone
+Relying Party as discussed above.  The only real difference is that a gatherer
+must also make its unauthenticated data collection available to other Relying
+Parties.  Assuming the standard configuration, this will be the directory
+<path>/var/rcynic/data/unauthenticated</path> and its subdirectories.
+
+<p>
+
+There are two slightly different ways to do this with <cmd>rsync</cmd>:
+
+<p>
+
+<ul>
+<li>Via unauthenticated <cmd>rsync</cmd>, by configuring an
+<file>rsyncd.conf</file> "module".
+<br>
+<li>Via <cmd>rsync</cmd> over a secure transport protocol such
+as <cmd>ssh</cmd>.
+</ul>
+
+<p>
+
+Since the downstream Relying Party performs its own validation in any case,
+either of these will work, but using a secure transport such as <cmd>ssh</cmd>
+will make it easier to track problems back to their source if a downstream
+Relying Party concludes that it has been receiving bad data.
+
+<p>
+
+The script for a downstream Relying Party using <cmd>ssh</cmd> might look like
+this:
+
+<pre>
+    #!/bin/sh -
+
+    PATH=/usr/bin:/bin:/usr/local/bin
+    umask 022
+    eval `/usr/bin/ssh-agent -s` >/dev/null
+    /usr/bin/ssh-add /root/rpki_ssh_id_rsa 2>&1 | /bin/fgrep -v 'Identity added:'
+    hosts='larry.example.org moe.example.org curly.example.org'
+
+    for host in $hosts
+    do
+        /usr/bin/rsync --archive --update --safe-links rpkisync@${host}:/var/rcynic/data/unauthenticated/ /var/rcynic/data/unauthenticated.${host}/
+    done
+
+    eval `/usr/bin/ssh-agent -s -k` >/dev/null
+
+    for host in $hosts
+    do
+        /usr/sbin/chroot -u rcynic -g rcynic /var/rcynic /bin/rcynic -c /etc/rcynic.conf -u /data/unauthenticated.${host}
+        /var/rcynic/bin/rcynic-html /var/rcynic/data/rcynic.xml /usr/local/www/data/rcynic.${host}
+    done
+
+    cd /var/rcynic/rpki-rtr
+    /usr/bin/su -m rcynic -c '/usr/local/bin/rpki-rtr cronjob /var/rcynic/data/authenticated'
+</pre>
+
+where <path>/root/rpki_ssh_id_rsa</path> is an SSH private key authorized to
+log in as user <i>rpkisync</i> on the gatherer machines.
+
+<p>
+
+If you want to lock this down a little tighter, you could use <cmd>ssh</cmd>'s
+<opt>command="..."</opt> mechanism as described in the <cmd>sshd</cmd>
+documentation to restrict the <i>rpkisync</i> user so that it can only run
+this one <cmd>rsync</cmd> command.
+
+<p>
+
+To avoid allowing the downstream Relying Parties any sort of login access at
+all on the gatherer machines, <cmd>rsync</cmd> can be run in an "insecure"
+configuration.  The "insecure" <cmd>rsync</cmd> configuration would look more
+like this:
+
+<p>
+
+<pre>
+    #!/bin/sh -
+
+    PATH=/usr/bin:/bin:/usr/local/bin
+    umask 022
+    hosts='larry.example.org moe.example.org curly.example.org'
+
+    for host in $hosts
+    do
+        /usr/bin/rsync --archive --update --safe-links rsync://${host}/unauthenticated/ /var/rcynic/data/unauthenticated.${host}/
+    done
+
+    for host in $hosts
+    do
+        /usr/sbin/chroot -u rcynic -g rcynic /var/rcynic /bin/rcynic -c /etc/rcynic.conf -u /data/unauthenticated.${host}
+        /var/rcynic/bin/rcynic-html /var/rcynic/data/rcynic.xml /usr/local/www/data/rcynic.${host}
+    done
+
+    cd /var/rcynic/rpki-rtr
+    /usr/bin/su -m rcynic -c '/usr/local/bin/rpki-rtr cronjob /var/rcynic/data/authenticated'
+</pre>
+
+<p>
+
+Where "unauthenticated" here is an <cmd>rsync</cmd> module pointing at
+<path>/var/rcynic/data/unauthenticated</path> on each of the gatherer
+machines.  Configuration for the "unauthenticated" module would look
+like:
+
+<p>
+
+<pre>
+    [unauthenticated]
+        read only           = yes
+        transfer logging    = yes
+        path                = /var/rcynic/data/unauthenticated
+        comment             = Unauthenticated RPKI data
+</pre>
+
+<p>
+
+<!*****************************************************************************>
+
+<a name="sect-ca"></a>
+<h2>3 Setting Up a Configuration Authority System</h2>
+
+<p>
+
+It is assumed that the vast majority of <rpki>rpki.net</rpki> installations
+will be Relying Parties, with only a relatively small number of installations
+also acting as Certification Authorities.  For this reason, the initial
+version of the Configuration Guide focuses on the RP software.  The
+Certification-Authority part of the Configuration Guide will be expanded
+in due course.
+
+<p>
+
+The sections that follow have the beginnings of a discussion on setting up
+a Configuration Authority system.  These are incomplete and will be completed
+soon.
+
+<p>
+
+<!*********************************************************>
+
+<a name="ca-configs"></a>
+<h3>3.1 Files and Directories</h3>
+
+<p>
+
+The <rpki>rpki.net</rpki> software requires a general configuration file
+and manages a number of files and directories.  Setting up this environment
+is a large part of configuring the Relying-Party software.  While much of
+it is done automatically by the installation process, there are portions
+that should be checked to ensure they are set properly.
+
+<p>
+
+<!*************************************>
+
+<a name="ca-rpki-conf"></a>
+<h4>3.1.1 <file>rpki.conf</file> Configuration File</h4>
+
+<p>
+
+The <file>rpki.conf</file> configuration file is central to the functioning
+of the <rpki>rpki.net</rpki> software.  It determines such things as which
+programs are run and the locations of keys, databases, and other objects.
+It is imperative that this file be set up properly in order for the
+<rpki>rpki.net</rpki> software to work as expected.
+
+<p>
+
+The <file>rpki.conf</file> file is composed of seven named sections of
+key/value entries.  The name of each section is enclosed in square brackets.
+Each entry is comprised of the entry name, an equals sign, and the entry
+value.  An entry's value can refer to an entry key in another section.  The
+following configuration fragments show how the parts of <file>rpki.conf</file>
+may be set:
+
+<pre>
+
+    [myrpki]
+        irdbd_server_host = localhost
+        irdbd_server_port = 4403
+
+    [irdbd]
+        server-port       = ${myrpki::irdbd_server_port}
+</pre>
+
+<p>
+
+The <rpki>rpki.net</rpki> installation process creates a default
+<file>rpki.conf</file> file.  The default values are usually sufficient
+for most installations.  However, the file must be examined to ensure
+that it is configured according to the needs of the installation.  To
+be thorough, you may want to examine all the default values; however,
+the values listed in the subsections below are the minimum set that
+should be checked.
+
+<p>
+
+The first subsection below describes the daemon-execution flags that must
+be set in order to start only those daemons that should be run by your
+installation.  The following subsections describe particular fields in
+each configuration section that must be checked.
+
+<p>
+
+After checking the <file>rpki.conf</file> file, the <cmd>rpkichk</cmd>
+command may be used to check that the values of the configuration entries
+appear to be sane.
+
+<p>
+
+Details on the <file>rpki.conf</file> configuration file may be found in
+the <a href="config-reference#rpki.conf">Configuration File
+Reference</a>.  The man page for <cmd>rpkichk</cmd> is in the 
+<a href="command-reference#man-rpkichk">Command Reference</a>.
+
+<p>
+
+<!*****************>
+
+<a name="ca-rpki-conf-daemons"></a>
+<h5>3.1.1.1 Execution Flags</h5>
+
+<p>
+
+There are several <file>rpki.conf</file> entries that control which
+<rpki>rpki.net</rpki> daemons will be executed.  These flags must be
+set properly for your installation.
+
+<p>
+
+There are two separate sets of <file>rpki.conf</file> entries which control
+the necessary behavior.  The <arg>run_</arg> entries control whether the
+back-end code back end code manages the servers in question.  The
+<arg>start_</arg> entries control whether the start-up scripts should start
+the servers in question.  The <arg>start_</arg> entries will reference the
+values of the <arg>run_</arg> entries if the related daemon will be run on
+the server on which the <file>rpki.conf</file> resides.  If a daemon will
+be run on a different server, then the related <arg>start_</arg> entry must
+reflect this.
+
+<p>
+
+<table border=1>
+<tr><th>Entry Name<th>Purpose<th>Default Value</tr>
+<tr><td><arg>run_rpkid</arg><td>Run the <cmd>rpkid</cmd> and <cmd>irdbd</cmd> daemons.<td align=center><i>yes</i></tr>
+<tr><td><arg>run_pubd</arg><td>Run the <cmd>pubd</cmd> daemon.<td align=center><i>yes</i></tr>
+<tr><td><arg>run_rootd</arg><td>Run the <cmd>rootd</cmd> daemon.<td align=center><i>no</i></tr>
+</table>
+
+<p>
+
+There is another set of entries that refer to these flag entries.  In most
+cases, the values of these entries should not be changed.  These entries are
+expected to correspond to the referenced entries.
+
+<p>
+
+The following table lists these referencing entries.
+
+<p>
+
+<table border=1>
+<tr><th>Entry Name<th>Referenced Entry<th>Controlled Daemon</tr>
+<tr><td><arg>start_rpkid</arg><td><i>${myrpki::run_rpkid}</i><td align=center><cmd>rpkid</cmd></tr>
+<tr><td><arg>start_irdbd</arg><td><i>${myrpki::run_rpkid}</i><td align=center><cmd>irdbd</cmd></tr>
+<tr><td><arg>start_pubd</arg> <td><i>${myrpki::run_pubd}</i><td align=center><cmd>pubd</cmd></tr>
+<tr><td><arg>start_rootd</arg><td><i>${myrpki::run_rootd}</i><td align=center><cmd>rootd</cmd></tr>
+</table>
+
+<p>
+
+The only case where the <arg>start_</arg> entries should be changed is when
+the back-end code is running on a different machine from one or more of the
+daemons.  In this case, finer control is needed over which daemons to start
+on which machines.
+
+<p>
+
+<!*****************>
+
+<a name="ca-rpki-conf-autoconf"></a>
+<h5>3.1.1.2 <arg>[autoconf]</arg> Entries</h5>
+
+<p>
+
+The <arg>[autoconf]</arg> configuration section has four entries for
+commonly used directories.  These entries are referenced by many of the other
+configuration sections.  These values are set in the <rpki>rpki.net</rpki>
+automatic configuration process when the software is built and installed.
+The default entries are almost certainly acceptable, but they should be
+checked all the same.
+
+<p>
+
+<table border=1>
+<tr><th>Entry Name<th>Default Value</tr>
+<tr><td><arg>bindir</arg><td><path>/usr/bin</path> or <path>/usr/local/bin</path></tr>
+<tr><td><arg>datarootdir</arg><td><path>/usr/share</path> or <path>/usr/local/share</path></tr>
+<tr><td><arg>sbindir</arg><td><path>/usr/sbin</path> or <path>/usr/local/sbin</path></tr>
+<tr><td><arg>sysconfdir</arg><td><path>/etc</path></tr>
+</table>
+
+<p>
+
+<!*****************>
+
+<a name="ca-rpki-conf-myrpki"></a>
+<h5>3.1.1.3 <arg>[myrpki]</arg> Entries</h5>
+
+<p>
+
+The <arg>[myrpki]</arg> configuration section is a shared section, with
+entries common to all the <rpki>rpki.net</rpki> daemons.  Many of these
+entries are referenced by other sections of the <file>rpki.conf</file> file.
+
+<p>
+
+There are three directory entries that must be checked for validity.  These
+are referenced in other sections, and <arg>bpki_servers_directory</arg> most
+widely.
+
+<table border=1>
+<tr><th>Entry Name<th>Default Value</tr>
+<tr><td><arg>bpki_servers_directory<td><arg>${autoconf::datarootdir}/<path>rpki</path></arg>
+<tr><td><arg>publication_base_directory<td><arg>${autoconf::datarootdir}/<path>rpki/publication</path></arg>
+<tr><td><arg>publication_root_cert_directory<td><arg>${myrpki::publication_base_directory}<path>.root</path></arg>
+</table>
+
+<p>
+
+There are a set of server entries that must be checked.  There is a host and
+a port entry for each of the <rpki>rpki.net</rpki> daemons.  These must be
+checked to ensure that the hostnames are correct and that the ports are not
+in use by other programs.
+
+<table border=1>
+<tr><th>Entry Name<th>Default Value</tr>
+<tr><td><arg>rpkid_server_host<td>hostname (FQDN)
+<tr><td><arg>rpkid_server_port<td>4404
+<tr><td><arg>irdbd_server_host<td>"localhost"
+<tr><td><arg>irdbd_server_port<td>4403
+<tr><td><arg>pubd_server_host<td>hostname (FQDN)
+<tr><td><arg>pubd_server_port<td>4402
+<tr><td><arg>rootd_server_host<td>"localhost"
+<tr><td><arg>rootd_server_port<td>4401
+</table>
+
+<p>
+
+The <rpki>rpki.net</rpki> daemons use a set of three databases, one for each
+daemon.  (Except for cmd>rootd</cmd>), that is.)  There are configuration
+entries for the database name, the SQL username, and the SQL password for each
+of these databases.  The default values should be okay, but they should be
+checked to be sure.
+
+<table border=1>
+<tr><th>Entry Name<th>Default Value</tr>
+<tr><td><arg>shared_sql_username<td>"rpki"
+<tr><td><arg>shared_sql_password<td>auto-generated at install time
+
+<tr><td><arg>rpkid_sql_database<td>"rpkid"
+<tr><td><arg>rpkid_sql_username<td><arg>${myrpki::shared_sql_username}</arg>
+<tr><td><arg>rpkid_sql_password<td><arg>${myrpki::shared_sql_password}</arg>
+
+<tr><td><arg>irdbd_sql_database<td>"irdbd"
+<tr><td><arg>irdbd_sql_username<td><arg>${myrpki::shared_sql_username}</arg>
+<tr><td><arg>irdbd_sql_password<td><arg>${myrpki::shared_sql_password}</arg>
+
+<tr><td><arg>pubd_sql_database<td>"pubd"
+<tr><td><arg>pubd_sql_username<td><arg>${myrpki::shared_sql_username}</arg>
+<tr><td><arg>pubd_sql_password<td><arg>${myrpki::shared_sql_password}</arg>
+</table>
+
+<p>
+
+<!*****************>
+
+<a name="ca-rpki-conf-rpkid"></a>
+<h5>3.1.1.4 <arg>[rpkid]</arg> Entries</h5>
+
+<p>
+
+The <arg>[rpkid]</arg> configuration section has entries specific to the
+<cmd>rpkid</cmd> daemon.
+Most of the default entries in this section are references to entries in
+the <arg>[myrpki]</arg> section.
+
+<p>
+
+There are five entries for <cmd>rpkid</cmd>-specific files.  The default
+files are in the <arg>bpki_servers_directory</arg> directory, as specified
+in the <arg>[myrpki]</arg> section.  The value of this directory entry
+should be checked for acceptability.
+
+<p>
+
+These file values should not be changed unless you really know what you're
+doing.
+
+<p>
+
+<p>
+
+<!*****************>
+
+<a name="ca-rpki-conf-irdbd"></a>
+<h5>3.1.1.5 <arg>[irdbd]</arg> Entries</h5>
+
+<p>
+
+The <arg>[irdbd]</arg> configuration section has entries specific to the
+<cmd>irdbd</cmd> daemon.
+All the default entries in this section are references to entries in the 
+<arg>[myrpki]</arg> section.
+
+<p>
+
+<!*****************>
+
+<a name="ca-rpki-conf-pubd"></a>
+<h5>3.1.1.6 <arg>[pubd]</arg> Entries</h5>
+
+<p>
+
+The <arg>[pubd]</arg> configuration section has entries specific to the
+<cmd>pubd</cmd> daemon.
+Most of the default entries in this section are references to entries in
+the <arg>[myrpki]</arg> section.
+
+<p>
+
+There are four entries for <cmd>rpkid</cmd>-specific files.  The default
+files are in the <arg>bpki_servers_directory</arg> directory, as specified
+in the <arg>[myrpki]</arg> section.  The value of this directory entry
+should be checked for acceptability.
+
+<p>
+
+These values should not be changed unless you really know what you're doing.
+
+<p>
+
+<!*****************>
+
+<a name="ca-rpki-conf-rootd"></a>
+<h5>3.1.1.7 <arg>[rootd]</arg> Entries</h5>
+
+<p>
+
+The <arg>[rootd]</arg> configuration section has entries specific to the
+<cmd>rootd</cmd> daemon.  Most of the default entries in this section are
+references to entries in the <arg>[myrpki]</arg> section.
+
+<p>
+
+As is explained elsewhere, the <rpki>rpki.net</rpki> documentation strongly
+urges that <cmd>rootd</cmd> not be run by most installations.  This section
+may be skipped by those that do not need to run <cmd>rootd</cmd>.
+
+<p>
+
+There are nine entries for <cmd>rootd</cmd>-specific files which contain paths
+specified by referencing other configuration values.  The default files are in
+<arg>bpki_servers_directory</arg>, <arg>publication_base_directory</arg>, and
+<arg>publication_root_cert_directory</arg> , as specified in the
+<arg>[myrpki]</arg> section.  The values of these directory entries should be
+checked for acceptability.
+
+<p>
+
+These values should not be changed unless you really know what you're doing.
+
+<p>
+
+<!*****************>
+
+<a name="ca-rpki-conf-web_portal"></a>
+<h5>3.1.1.8 <arg>[web_portal]</arg> Entries</h5>
+
+<p>
+
+The <arg>[web_portal]</arg> configuration section has entries specific
+to the <rpki>rpki.net</rpki> web interface.
+Most of the default entries in this section are references to entries
+in the <arg>[myrpki]</arg> section.
+
+<p>
+
+The single non-reference entry is the <arg>secret-key</arg> entry.  This is
+the site-specific secret key used for Django.  This secret key is generated
+during <rpki>rpki.net</rpki> installation and is almost certainly safe to
+leave as is.
+
+<p>
+
+<!*************************************>
+
+<a name="#ca-root-certs"></a>
+<h4>3.1.2 Root Certificates</h4>
+
+<p>
+
+If a root CA will be run using <cmd>rootd</cmd>, a root certificate must
+be created.  <cmd>generate-root-certificate</cmd> is very useful script for
+doing this, and it is available from hactrn.net.
+
+<p>
+
+The command sequence below demonstrates using
+<cmd>generate-root-certificate</cmd>.
+
+<p>
+
+<pre>
+    # cd /usr/share/rpki
+    # wget https://subvert-rpki.hactrn.net/trunk/potpourri/generate-root-certificate --no-check-certificate
+    # python generate-root-certificate
+
+    # mkdir /usr/share/rpki/publication.root
+    # rsync root.cer /usr/share/rpki/publication.root
+
+    # rm /etc/rpki/trust-anchors/*
+    # rsync root.tal /etc/rpki/trust-anchors/TestRoot.tal
+</pre>
+
+<p>
+
+This command sequence creates a root certificate, key, and Trust Anchor List.
+The certificate is saved in a publication directory.  The TAL is moved to
+become the only set of Trust Anchors used by the RPKI software.
+
+<p>
+
+This command sequence assumes that the <path>/etc/rpki.conf</path> file has
+the following values.  The values of these configuration fields are likely
+to refer to other fields, so be sure to check the actual value.  The commands
+must be adjusted if this is not the case.
+
+<p>
+
+<table border=1>
+<tr><th>Entry Name<th>Assumed Value</tr>
+<tr><td><arg>bpki_servers_directory</arg><td><path>/usr/share/rpki</path> 
+<tr><td><arg>publication_base_directory</arg><td><path>/usr/share/rpki/publication</path>
+<tr><td><arg>publication_root_cert_directory</arg><td><path>/usr/share/rpki/publication.root</path>
+</table>
+
+<p>
+
+<!*************************************>
+
+<a name="ca-mysql-db"></a>
+<h4>3.1.3 MySQL Database Configuration</h4>
+
+<p>
+
+<rpki>rpki.net</rpki> databases must be initialized prior to running
+<cmd>rpkid</cmd>, <cmd>irdbd</cmd>, or <cmd>pubd</cmd>.  This initialization
+may be performed with the <cmd>rpki-sql-setup</cmd> command or it may be
+performed manually.
+
+<p>
+
+MySQL is used to manage the <rpki>rpki.net</rpki> databases.  It is assumed
+that MySQL was installed during the <rpki>rpki.net</rpki> installation process
+detailed in the <a href="install">Installation Manual</a>.
+
+<p>
+
+See the <a href="config-reference#rpki.conf">Configuration File
+Reference</a> for details on the configuration file settings the daemons will
+use to find and authenticate themselves to their respective databases.
+
+<p>
+
+<!*****************>
+
+<a name="ca-mysql-db-auto"></a>
+<h5>3.1.3.1 Automated Database Configuration</h5>
+
+<p>
+
+The <cmd>rpki-sql-setup</cmd> automatically generates the databases required
+by <rpki>rpki.net</rpki>.  The script prompts for the MySQL root password
+then uses values from the <file>rpki.conf</file> to complete the database
+initialization.
+
+<pre>
+    $ rpki-sql-setup
+    Please enter your MySQL root password:
+</pre>
+
+<p>
+
+<cmd>rpki-sql-setup</cmd> will provide notice of the databases it creates.
+The <opt>-v</opt> option may be used to see more details about the actions
+taken during database creation.
+
+<p>
+
+The man page for <cmd>rpki-sql-setup</cmd> is in the 
+<a href="command-reference#man-rpki-sql-setup">Command Reference</a>.
+
+<p>
+
+<!*****************>
+
+<a name="ca-mysql-db-mano"></a>
+<h5>3.1.3.2 Manual Database Configuration</h5>
+
+<p>
+
+The <rpki>rpki.net</rpki> databases can be created manually.  In these
+SQL command sequences, the <arg>irdb_database</arg>, <arg>irdb_user</arg>,
+<arg>irdb_password</arg>, <arg>rpki_database</arg>, <arg>rpki_user</arg>,
+<arg>rpki_password</arg>, <arg>pubd_database</arg>, <arg>pubd_user</arg>,
+and <arg>pubd_password</arg> values must match the values in the
+<file>rpki.conf</file> configuration file.  Also, the <arg>$top</arg> variable
+must point to the top level of the <rpki>rpki.net</rpki> distribution.
+
+<p>
+
+Two databases must be created:
+
+<pre>
+    $ mysql -u root -p
+    mysql> CREATE DATABASE irdb_database;
+    mysql> GRANT all ON irdb_database.* TO irdb_user@localhost IDENTIFIED BY 'irdb_password';
+    mysql> CREATE DATABASE rpki_database;
+    mysql> GRANT all ON rpki_database.* TO rpki_user@localhost IDENTIFIED BY 'rpki_password';
+    mysql> USE rpki_database;
+    mysql> SOURCE $top/schemas/sql/rpkid.sql;
+    mysql> COMMIT;
+    mysql> quit
+</pre>
+
+If the <cmd>pubd</cmd> publication daemon will be run, a database for it
+must also be initialized.
+values used in <file>rpki.conf</file>.
+
+<pre>
+    $ mysql -u root -p
+    mysql> CREATE DATABASE pubd_database;
+    mysql> GRANT all ON pubd_database.* TO pubd_user@localhost IDENTIFIED BY 'pubd_password';
+    mysql> USE pubd_database;
+    mysql> SOURCE $top/schemas/sql/pubd.sql;
+    mysql> COMMIT;
+    mysql> quit
+</pre>
+
+<p>
+
+<!*************************************>
+
+<a name="ca-rsyncd-conf"></a>
+<h4>3.1.4 <file>rsyncd.conf</file> Configuration File</h4>
+
+<p>
+
+The <cmd>rsyncd</cmd> command must be run when the <rpki>rpki.net</rpki>
+publication server <cmd>pubd</cmd> will be used.  (<cmd>rsyncd</cmd> is
+standard on most Unix-like systems.) The <cmd>rsyncd</cmd> configuration will
+need to match the <cmd>pubd</cmd> configuration in the <file>rpki.conf</file>
+file.  This will allow Relying Parties to find the RPKI objects managed by
+<cmd>pubd</cmd>.
+
+<p>
+
+The following is a sample <arg>rpki</arg> section that may be added to your
+system's <file>rsyncd.conf</file> file:
+
+<pre>
+    [rpki]
+        path                = /usr/share/rpki/publication
+        use chroot          = no
+        read only           = yes
+        transfer logging    = yes
+        comment             = for rpki.net's pubd daemon
+
+</pre>
+
+<p>
+
+This configuration section must be adapted for your own installation.  In
+particular, the <arg>path</arg> field must match the directory listed as
+<arg>publication_base_directory</arg> in the <file>rpki.conf</file> file. 
+
+<p>
+
+The <arg>publication_base_directory</arg> field may reference other fields
+in <file>rpki.conf</file>, but the actual path must be used in
+<file>rsyncd.conf</file>.  The <cmd>rpkichk -list</cmd> command may be
+used to determine the actual path.  The commands below illustrate how
+<file>rpki.conf</file> may list this field and what it translates to:
+
+<pre>
+    $ rpkichk -list -untranslate | grep ^publication_base_directory
+    publication_base_directory     	"${autoconf::datarootdir}/rpki/publication"
+
+    $ rpkichk -list | grep ^publication_base_directory
+    publication_base_directory     	"/usr/share/rpki/publication"
+</pre>
+
+<p>
+
+The <cmd>rsyncdchk</cmd> command may be used to check that the values of
+the configuration values in the <file>rsyncd.conf</file> file appear to
+be sane.
+
+<p>
+
+Details on the <rpki>rpki.net</rpki>-specific portions of the
+<file>rsyncd.conf</file> configuration file may be found in the
+<a href="config-reference#rsyncd.conf">Configuration File
+Reference</a>.  The man page for <cmd>rsyncdchk</cmd> is in the 
+<a href="command-reference#man-rsyncdchk">Command Reference</a>.
+
+<p>
+
+<!*********************************************************>
+
+<a name="ca-irdbd"></a>
+<h3>3.2 <cmd>irdbd</cmd> Configuration</h3>
+
+<p>
+
+<cmd>irdbd</cmd> is a sample implementation of the server side of the IRDB
+callback subset of the left-right protocol.  <cmd>irdbd</cmd> is part of the
+Internet Registry Back-End (IRBE) system.  It shares an SQL database with
+the <cmd>rpkic</cmd> control program and the web interface.
+
+<p>
+
+In production use, this service is a function of the IRBE stub.
+<cmd>irdbd</cmd> may be suitable for production use in simple cases.
+However, a registry with a complex IRDB may need to extend or rewrite
+<cmd>irdbd</cmd>.
+
+<p>
+
+Configuration for <cmd>irdbd</cmd> is relatively simple, and is handled
+by setting up the <file>rpki.conf</file> file.  See the
+<a href="config-reference#rpki.conf">Configuration File Reference</a>
+for details.
+
+<p>
+
+<!*********************************************************>
+
+<a name="ca-pubd"></a>
+<h3>3.3 <cmd>pubd</cmd> Configuration</h3>
+
+<p>
+
+<cmd>pubd</cmd> stores dynamic data in an SQL database, which must have been
+created for it, as explained in the <a href="#ca-mysql-db">MySQL setup
+instructions</a>.  <cmd>pubd</cmd> also stores the published objects
+themselves as disk files in a configurable location which should correspond
+to an appropriate module definition in <file>rsyncd.conf</file>; see the
+<a href="config-reference#rsyncd.conf">Configuration File Reference</a>
+for details.
+
+<p>
+
+The <cmd>pubd</cmd> daemon may be run on the same host as the other
+<rpki>rpki.net</rpki> servers, or on a different host from them.  The
+default is to run <cmd>pubd</cmd> together with the other servers on
+the same host.  This choice will require different sets of configuration
+actions.
+
+<p>
+
+<!*************************************>
+
+<a name="ca-pubd-same-server"></a>
+<h4>3.3.1 Running <cmd>pubd</cmd> on the Same Server</h4>
+
+<p>
+
+The <file>rpki.conf</file> file must be created as described in the
+<a href="#ca-rpki-conf"><file>rpki.conf</file> Configuration File</a>
+section.  No additional configuration must performed if <cmd>pubd</cmd>
+will run on the same server as the other <rpki>rpki.net</rpki> servers.
+
+<p>
+
+<!*************************************>
+
+<a name="ca-pubd-diff-server"></a>
+<h4>3.3.2 Running <cmd>pubd</cmd> on a Different Server</h4>
+
+<p>
+
+The following guidelines describe how to set up an <cmd>pubd</cmd> server
+to run on a different machine than the rest of the back-end code.  For this
+section, <cmd>pubd</cmd> and the back-end code will run on different machines,
+which will be named <i>pubd.example.org</i> and <i>backend.example.org</i>.
+Obviously, your installation will use different host names.
+
+<p>
+
+Most of the configuration is the same as in the normal case, but there
+are a few extra steps.  The following instructions supplement the normal
+instructions, but do not replace them.
+
+<p>
+
+<b>WARNING</b>: These setup directions have not been tested extensively.
+
+<ol>
+
+<li>On <i>backend.example.org</i>, create the <file>rpki.conf</file> file as
+described in the <a href="#ca-rpki-conf"><file>rpki.conf</file> Configuration
+File</a> section.
+<br>
+The following settings will be used:
+<pre>
+    irbe_server_host = backend.example.org
+    pubd_server_host = pubd.example.org
+</pre>
+
+<p>
+
+<li>Customize <file>rpki.conf</file> on <i>backend.example.org</i>:
+<ul>
+<li><arg>start_irdbd</arg> should be enabled.
+<p>
+<li><arg>start_pubd</arg> should be disabled.
+</ul>
+
+<p>
+
+<li>Enable <arg>run_pubd</arg> in <file>rpki.conf</file>.
+
+<p>
+
+<li>Copy the <file>rpki.conf</file> file to <i>pubd.example.org</i>.
+
+<p>
+
+<li>Customize the <file>rpki.conf</file> on <i>pubd.example.org</i>:
+
+<ul>
+<li><arg>start_irdbd</arg> should be disabled.
+<p>
+<li><arg>start_pubd</arg> should be enabled.
+</ul>
+<p>
+
+<li>Ensure that the SQL databases have been set up on both servers.
+The <cmd>rpki-sql-setup</cmd> script should do the right thing in each
+case, based on the setting of the <arg>start_</arg> options.
+
+<p>
+
+<li>Run <cmd>"rpkic initialize"</cmd> on <i>backend.example.org</i>.
+This will create the BPKI and write out all of the necessary keys and
+certificates.  These are the <file>.cer</file>, <file>.key</file>, and
+<file>.crl</file> files.
+
+<p>
+
+<li>The relevant BPKI files must be copied to <i>pubd.example.org</i>:
+
+<ul>
+
+<li>the <file>.cer</file> file,
+<li>the <file>.crl</file> file,
+<li>the <file>pubd.key</file> file.
+
+</ul>
+
+<p>
+
+<li>Run <cmd>rpki-start-servers</cmd> on the two server hosts when
+it's time to start the servers.
+
+<p>
+
+<li>Do the usual setup, but keep in mind that the the back-end controlling
+all of these servers runs on <i>backend.example.org</i>, so that is where
+the <cmd>rpkic</cmd> or GUI commands to manage the servers must be issued.
+<cmd>rpkic</cmd> and the GUI both know how to talk to <cmd>pubd</cmd>
+over the network, so managing it remotely is fine.
+
+</ol>
+
+<p>
+
+<!*********************************************************>
+
+<a name="ca-rootd"></a>
+<h3>3.4 <cmd>rootd</cmd> Configuration</h3>
+
+<p>
+
+<cmd>rootd</cmd> is a minimal implementation of the server side of the up-down
+protocol.  It is a separate program because the root certificate of an RPKI
+certificate tree requires special handling and may also require a special
+handling policy.  All <cmd>rootd</cmd> configuration comes from the
+<file>rpki.conf</file> configuration file; see the
+<a href="config-reference#rpki.conf">Configuration File Reference</a>
+for details.
+
+<p>
+
+Warnings against using the <cmd>rootd</cmd> daemon:
+
+<ul>
+<li><cmd>rootd</cmd> is a simple implementation intended for
+test use.  <b>It is not suitable for use in a production system.</b>
+<p>
+
+<li>You do not need to run <cmd>rootd</cmd> unless one of the following
+conditions holds true:
+<ul>
+<li>You are IANA.
+<li>You are certifying private address space.
+<li>You are an RIR which refuses to accept IANA as the root
+of the public address hierarchy.
+</ul>
+If none of these conditions are true, you do not need to run <cmd>rootd</cmd>.
+<p>
+
+<li>The developers say that <cmd>rootd</cmd> is a mess, and it needs to be
+rewritten and merged into <cmd>rpkid</cmd>.  It doesn't use the publication
+protocol and it requires far too many configuration parameters.
+
+<p>
+
+</ul>
+
+<p>
+
+<!*********************************************************>
+
+<a name="ca-rpkid"></a>
+<h3>3.5 <file>rpkid</file> Configuration</h3>
+
+<p>
+
+<cmd>rpkid</cmd> is the main RPKI engine daemon.  The <file>rpki.conf</file>
+configuration file must be created before <cmd>rpkid</cmd> can be used.
+Afterwards, the <cmd>rpkic</cmd> command line tool or the web interface must
+be used to guide the remaining dynamic configuration.
+
+<p>
+
+<cmd>rpkid</cmd> stores dynamic data in an SQL database, which must have
+been created for it.  Initialization of this database is explained in the
+<a href="#ca-mysql-db">MySQL Database Configuration</a> section.
+
+<p>
+
+The <cmd>rpkid</cmd> daemon may be run on the same host as the other
+<rpki>rpki.net</rpki> servers, or on a different host from them.  The
+default is to run <cmd>rpkid</cmd> together with the other servers on
+the same host.  This choice will require different sets of configuration
+actions.
+
+<p>
+
+<!*************************************>
+
+<a name="ca-rpkid-same-server"></a>
+<h4>3.5.1 Running <cmd>rpkid</cmd> on the Same Server</h4>
+
+<p>
+
+The <file>rpki.conf</file> file must be created as described in the
+<a href="#ca-rpki-conf"><file>rpki.conf</file> Configuration File</a>
+section.  No additional configuration must performed if <cmd>rpkid</cmd>
+will run on the same server as the other <rpki>rpki.net</rpki> servers.
+
+<p>
+
+<!*************************************>
+
+<a name="ca-rpkid-diff-server"></a>
+<h4>3.5.2 Running <cmd>rpkid</cmd> on a Different Server</h4>
+
+<p>
+
+The following guidelines describe how to set up an <cmd>rpkid</cmd> server
+to run on a different machine than the rest of the back-end code.  For this
+section, <cmd>rpkid</cmd> and the back-end code will run on different machines, which will be named <i>rpkid.example.org</i> and <i>backend.example.org</i>.
+Obviously, your installation will use different host names.
+
+<p>
+
+Most of the configuration is the same as in the normal case, but there
+are a few extra steps.  The following instructions supplement the normal
+instructions, but do not replace them.
+
+<p>
+
+<b>WARNING</b>: These setup directions have not been tested extensively.
+
+<ol>
+
+<li>On <i>backend.example.org</i>, create the <file>rpki.conf</file> file as
+described in the <a href="#ca-rpki-conf"><file>rpki.conf</file> Configuration
+File</a> section.
+<br>
+The following settings will be used:
+<pre>
+    irbe_server_host  = backend.example.org
+    rpkid_server_host = rpkid.example.org
+</pre>
+
+<p>
+
+<li>Customize <file>rpki.conf</file> on <i>backend.example.org</i>:
+<ul>
+<li><arg>start_irdbd</arg> should be enabled.
+<p>
+<li><arg>start_rpkid</arg> should be disabled.
+</ul>
+
+<p>
+
+<li>Enable <arg>run_rpkid</arg> in <file>rpki.conf</file>.
+
+<p>
+
+<li>Copy the <file>rpki.conf</file> file to <i>rpkid.example.org</i>.
+
+<p>
+
+<li>Customize <file>rpki.conf</file> on <i>rpkid.example.org</i>:
+
+<ul>
+<li><arg>start_irdbd</arg> should be disabled.
+<p>
+<li><arg>start_rpkid</arg> should be enabled.
+</ul>
+<p>
+
+<li>Ensure that the SQL databases have been set up on both servers.
+The <cmd>rpki-sql-setup</cmd> script should do the right thing in each
+case, based on the setting of the <arg>start_</arg> options.
+
+<p>
+
+<li>Run <cmd>"rpkic initialize"</cmd> on <i>backend.example.org</i>.
+This will create the BPKI and write out all of the necessary keys and
+certificates.  These are the <file>.cer</file>, <file>.key</file>, and
+<file>.crl</file> files.
+
+<p>
+
+<li>The relevant BPKI files must be copied to <i>rpkid.example.org</i>:
+
+<ul>
+
+<li>the <file>.cer</file> file,
+<li>the <file>.crl</file> file,
+<li>the <file>rpkid.key</file> file.
+
+</ul>
+
+<p>
+
+<li>Run <cmd>rpki-start-servers</cmd> on the two server hosts when
+it's time to start the servers.
+
+<p>
+
+<li>Do the usual setup, but keep in mind that the the back-end controlling
+all of these servers runs on <i>backend.example.org</i>, so that is where
+the <cmd>rpkic</cmd> or GUI commands to manage the servers must be issued.
+<cmd>rpkic</cmd> and the GUI both know how to talk to <cmd>rpkid</cmd>
+over the network, so managing it remotely is fine.
+
+</ol>
+
+<p>
+
+<!*********************************************************>
+
+<a name="ca-data-init"></a>
+<h3>3.6 Initialization of Certification Authority Data</h3>
+
+<p>
+
+The Certification Authority data must be initialized.  The
+<cmd>rpkic</cmd> command may be used to do this.  <cmd>rpkic</cmd> uses the 
+value of the <arg>handle</arg> field in the <path>/etc/rpki.conf</path> file
+as an identifier in the initialization.
+
+<p>
+
+The command sequence below demonstrates the <cmd>rpkic</cmd> commands needed
+to initialize the CA.  This example assumes the <arg>handle</arg> field
+has the value "<b>example-ca</b>".
+
+<p>
+
+<pre>
+    # service rpki-ca restart
+    # cd /usr/share/rpki
+    # rpkic initialize
+    # rpkic configure_publication_client /usr/share/rpki/example-ca.example-ca.repository-request.xml
+    # rpkic configure_repository /usr/share/rpki/testCA.repository-response.xml
+</pre>
+
+<p>
+
+This example does not include the output from these commands.
+The path used in the <arg>configure_publication_client</arg> command was
+given in the output to the <arg>initialize</arg> command.
+Similarly, the path used in the in the <arg>configure_repository</arg>
+command was given in the <arg>configure_publication_client</arg> command.
+
+<p>
+
+The man page for <cmd>rpkic</cmd> is in the 
+<a href="command-reference#man-rpkic">Command Reference</a>.
+
+<p>
+
+<!*********************************************************>
+
+<a name="ca-web-interface"></a>
+<h3>3.7 Web Interface Configuration</h3>
+
+<p>
+
+<rpki>rpki.net</rpki> provides a web-based interface to the Certification
+Authority sytem.  This interface is known as Web Portal.  Several things must
+be configured prior to using the Web Portal:  superusers, error notifications,
+and <cmd>cron</cmd> jobs.  The required configuration actions are described
+in this section.
+
+<p>
+
+Once these other other things are set up, Users and Resource Holders must
+be defined for the Web Portal.
+See the <a href="web-portal-ug">Web Portal Administrator's
+Manual</a> for details on how to create and modify the Web Portal's objects.
+
+<p>
+
+<!*************************************>
+
+<a name="ca-webint-config"></a>
+<h4>3.7.1 Configuring the Web Portal</h4>
+
+<p>
+
+The <arg>[web_portal]</arg> section in the <path>/etc/rpki.conf</path>
+configuration file contains fields relevant to the Web Portal.  The value
+of the <arg>download-directory</arg> field must be checked to ensure that
+the directory is on a file system large enough to hold a dumped routing
+table.  Default values for all other fields should be sufficient for most
+installations.
+
+<p>
+
+See the <a href="config-reference#web_portal">Configuration File
+Reference</a> for details.
+
+<p>
+
+<!*************************************>
+
+<a name="ca-webint-superuser"></a>
+<h4>3.7.2 Creating a Web Portal Superuser</h4>
+
+<p>
+
+A superuser for the Web Portal should be created.  The <cmd>rpki-manage</cmd>
+command will create the superuser and set its password.  You will be
+prompted for a username, an email address, and a password.  Strong passwords
+should be used for all accounts, but especially for the superuser accounts.
+
+<p>
+
+<pre>
+    # rpki-manage
+</pre>
+
+<p>
+
+The man page for <cmd>rpki-manage</cmd> is in the 
+<a href="command-reference#man-rpki-sql-setup">Command Reference</a>.
+
+<p>
+
+<!*************************************>
+
+<a name="ca-webint-errors"></a>
+<h4>3.7.3 Error Notifications via Email</h4>
+
+<p>
+
+By default, exceptions generated while the Web Portal is processing a request
+will be logged to the Apache log file.  An email message will be sent
+to <i>root@localhost</i> as well.
+
+<p>
+
+If you wish to change where email is sent, you can edit
+<path>/etc/rpki/local_settings.py</path> and add the following lines:
+
+<pre>
+    ADMINS = (('YOUR NAME', 'YOUR EMAIL ADDRESS'),)
+</pre>
+
+For example,
+
+<pre>
+    ADMINS = (('Joe User', 'joe@example.com'),)
+</pre>
+
+<p>
+
+<!*************************************>
+
+<a name="ca-webint-cronjobs"></a>
+<h4>3.7.4 Cron Jobs for the Web Portal</h4>
+
+<p>
+
+The Web Portal makes use of some external data sources to display the
+validation status of routing entries.  Therefore, it is necessary to run
+some background jobs periodically to refresh this data.  The Web Portal
+software makes use of the <cmd>cron</cmd> facility present in POSIX
+operating systems to perform these tasks.
+
+<!*****************>
+
+<a name="ca-webint-cronjobs-snapshots"></a>
+<h5>3.7.4.1 Importing Routing Table Snapshots</h5>
+
+<p>
+
+In order for the Web Portal to display the validation status of routes covered
+by a resource holder's RPKI certificates, it needs a source of the currently
+announced global routing table.  The Web Portal includes a script which can
+parse the output of the RouteViews full snapshot (warning: links to very large
+file!).
+
+<p>
+
+When the software is installed, there will be a
+<path>/usr/local/sbin/rpkigui-import-routes</path> script that should be
+invoked periodically.  Routeviews.org updates the snapshot every two hours, so
+it does not make sense to run it more frequently than two hours.  How often it
+should run depends on how often the routes you are interested in are changing.
+
+<p>
+
+Create an entry in root's <file>crontab</file> such as
+
+<p>
+
+<pre>
+    30  */2 *   *   *      /usr/local/sbin/rpkigui-import-routes
+</pre>
+
+<p>
+
+<!*****************>
+
+<a name="ca-webint-cronjobs-roas"></a>
+<h5>3.7.4.2 Importing ROAs</h5>
+
+<p>
+
+If you want the GUI's "routes" page to see ROAs when you click those buttons,
+you will need to run <cmd>rcynic</cmd>.  See the instructions for setting up
+<cmd>rcynic</cmd>.
+
+<p>
+
+This data is imported by the <cmd>rcynic-cron</cmd> script.  If you have not
+already set up that <cmd>cron</cmd> job, you should do so now.  By default,
+<cmd>rcynic-cron</cmd> is run once an hour.  This means that the routes view
+in the GUI will not immediately update as you create and destroy ROAs.  You
+may wish to run <cmd>rcynic-cron</cmd> more frequently, or configure
+<file>rcynic.conf</file> to only include the TAL that is the root of your
+resources, and run the script more frequently (perhaps every 2-5 minutes.)
+
+<p>
+
+If you are running <cmd>rootd</cmd>, you may want to run with only your local
+Trust Anchor.  In this case, to have the GUI be fairly responsive to changes,
+you may want to run the <cmd>rcynic</cmd> often.  In this case, you may want
+to look at the <arg>jitter</arg> value in <file>rcynic.conf</file>.
+
+<p>
+
+<!*****************>
+
+<a name="ca-webint-cronjobs-expchk"></a>
+<h5>3.7.4.3 Expiration Checking</h5>
+
+<p>
+
+The Web Portal can notify users when it detects that RPKI certificates will
+expire in the near future.  Run the <cmd>rpkigui-check-expired</cmd> script
+as a <cmd>cron</cmd> job, perhaps once a night:
+
+<p>
+
+By default, it will warn of expiration 14 days in advance, but this may be
+changed by using the <arg>-t</arg> command-line option and specifying how
+many days in advance to check.
+
+<p>
+
+<!*************************************>
+
+<a name="ca-webint-verify"></a>
+<h4>3.7.5 Verify the Web Portal is Working</h4>
+
+<p>
+
+To ensure that the Web Portal is working properly, navigate to
+<i>https://YOURHOST/rpki/</i>.  You should see the login page for
+the Web Portal.
+
+<p>
+
+Enter the superuser name and password (as created in the
+<a name="ca-webint-superuser"></a> section) in the login form.
+If the Web Portal is working properly, this will take you to the 
+Web Portal's dashboard.
+
+<p>
+
+The <a href="web-portal-ug">Web Portal Administrator's
+Manual</a> provides more information about administering the Web Portal.
+
+<p>
+
+<!*****************>
+
+<a name="ca-webint-diffuser"></a>
+<h4>3.7.6 Running the Web Portal as a Different User</h4>
+
+<p>
+
+By default, the Web Portal is run in embedded mode in <module>mod_wsgi</module>,
+which means it runs inside the Apache process.  However, you can make the Web
+Portal run in daemon mode as a different user using <module>mod_wsgi</module>.
+
+<pre>
+    $ ./configure --enable-wsgi-daemon-mode[=user[:group]]
+</pre>
+
+Where <arg>user</arg> is the optional user to run the Web Portal as, and
+<arg>group</arg> is the optional group to run the Web Portal as.  If
+<arg>user</arg> is not specified, it will run in a separate process but
+the same user as Apache is configured to run.
+
+<p>
+
+When run in daemon mode, a Unix-domain socket will be created in the
+same directory as the Apache log files.  If the user you have specified to run
+the Web Portal as does not have permission to read a file in that directory,
+the web interface will return a "500 Internal Server Error" and you will see a
+"Permission Denied Error" in your Apache logs.  The solution to this is to use
+the <arg>WSGISocketPrefix</arg> Apache configuration directive to specify an
+alternative location, such as:
+
+<pre>
+    WSGISocketPrefix /var/run/wsgi
+</pre>
+
+This directive must not be placed inside of the <i>&lt;VirtualHost&gt;</i>
+section.  It must be located at the global scope.
+
+<p>
+
+See <a href="http://code.google.com/p/modwsgi/wiki/ConfigurationDirectives#WSGISocketPrefix">ModWSGI Configuration Directives</a>
+for more information.
+
+<p>
+
+<!*****************************************************************************>
+
+<br><br>
+
+<p>
+<hr>
+<p>
+
+Sections of this document are derived or taken verbatim from Dragon
+Research Lab's <a href="http://rpki.net/wiki/doc/RPKI">RPKI Tools Manual</a>.
+
+<p>
+Copyright (c) 2015, Parsons, Inc<br>
+All rights reserved
+<br><br>
+
+</div>
+</div>
+
+
+
+	</div>
+
+	
+      </div>
+    </div>
+  </body>
+
+  <script type="application/ld+json">
+   {
+     "@context": "http://schema.org",
+     "@type": "Organization",
+     "url": "https://securerouting.net",
+     "logo": "/images/secure-routing-cloud.svg"
+   }
+  </script>
+  <script type="application/ld+json">
+   {
+     "@context": "http://schema.org",
+     "@type": "Organization",
+     "url": "https://securerouting.net",
+     "name": "Secure Routing",
+     "sameAs" : [
+       "https://www.youtube.com/channel/UCVOrJW51e8uu6aO_qnkk6qA"
+     ],
+   }
+  </script>
+</html>
+

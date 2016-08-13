@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <title>Secure Routing -- Protect Your Infrastructure</title>
+
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/ears.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+
+    <script src="/js/jquery.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script>
+     $(document).ready(function () {
+       $('.dropdown-toggle').dropdown();
+     });
+    </script>
+
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container-fluid">
+	<div class="navbar-header">
+	  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+	  </button>
+	  <a class="navbar-brand" href="/">Secure Routing</a>
+	</div>
+
+	<div class="collapse navbar-collapse" id="navbar-collapse">
+	  <ul class="nav navbar-nav earsnav">
+	    <!-- LEARN -->
+	    <li class="dropdown">
+	      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Learn <span class="caret"></span>
+	      </a>
+
+	      <ul class="dropdown-menu">
+		<li><a href="/sbs-guide">Step-by-Step Guide</a></li>
+		<li><a href="https://www.youtube.com/channel/UCVOrJW51e8uu6aO_qnkk6qA">Youtube Channel</a></li>
+		<li><a href="/specifications.html">Specifications</a></li>
+		<li><a href="https://datatracker.ietf.org/wg/sidr/">Join The SIDR Working Group</a></li>
+	      </ul>
+	    </li>
+
+	    <!-- TRY -->
+	    <li class="dropdown">
+	      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Try <span class="caret"></span>
+	      </a>
+
+	      <ul class="dropdown-menu">
+		<li><a href="/workshop.html"">The Demonstration Workshop</a></li>
+	      </ul>
+	    </li>
+
+	    <!-- DEPLOY -->
+	    <li class="dropdown">
+	      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Deploy <span class="caret"></span>
+	      </a>
+
+	      <!-- TRY MENU -->
+	      <ul class="dropdown-menu">
+		  <li><a href="/bird.html">Install BIRD</a></li>
+		  <li><a href="http://www-x.antd.nist.gov/bgpsrx/">Install Quagga</a></li>
+		  <li><a href="http://rpki.net">Install RPKI.NET</a></li>
+		  <li><a href="http://sourceforge.net/projects/rpstir">Install RPSTIR</a></li>
+	      </ul>
+	    </li>
+
+	    <!-- INCIDENTS BUTTON -->
+	    <li class="dropdown">
+	      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Routing Incidents<span class="caret"></span>
+	      </a>
+
+	      <!-- INCIDENTS MENU -->
+	      <ul class="dropdown-menu">
+		<li><a href="/incident">Database</a></li>
+		<li><a href="/timeline.html"">Timeline</a></li>
+	      </ul>
+	    </li>
+	  </ul>
+	</div>
+      </div>
+    </nav>
+
+    <div class="container ears-top">
+      <div class="row">
+	
+	<div class="col-md-12" role="main">
+	
+
+	  <div class="page-header">
+  <h1><a href="/sbs-guide">Routing Security Step-by-Step Guide</a></h1>
+</div>
+
+<div class="panel panel-primary">
+  <div class="panel-heading">Validation Checks for <file>rpki.conf</file> Files</div>
+<div class="panel-body">
+
+<link href="/css/sbs-guide.css" rel="stylesheet">
+
+<style>
+
+td { padding-left: 0.35em; }
+
+</style>
+
+<!*****************************************************************************>
+
+<p>
+
+The <cmd>rpkichk</cmd> command performs validation checks on the
+<file>rpki.conf</file> configuration file.  It provides some amount of
+assurance that the <rpki>rpki.net</rpki> system is configured in a way
+that best supports the system's operation and security.  <cmd>rpkichk</cmd>
+validation checks fall in the following groups:
+
+<ul>
+<li>basic checks - simple system checks, such as the existence of files,
+valid hostnames, protected keys
+<li>cross checks - related configuration fields don't conflict
+<li>recommended-value checks - checks that recommended values are being used
+<!--------------------------------------------------
+<li>cross-file checks - configuration fields related to settings in other
+files are properly initialized
+--------------------------------------------------->
+</ul>
+
+<p>
+
+These checking groups are described in more detail in the sections below.
+
+<p>
+
+This document is prepared under Contract Number HSHQDC-14-C-B0035 for        
+DHS S&amp;T CSD
+
+<p>
+
+<!*****************************************************************************>
+
+<!--------------------------------------------------
+
+<h2>Development Status</h2>
+
+<p>
+
+<table border=1>
+<tr><td width=200>basic checks<td width=80>complete</tr>
+<tr><td>cross checks<td>complete</tr>
+<tr><td>recommended-value checks<td>complete</tr>
+<tr><td>cross-file checks<td>not started</tr>
+</table>
+
+<p>
+
+<i>This table and section will be deleted when all checking groups have
+been completed for the <cmd>rpkichk</cmd> command.</i>
+
+<p>
+
+--------------------------------------------------->
+
+<!*****************************************************************************>
+
+<h2>1. Basic Checks</h2>
+
+<p>
+
+<table align=center border=1>
+<tr align=center>
+<td width=100><b>Section</b>
+<td width=150><b>Field</b>
+<td><b>Checks Performed</b>
+</tr>
+
+<tr><td rowspan=4><i>autoconf</i><td><i>bindir</i><td>directory exists, is readable and searchable
+<tr><td><i>datarootdir</i><td>directory exists, is readable and searchable
+<tr><td><i>sbindir</i><td>directory exists, is readable and searchable
+<tr><td><i>sysconfdir</i><td>directory exists, is readable and searchable
+
+<tr><td rowspan=5><i>irdbd</i><td><i>sql-database</i><td>database name isn't null
+<tr><td><i>sql-username</i><td>valid SQL user name was given
+<tr><td><i>sql-password</i><td>SQL password/hash defined; at least 40 characters long
+<tr><td><i>server-host</i><td>only alphanumerics, dash, and dot; no consecutive dots
+<tr><td><i>server-port</i><td>only digits; only positive numbers; no fractional part
+
+<tr><td rowspan=33><i>myrpki</i><td><i>bpki_servers_directory</i><td>directory exists, is readable and searchable
+<tr><td><i>handle</i><td>only alphanumerics, dash, and underscore
+<tr><td><i>irdbd_server_host</i><td>only alphanumerics, dash, and dot; no consecutive dots
+<tr><td><i>irdbd_server_port</i><td>only digits; only positive numbers; no fractional part
+<tr><td><i>irdbd_sql_database</i><td>database name isn't null
+<tr><td><i>irdbd_sql_password</i><td>SQL password/hash defined; at least 40 characters long
+<tr><td><i>irdbd_sql_username</i><td>valid SQL user name was given
+<tr><td><i>pubd_server_host</i><td>only alphanumerics, dash, and dot; no consecutive dots
+<tr><td><i>pubd_server_port</i><td>only digits; only positive numbers; no fractional part
+<tr><td><i>pubd_sql_database</i><td>database name isn't null
+<tr><td><i>pubd_sql_password</i><td>SQL password/hash defined; at least 40 characters long
+<tr><td><i>pubd_sql_username</i><td>valid SQL user name was given
+<tr><td><i>publication_base_directory</i><td>directory exists, is readable and searchable
+<tr><td><i>publication_root_cert_directory</i><td>directory exists, is readable and searchable
+<tr><td><i>publication_root_module</i><td>module isn't null
+<tr><td><i>publication_rsync_module</i><td>module isn't null
+<tr><td><i>publication_rsync_server</i><td>only alphanumerics, dash, and dot; no consecutive dots
+<tr><td><i>rootd_server_host</i><td>only alphanumerics, dash, and dot; no consecutive dots
+<tr><td><i>rootd_server_port</i><td>only digits; only positive numbers; no fractional part
+<tr><td><i>rpkid_server_host</i><td>only alphanumerics, dash, and dot; no consecutive dots
+<tr><td><i>rpkid_server_port</i><td>only digits; only positive numbers; no fractional part
+<tr><td><i>rpkid_sql_database</i><td>database name isn't null
+<tr><td><i>rpkid_sql_password</i><td>SQL password/hash defined; at least 40 characters long
+<tr><td><i>rpkid_sql_username</i><td>valid SQL user name was given
+<tr><td><i>run_pubd</i><td>boolean value -- "yes" or "no" (either case)
+<tr><td><i>run_rootd</i><td>boolean value -- "yes" or "no" (either case)
+<tr><td><i>run_rpkid</i><td>boolean value -- "yes" or "no" (either case)
+<tr><td><i>shared_sql_password</i><td>SQL password/hash defined; at least 40 characters long
+<tr><td><i>shared_sql_username</i><td>valid SQL user name was given
+<tr><td><i>start_irdbd</i><td>boolean value -- "yes" or "no" (either case)
+<tr><td><i>start_pubd</i><td>boolean value -- "yes" or "no" (either case)
+<tr><td><i>start_rootd</i><td>boolean value -- "yes" or "no" (either case)
+<tr><td><i>start_rpkid</i><td>boolean value -- "yes" or "no" (either case)
+
+<tr><td rowspan=10><i>pubd</i><td><i>bpki-ta</i><td>file exists, is readable
+<tr><td><i>irbe-cert</i><td>file exists, is readable
+<tr><td><i>pubd-cert</i><td>file exists, is readable
+<tr><td><i>pubd-key</i><td>file exists, is readable only by owner
+<tr><td><i>publication-base</i><td>directory exists, is readable and searchable
+<tr><td><i>server-host</i><td>only alphanumerics, dash, and dot; no consecutive dots
+<tr><td><i>server-port</i><td>only digits; only positive numbers; no fractional part
+<tr><td><i>sql-database</i><td>database name isn't null
+<tr><td><i>sql-password</i><td>SQL password/hash defined; at least 40 characters long
+<tr><td><i>sql-username</i><td>valid SQL user name was given
+
+<tr><td rowspan=18><i>rootd</i><td><i>bpki-ta</i><td>file exists, is readable
+<tr><td><i>child-bpki-cert</i><td>file exists, is readable
+<tr><td><i>rootd-bpki-cert</i><td>file exists, is readable
+<tr><td><i>rootd-bpki-crl</i><td>file exists, is readable
+<tr><td><i>rootd-bpki-key</i><td>file exists, is readable only by owner
+<tr><td><i>rpki-base-uri</i><td>url uses <b>http://</b> or <b>rsync://</b>, network location given, 0 or 1 colons in network location
+<tr><td><i>rpki-class-name</i><td>class name isn't null
+<tr><td><i>rpki-root-cert</i><td>file exists, is readable
+<tr><td><i>rpki-root-cert-uri</i><td>url uses <b>http://</b> or <b>rsync://</b>, network location given, 0 or 1 colons in network location
+<tr><td><i>rpki-root-crl</i><td>file exists, is readable
+<tr><td><i>rpki-root-dir</i><td>directory exists, is readable and searchable
+<tr><td><i>rpki-root-key</i><td>file exists, is readable only by owner
+<tr><td><i>rpki-root-manifest</i><td>file exists, is readable
+<tr><td><i>rpki-subject-cert</i><td>file exists, is readable
+<tr><td><i>rpki-subject-lifetime</i><td>numeric portion is positive, unit is for hours, days, or months
+<tr><td><i>rpki-subject-pkcs10</i><td>file exists, is readable
+<tr><td><i>server-host</i><td>only alphanumerics, dash, and dot; no consecutive dots
+<tr><td><i>server-port</i><td>only digits; only positive numbers; no fractional part
+
+<tr><td rowspan=11><i>rpkid</i><td><i>bpki-ta</i><td>file exists, is readable
+<tr><td><i>irbe-cert</i><td>file exists, is readable
+<tr><td><i>irdb-cert</i><td>file exists, is readable
+<tr><td><i>irdb-url</i><td>url uses <b>http://</b>, network location given, 0 or 1 colons in network location
+<tr><td><i>rpkid-cert</i><td>file exists, is readable
+<tr><td><i>rpkid-key</i><td>file exists, is readable only by owner
+<tr><td><i>server-host</i><td>only alphanumerics, dash, and dot; no consecutive dots
+<tr><td><i>server-port</i><td>only digits; only positive numbers; no fractional part
+<tr><td><i>sql-database</i><td>database name isn't null
+<tr><td><i>sql-password</i><td>SQL password/hash defined; at least 40 characters long
+<tr><td><i>sql-username</i><td>valid SQL user name was given
+
+<tr><td rowspan=5><i>web_portal</i><td><i>sql-database</i><td>database name isn't null
+<tr><td><i>sql-username</i><td>valid SQL user name was given
+<tr><td><i>sql-password</i><td>password defined and at least 40 characters long
+<tr><td><i>sql-password</i><td>SQL password/hash defined; at least 40 characters long
+<tr><td><i>secret-key</i><td>SQL password/hash defined; at least 40 characters long
+</table>
+
+<p>
+
+<!*****************************************************************************>
+
+<h2>2. Cross Checks</h2>
+
+<p>
+
+The cross checks ensure that pairs of configuration fields that are connected
+are the same.  The fields may be located in the same section of the file or in
+different sections.  The names of fields in different sections may or may not
+be the same.
+
+<p>
+
+The sections below contain tables describing the cross checks to be performed.
+Each table entry will list the section's field name, the "foreign" section,
+the foreign section's field name, and the comparison that will be performed.
+
+<p>
+
+For example, the <i>rpkid</i> and <i>pubd</i> sections both have a
+<i>bpki-ta</i> field, and they should contain the same values.  Similarly,
+the <i>myrpki</i> section has the <i>pubd_server_port</i> field and the
+<i>pubd</i> section has the <i>server-port</i>, and they should both be
+the same.
+
+<p>
+
+The tables listed in this section contain duplicated entries.  This is to
+allow this document to be used as a checklist to ensure that all checks have
+been implemented.  Listing each cross check twice allows the checks to be
+performed in the checks for each section.
+
+<p>
+
+For example, the <i>rpkid</i> and <i>pubd</i> sections both have a
+<i>bpki-ta</i> field, and they should contain the same values.  The
+<i>rpkid</i> section below will contain an entry for this check, as
+will the <i>pubd</i> section below.
+
+<p>
+
+As of this writing, all comparison checks are for equality.  It is unknown
+if this may change in the future, so the comparison column is included 
+in the case that it does.
+
+<p>
+
+<!---------------------------------------------------------------------->
+
+<table align=center border=1>
+<tr align=center>
+<td width=250><b>Section:Field</b>
+<td width=250><b>Foreign&nbsp;Section:Field</b>
+<td width=100><b>Comparison</b>
+</tr>
+
+<tr valign=top><td valign=top><i>autoconf</i><td colspan=2>No cross checks are required for this
+section.
+<tr><td colspan=3>&nbsp;
+
+<tr><td><i>irdbd:server-host</i><td><i>myrpki:irdbd_server_host<td>equality
+<tr><td><i>irdbd:server-port</i><td><i>myrpki:irdbd_server_port<td>equality
+<tr><td><i>irdbd:sql-database</i><td><i>myrpki:irdbd_sql_database<td>equality
+<tr><td><i>irdbd:sql-password</i><td><i>myrpki:irdbd_sql_password<td>equality
+<tr valign=top><td><i>irdbd:sql-username</i><td><i>myrpki:irdbd_sql_username<td>equality
+<tr><td colspan=3>&nbsp;
+
+<tr><td><i>myrpki:irdbd_server_host</i><td><i>irdbd:server-host</i><td>equality
+<tr><td><i>myrpki:irdbd_server_port</i><td><i>irdbd:server-port</i><td>equality
+<tr><td><i>myrpki:irdbd_sql_database</i><td><i>irdbd:sql-database</i><td>equality
+<tr><td><i>myrpki:irdbd_sql_password</i><td><i>irdbd:sql-password</i><td>equality
+<tr><td><i>myrpki:irdbd_sql_username</i><td><i>irdbd:sql-username</i><td>equality
+<tr><td><i>myrpki:pubd_server_host</i><td><i>pubd:server-host</i><td>equality
+<tr><td><i>myrpki:pubd_server_port</i><td><i>pubd:server-port</i><td>equality
+<tr><td><i>myrpki:pubd_sql_database</i><td><i>pubd:sql-database</i><td>equality
+<tr><td><i>myrpki:pubd_sql_password</i><td><i>pubd:sql-password</i><td>equality
+<tr><td><i>myrpki:pubd_sql_username</i><td><i>pubd:sql-username</i><td>equality
+<tr><td><i>myrpki:publication_base_directory</i><td><i>pubd:publication-base</i><td>equality
+<tr><td><i>myrpki:rootd_server_host</i><td><i>rootd:server-host</i><td>equality
+<tr><td><i>myrpki:rootd_server_port</i><td><i>rootd:server-port</i><td>equality
+<tr><td><i>myrpki:rpkid_server_host</i><td><i>rpkid:server-host</i><td>equality
+<tr><td><i>myrpki:rpkid_server_port</i><td><i>rpkid:server-port</i><td>equality
+<tr><td><i>myrpki:rpkid_sql_database</i><td><i>rpkid:sql-database</i><td>equality
+<tr><td><i>myrpki:rpkid_sql_password</i><td><i>rpkid:sql-password</i><td>equality
+<tr valign=top><td><i>myrpki:rpkid_sql_username</i><td><i>rpkid:sql-username</i><td>equality
+<tr><td colspan=3>&nbsp;
+
+<tr><td><i>pubd:bpki-ta</i><td><i>rootd:bpki-ta</i><td>equality
+<tr><td><i>pubd:bpki-ta</i><td><i>rpkid:bpki-ta</i><td>equality
+<tr><td><i>pubd:irbe-cert</i><td><i>rpkid:irbe-cert</i><td>equality
+<tr><td><i>pubd:publication-base</i><td><i>myrpki:publication_base_directory</i><td>equality
+<tr><td><i>pubd:server-host</i><td><i>myrpki:pubd_server_host</i><td>equality
+<tr><td><i>pubd:server-port</i><td><i>myrpki:pubd_server_port</i><td>equality
+<tr><td><i>pubd:sql-database</i><td><i>myrpki:pubd_sql_database</i><td>equality
+<tr><td><i>pubd:sql-password</i><td><i>myrpki:pubd_sql_password</i><td>equality
+<tr valign=top><td><i>pubd:sql-username</i><td><i>myrpki:pubd_sql_username</i><td>equality
+<tr><td colspan=3>&nbsp;
+
+<tr><td><i>rootd:bpki-ta</i><td><i>pubd:bpki-ta</i><td>equality
+<tr><td><i>rootd:bpki-ta</i><td><i>rpkid:bpki-ta</i><td>equality
+<tr><td><i>rootd:server-host</i><td><i>myrpki:rootd_server_host</i><td>equality
+<tr valign=top><td><i>rootd:server-port</i><td><i>myrpki:rootd_server_port</i><td>equality
+<tr><td colspan=3>&nbsp;
+
+<tr><td><i>rpkid:bpki-ta</i><td><i>pubd:bpki-ta</i><td>equality
+<tr><td><i>rpkid:bpki-ta</i><td><i>rootd:bpki-ta</i><td>equality
+<tr><td><i>rpkid:irbe-cert</i><td><i>pubd:irbe-cert</i><td>equality
+<tr><td><i>rpkid:server-host</i><td><i>myrpki:rpkid_server_host</i><td>equality
+<tr><td><i>rpkid:server-port</i><td><i>myrpki:rpkid_server_port</i><td>equality
+<tr><td><i>rpkid:sql-database</i><td><i>myrpki:rpkid_sql_database</i><td>equality
+<tr><td><i>rpkid:sql-password</i><td><i>myrpki:rpkid_sql_password</i><td>equality
+<tr valign=top><td><i>rpkid:sql-username</i><td><i>myrpki:rpkid_sql_username</i><td>equality
+<tr><td colspan=3>&nbsp;
+
+<tr valign=top><td><i>web_portal</i><td colspan=2>No cross checks are required
+for this section.
+
+</table>
+
+<p>
+
+<!*****************************************************************************>
+
+<h2>3. Recommended-Value Checks</h2>
+
+<p>
+
+The fields in this section are given values in the default
+<file>rpki.conf</file> file that are recommended to be left alone.  The
+default configuration file gives these fields with an accompanying comment
+similar to "Use this value unless you really know what you're doing." Some
+fields are recommended to have specific values; some fields are recommended to
+match other fields in the configuration file.  Certain situations allow for
+them to be different, but most installations will not require those
+configurations.  The Recommended-Value Checks verify that the recommended
+values are actually in use.
+
+<p>
+
+These fields have actual values they should contain.
+
+<p>
+
+<table align=center border=1>
+<tr align=center>
+<td width=240><b>Section:Field</b>
+<td><b>Suggested Value</b>
+</tr>
+<tr><td><i>myrpki:irdbd_server_host</i><td>'localhost'
+<tr><td><i>myrpki:irdbd_sql_database</i><td>'irdbd'
+<tr><td><i>myrpki:pubd_sql_database</i><td>'pubd'
+<tr><td><i>myrpki:publication_root_module</i><td>'root'
+<tr><td><i>myrpki:publication_rsync_module</i><td>'rpki'
+<tr><td><i>myrpki:rootd_server_host</i><td>'localhost'
+<tr><td><i>myrpki:rpkid_sql_database</i><td>'rpkid'
+<tr><td><i>myrpki:run_pubd</i><td>'no'
+<tr><td><i>myrpki:run_rootd</i><td>'no'
+<tr><td><i>myrpki:run_rpkid</i><td>'yes'
+<tr><td><i>myrpki:shared_sql_username</i><td>'rpki'
+</table>
+
+<br>
+
+These fields are strongly suggested to match each other.
+
+<p>
+
+<table align=center border=1>
+<tr align=center>
+<td width=250><b>Section:Field</b>
+<td width=250><b>Foreign&nbsp;Section:Field</b>
+</tr>
+
+<tr><td><i>myrpki:bpki_servers_directory</i><td><i>autoconf::datarootdir</i><b>/rpki</b>
+<tr><td><i>myrpki:publication_rsync_server</i><td><i>myrpki::pubd_server_host</i>
+<tr><td><i>myrpki:start_irdbd</i><td><i>myrpki::run_rpkid</i>
+<tr><td><i>myrpki:start_pubd</i><td><i>myrpki::run_pubd</i>
+<tr><td><i>myrpki:start_rootd</i><td><i>myrpki::run_rootd</i>
+<tr valign=top><td><i>myrpki:start_rpkid</i><td><i>myrpki::run_rpkid</i>
+<tr><td colspan=3>&nbsp;
+
+<tr><td><i>pubd:bpki-ta</i><td><i>myrpki::bpki_servers_directory</i><b>/ca.cer</b>
+<tr><td><i>pubd:pubd-cert</i><td><i>myrpki::bpki_servers_directory</i><b>/pubd.cer</b>
+<tr><td><i>pubd:pubd-key</i><td><i>myrpki::bpki_servers_directory</i><b>/pubd.key</b>
+<tr valign=top><td><i>pubd:irbe-cert</i><td><i>myrpki::bpki_servers_directory</i><b>/irbe.cer</b>
+<tr><td colspan=3>&nbsp;
+
+<tr><td><i>rootd:bpki-ta</i><td><i>myrpki::bpki_servers_directory</i><b>/ca.cer</b>
+<tr><td><i>rootd:rootd-bpki-crl</i><td><i>myrpki::bpki_servers_directory</i><b>/ca.crl</b>
+<tr><td><i>rootd:rootd-bpki-cert</i><td><i>myrpki::bpki_servers_directory</i><b>/rootd.cer</b>
+<tr><td><i>rootd:rootd-bpki-key</i><td><i>myrpki::bpki_servers_directory</i><b>/rootd.key</b>
+<tr valign=top><td><i>rootd:child-bpki-cert</i><td><i>myrpki::bpki_servers_directory</i><b>/child.cer</b>
+<tr><td colspan=3>&nbsp;
+
+<tr><td><i>rpkid:bpki-ta</i><td><i>myrpki::bpki_servers_directory</i><b>/ca.cer</b>
+<tr><td><i>rpkid:rpkid-cert</i><td><i>myrpki::bpki_servers_directory</i><b>/rpkid.cer</b>
+<tr><td><i>rpkid:rpkid-key</i><td><i>myrpki::bpki_servers_directory</i><b>/rpkid.key</b>
+<tr><td><i>rpkid:irdb-cert</i><td><i>myrpki::bpki_servers_directory</i><b>/irdbd.cer</b>
+<tr valign=top><td><i>rpkid:irbe-cert</i><td><i>myrpki::bpki_servers_directory</i><b>/irbe.cer</b>
+
+</table>
+
+<p>
+
+<!*****************************************************************************>
+
+<!--------------------------------------------------
+
+<h2>4. Cross-File Checks</h2>
+
+<p>
+
+The fields in this section must match values set in other configuration
+files.
+
+<p>
+
+These checks are not yet implemented in <cmd>rpkichk</cmd>.
+
+<p>
+
+<table align=center border=1>
+<tr align=center>
+<td width=250><b>Section:Field</b>
+<td><b>File to Match</b>
+</tr>
+
+<tr><td><i>myrpki:publication_root_module</i><td><file>rsyncd.conf</file>
+<tr><td><i>myrpki:publication_rsync_module</i><td><file>rsyncd.conf</file>
+
+</table>
+
+<p>
+
+--------------------------------------------------->
+
+<!*****************************************************************************>
+
+<br><br>
+
+</div>
+</div>
+
+
+	</div>
+
+	
+      </div>
+    </div>
+  </body>
+
+  <script type="application/ld+json">
+   {
+     "@context": "http://schema.org",
+     "@type": "Organization",
+     "url": "https://securerouting.net",
+     "logo": "/images/secure-routing-cloud.svg"
+   }
+  </script>
+  <script type="application/ld+json">
+   {
+     "@context": "http://schema.org",
+     "@type": "Organization",
+     "url": "https://securerouting.net",
+     "name": "Secure Routing",
+     "sameAs" : [
+       "https://www.youtube.com/channel/UCVOrJW51e8uu6aO_qnkk6qA"
+     ],
+   }
+  </script>
+</html>
+

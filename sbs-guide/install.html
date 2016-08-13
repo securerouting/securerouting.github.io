@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <title>Secure Routing -- Protect Your Infrastructure</title>
+
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/ears.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+
+    <script src="/js/jquery.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script>
+     $(document).ready(function () {
+       $('.dropdown-toggle').dropdown();
+     });
+    </script>
+
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container-fluid">
+	<div class="navbar-header">
+	  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+	  </button>
+	  <a class="navbar-brand" href="/">Secure Routing</a>
+	</div>
+
+	<div class="collapse navbar-collapse" id="navbar-collapse">
+	  <ul class="nav navbar-nav earsnav">
+	    <!-- LEARN -->
+	    <li class="dropdown">
+	      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Learn <span class="caret"></span>
+	      </a>
+
+	      <ul class="dropdown-menu">
+		<li><a href="/sbs-guide">Step-by-Step Guide</a></li>
+		<li><a href="https://www.youtube.com/channel/UCVOrJW51e8uu6aO_qnkk6qA">Youtube Channel</a></li>
+		<li><a href="/specifications.html">Specifications</a></li>
+		<li><a href="https://datatracker.ietf.org/wg/sidr/">Join The SIDR Working Group</a></li>
+	      </ul>
+	    </li>
+
+	    <!-- TRY -->
+	    <li class="dropdown">
+	      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Try <span class="caret"></span>
+	      </a>
+
+	      <ul class="dropdown-menu">
+		<li><a href="/workshop.html"">The Demonstration Workshop</a></li>
+	      </ul>
+	    </li>
+
+	    <!-- DEPLOY -->
+	    <li class="dropdown">
+	      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Deploy <span class="caret"></span>
+	      </a>
+
+	      <!-- TRY MENU -->
+	      <ul class="dropdown-menu">
+		  <li><a href="/bird.html">Install BIRD</a></li>
+		  <li><a href="http://www-x.antd.nist.gov/bgpsrx/">Install Quagga</a></li>
+		  <li><a href="http://rpki.net">Install RPKI.NET</a></li>
+		  <li><a href="http://sourceforge.net/projects/rpstir">Install RPSTIR</a></li>
+	      </ul>
+	    </li>
+
+	    <!-- INCIDENTS BUTTON -->
+	    <li class="dropdown">
+	      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Routing Incidents<span class="caret"></span>
+	      </a>
+
+	      <!-- INCIDENTS MENU -->
+	      <ul class="dropdown-menu">
+		<li><a href="/incident">Database</a></li>
+		<li><a href="/timeline.html"">Timeline</a></li>
+	      </ul>
+	    </li>
+	  </ul>
+	</div>
+      </div>
+    </nav>
+
+    <div class="container ears-top">
+      <div class="row">
+	
+	<div class="col-md-12" role="main">
+	
+
+	  <div class="page-header">
+  <h1><a href="/sbs-guide">Routing Security Step-by-Step Guide</a></h1>
+</div>
+
+<div class="panel panel-primary">
+  <div class="panel-heading">Installation Guide</div>
+<div class="panel-body">
+
+<link href="/css/sbs-guide.css" rel="stylesheet">
+
+<!*****************************************************************************>
+
+<a name="toc"></a>
+<h1>Table of Contents</h1>
+
+<p>
+
+<ul class="toc">
+<li><a href="#intro">1 Introduction</a><br>
+<li><a href="#platform-possibilities">2 Platform Possibilities</a><br>
+<li><a href="#software-install">3 <rpki>rpki.net</rpki> Software Installation</a>
+<ul class="toc">
+<li><a href="#install-linux">3.1 Installing on Debian and Ubuntu Using APT Packages</a>
+<li><a href="#install-linux-upgrade">3.2 Upgrading rpki.net Software on Debian and Ubuntu</a>
+<li><a href="#install-freebsd">3.3 Installing on FreeBSD Using Ports</a>
+<li><a href="#install-freebsd-upgrade">3.4 Upgrading on FreeBSD</a>
+<li><a href="#install-src">3.5 Installing From Source Code</a>
+</ul>
+<li><a href="#next-steps">4 Next Steps</a><br>
+<li><a href="#full-toc">5 Full Table of Contents</a>
+</ul>
+
+<p>
+
+<!*****************************************************************************>
+
+<a name="intro"></a>
+<h2>1 Introduction</h2>
+
+<p>
+
+The <rpki>rpki.net</rpki> package contains implementations of the
+Relying-Party and Certification-Authority software.  It may be installed
+from pre-built packages on a variety of systems, such as FreeBSD, Ubuntu
+Linux, and Debian Linux.  It may be built from source on other systems,
+but this may entail some modifications on the part of the installer.
+
+<p>
+
+The <rpki>rpki.net</rpki> package is available on <rpki><a href="http://rpki.net/">rpki.net</a></rpki>.
+
+<p>
+
+This document describes installing <rpki>rpki.net</rpki> from the pre-built
+packages, as well as installing from source.  There are also instructions for
+upgrading previously installed versions of <rpki>rpki.net</rpki>.
+
+<p>
+
+This document only discusses <rpki>rpki.net</rpki> installation and upgrades.
+System configuration is discussed in the <a
+href="configure">RSI-EARS Step-By-Step Configuration Guide</a>.
+
+<p>
+
+This document is prepared under Contract Number HSHQDC-14-C-B0035 for        
+DHS S&amp;T CSD
+
+<p>
+
+<!*****************************************************************************>
+
+<a name="platform-possibilities"></a>
+<h2>2 Platform Possibilities</h2>
+
+<p>
+
+The <rpki>rpki.net</rpki> documentation (on <a
+href="http://rpki.net">http://rpki.net</a>) says that <rpki>rpki.net</rpki>
+may be installed from pre-built packages and run on the following platforms:
+
+<ul>
+<li>Ubuntu 12.04 LTS ("Precise Pangolin")
+<li>Ubuntu 14.04 ("Trusty Tahir")
+<li>Debian 7 ("Wheezy")
+<li>FreeBSD
+</ul>
+
+<p>
+
+On other platforms, <rpki>rpki.net</rpki> may be built and installed from
+source code.  It may be built from source on these platforms, as well.
+
+<p>
+
+We have had the best success installing <rpki>rpki.net</rpki> on Ubuntu
+14.04.1 using binary packages.
+
+<p>
+
+<!*****************************************************************************>
+
+<a name="software-install"></a>
+<h2>3 <rpki>rpki.net</rpki> Software Installation</h2>
+
+<p>
+
+This section describes installing both the <rpki>rpki.net</rpki> software.
+In addition to the <rpki>rpki.net</rpki> software, there are additional software
+packages upon which <rpki>rpki.net</rpki> relies; installation instructions for
+these additional, required packages are also given.
+
+<p>
+
+Software installation requires superuser access on the target machine.<br>
+Shell commands provided below assume a <cmd>sh</cmd>/<cmd>bash</cmd> shell.
+
+<p>
+
+<!*********************************************************>
+
+<a name="install-linux"></a>
+<h3>3.1 Installing on Debian and Ubuntu Using APT Packages</h3>
+
+<p>
+
+Precompiled binary packages for Debian and Ubuntu are available from
+<a href="http://download.rpki.net">http://download.rpki.net</a> using the
+Advanced Package Tools (APT).  To use APT, you need to configure APT on your
+machine to know about the <rpki>rpki.net</rpki> APT repository.  Once you have
+done this, you should be able to install and update the <rpki>rpki.net</rpki>
+packages like any other precompiled package.
+
+<p>
+
+<!*************************************>
+
+<a name="install-linux-apt-setup"></a>
+<h4>3.1.1 Initial APT Setup</h4>
+
+<p>
+
+You should only need to perform these steps once for any particular machine.
+The second step consists of only one command.  However, the particular command
+depends on the platform.
+
+<ol>
+<li> Add the GPG public key for this repository.  This step is optional.
+
+<pre>
+    $ wget -q -O - http://download.rpki.net/APT/apt-gpg-key.asc | sudo apt-key add -
+</pre>
+
+<li> Configure APT to use this repository.
+
+<ul>
+
+<li>Debian Wheezy
+
+<pre>
+    $ sudo wget -q -O /etc/apt/sources.list.d/rpki.list http://download.rpki.net/APT/rpki.wheezy.list
+</pre>
+
+<li>Ubuntu Precise
+
+<pre>
+    $ sudo wget -q -O /etc/apt/sources.list.d/rpki.list http://download.rpki.net/APT/rpki.precise.list
+</pre>
+
+<li>Ubuntu Trusty
+
+<pre>
+    $ sudo wget -q -O /etc/apt/sources.list.d/rpki.list http://download.rpki.net/APT/rpki.trusty.list
+</pre>
+
+</ul>
+
+</ol>
+
+<p>
+
+<!*************************************>
+
+<a name="install-linux-apt"></a>
+<h4>3.1.2  Installation Using APT Tools </h4>
+
+<p>
+
+These instructions assume that you're using <cmd>apt-get</cmd>.  Other APT tools,
+such as <cmd>aptitude</cmd>, should also work.
+
+<ol>
+<li>Update available packages.
+
+<pre>
+    $ sudo apt-get update
+</pre>
+
+<li>Install the software.
+
+<pre>
+    $ sudo apt-get install rpki-rp rpki-ca
+</pre>
+
+<li>If the <rpki>rpki.net</rpki> Web Portal will be used on a CA installation,
+then Apache must also be installed.
+
+<pre>
+    $ sudo apt-get install apache2 libapache2-mod-wsgi
+</pre>
+
+<li>Customize the default <file>rpki.conf</file> for your environment
+as necessary.  The full path for this configuration file is
+<path>/etc/rpki.conf</path>.
+
+<p>
+
+In particular, you must change the <config>handle</config> and
+<config>rpkid_server_host</config> configuration fields.<br>
+There are detailed instructions for customizing the <file>rpki.conf</file>
+file in the <a href="config-reference#rpki.conf">Configuration File
+Reference</a>.
+
+<p>
+
+<li>Whenever anything in <file>rpki.conf</file> is changed, you must restart the
+RPKI CA service for the changes to take effect.
+
+<pre>
+    $ sudo service rpki-ca restart
+</pre>
+
+</ol>
+
+<!*************************************>
+
+<a name="install-linux-prereqs"></a>
+<h4>3.1.3 Prerequisites for Debian and Ubuntu</h4>
+
+<p>
+
+The packages in the following table must be installed in order for the
+<rpki>rpki.net</rpki> software to work.  Each package's name is given so that
+the installation may performed by the <cmd>apt-get</cmd> command.
+
+<p>
+
+A C compiler may be needed if any of the prerequisite packages must be built,
+rather than installed from a binary package.  <cmd>gcc</cmd> and <cmd>Clang</cmd>
+are known to work.
+
+<p>
+
+<center>
+
+<table border=1>
+
+<tr align=center>
+<td width=150><b>Software Package</b>
+<td width=450><b>APT Name</b>
+</tr>
+
+<tr><td>Python 2.7<td>python<br>python-dev<br>python-setuptools<br>python-pip (for Ubuntu installations)</tr>
+<tr><td>LibXML2<td>python-lxml<br>libxml2-utils</tr>
+<tr><td>MySQL client<td>mysql-client</tr>
+<tr><td>MySQL server<td>mysql-server</tr>
+<tr><td>Python "db" interface<td>python-mysqldb</tr>
+<tr><td>Django 1.4<td>Debian:  py27-django<br>Ubuntu:  Install manually using
+<i>sudo pip install django==1.4.5</i></tr>
+<tr><td>VObject<td>python-vobject</tr>
+<tr><td>PyYAML<td>python-yaml</tr>
+<tr><td>xsltproc<td>xsltproc</tr>
+<tr><td>RRDTool<td>rrdtool</tr>
+<tr><td>Apache<td>Apache 2.2 or later</tr>
+<tr><td>ssl<td>libssl0.9.8 or libssl1.0.0</tr>
+<tr><td>wsgi<td>libapache2-mod-wsgi 3 or later</tr>
+<tr><td>Django South 0.7.6<td>Debian:  python-django-south<br>Ubuntu:  Install
+manually using <i>sudo pip install South>=0.7.6</i></tr>
+
+</table>
+
+</center>
+
+<p>
+
+On some platforms the Python sources (in particular, the header files
+and libraries needed when building Python extensions) are in a separate
+"development" package; on other platforms they are all part of a single
+package. If you get compilation errors trying to build a the package and
+the error message says something about the file <file>Python.h</file> being
+missing, this is almost certainly your problem.
+
+<p>
+
+After completing the installation steps in this section, you have finished
+installation and may proceed to the <a href="#next-steps">Next Steps</a>
+section.
+However, developers should consider installing the development tools, as
+described in the <a href="#install-src-devtools">Developers Tools</a> section.
+
+<p>
+
+<!*********************************************************>
+
+<a name="install-linux-upgrade"></a>
+<h3>3.2 Upgrading rpki.net Software on Debian and Ubuntu</h3>
+
+<p>
+
+After <rpki>rpki.net</rpki> has been installed as described above, software upgrades
+may be performed using the normal APT upgrade process.
+
+The following commands will upgrade all your packages:
+
+<pre>
+    $ sudo apt-get update
+    $ sudo apt-get upgrade
+</pre>
+
+Alternatively, the following commands will only upgrade the <rpki>rpki.net</rpki>
+tools:
+
+<pre>
+    $ sudo apt-get update
+    $ sudo apt-get upgrade rpki-ca rpki-rp
+</pre>
+
+If the <rpki>rpki.net</rpki> Web Portal will be used on a CA installation,
+the Apache packages may be upgraded with this command:
+
+<pre>
+    $ sudo apt-get upgrade apache2 libapache2-mod-wsgi
+</pre>
+
+<p>
+
+After completing the installation steps in this section, you have finished
+installation and may proceed to the <a href="#next-steps">Next Steps</a>
+section.
+However, developers should consider installing the development tools, as
+described in the <a href="#install-src-devtools">Developers Tools</a> section.
+
+<p>
+
+<!*********************************************************>
+
+<a name="install-freebsd"></a>
+<h3>3.3 Installing on FreeBSD Using Ports</h3>
+
+<p>
+
+The FreeBSD Ports system may be used to install the <rpki>rpki.net</rpki>
+software.  This section describes how to configure the Ports system and
+install <rpki>rpki.net</rpki> using it.
+
+<p>
+
+<!*************************************>
+
+<a name="install-freebsd-manual"></a>
+<h4>3.3.1 Manual Installation</h4>
+
+<p>
+
+FreeBSD port skeletons must be downloaded in order to install the
+<rpki>rpki.net</rpki> software using the ports system.  These skeletons are
+available from <a href="http://download.rpki.net">download.rpki.net</a>.
+
+<ol>
+
+<li>Download the port skeletons manually and install from them.  The
+following shell commands will install the <rpki>rpki.net</rpki> ports:
+
+<pre>
+    for port in rpki-rp rpki-ca
+    do
+        fetch http://download.rpki.net/FreeBSD_Packages/${port}-port.tgz
+        tar xf ${port}-port.tgz
+        cd ${port}
+        make install
+        cd ..
+        rm -rf ${port}
+    done
+</pre>
+
+<li>If the <rpki>rpki.net</rpki> Web Portal will be used on a CA
+installation, the port skeletons can be downloaded and installed manually.
+The following shell commands will install the <rpki>rpki.net</rpki> ports:
+
+<pre>
+    for port in apache22 mod_wsgi3
+    do
+        fetch http://download.rpki.net/FreeBSD_Packages/${port}-port.tgz
+        tar xf ${port}-port.tgz
+        cd ${port}
+        make install
+        cd ..
+        rm -rf ${port}
+    done
+</pre>
+
+<li>Customize the default <file>rpki.conf</file> for your environment as
+necessary.  The full path for this configuration file is
+<path>/etc/rpki.conf</path>.
+
+<p>
+
+In particular, you must change the <config>handle</config> and
+<config>rpkid_server_host</config> configuration fields.<br>
+There are detailed instructions for customizing the <file>rpki.conf</file>
+file in the <a href="config-reference#rpki.conf">Configuration File
+Reference</a>.
+
+<li>Whenever anything in <file>rpki.conf</file> is changed, you must restart
+the RPKI CA service for the changes to take effect.
+
+<pre>
+    $ sudo service rpki-ca restart
+</pre>
+
+</ol>
+
+<p>
+
+<!*************************************>
+
+<a name="install-freebsd-auto"></a>
+<h4>3.3.2 Automated Download and Install with rpki-portmaster.sh</h4>
+
+<p>
+
+The <cmd>rpki-portmaster.sh</cmd> script may be used to automate the download
+steps given in the "Manual Installation" section.
+
+<ol>
+
+<li>Download <cmd>rpki-portmaster.sh</cmd>.
+
+<pre>
+    $ fetch http://download.rpki.net/FreeBSD_Packages/rpki-portmaster.sh
+</pre>
+
+<li>Install (or upgrade) the <rpki>rpki.net</rpki> software.
+
+<pre>
+    $ sh rpki-portmaster.sh
+</pre>
+
+<li>Customize the default <file>rpki.conf</file> for your environment
+as necessary.  The full path for this configuration file is
+<path>/etc/rpki.conf</path>.
+
+<p>
+
+In particular, you must change the <config>handle</config> and
+<config>rpkid_server_host</config> configuration fields.<br>
+There are detailed instructions for customizing the <file>rpki.conf</file>
+file in the <a href="config-reference#rpki.conf">Configuration File
+Reference</a>.
+
+<li>Whenever anything in <file>rpki.conf</file> is changed, you must restart
+the RPKI CA service for the changes to take effect.
+
+<pre>
+    $ sudo service rpki-ca restart
+</pre>
+
+</ol>
+
+<p>
+
+<!*************************************>
+
+<a name="install-freebsd-prereqs"></a>
+<h4>3.3.3 Prerequisite Software Packages for FreeBSD</h4>
+
+<p>
+
+The packages in the following table must be installed in order for the
+<rpki>rpki.net</rpki> software to work.  Each package's path and name are
+given so that the installation may performed by either the <cmd>make</cmd>
+command or a ports-specific tool that understands path names.
+
+<p>
+
+A C compiler is needed in order to build the prerequisite packages.
+<cmd>gcc</cmd> and <cmd>Clang</cmd> are known to work.
+
+<p>
+
+<center>
+
+<table border=1>
+
+<tr align=center>
+<td width=150><b>Software Package</b>
+<td width=300><b>Ports Path</b>
+<td width=150><b>Ports Name</b>
+</tr>
+
+<tr><td>Python 2.7<td><path>/usr/ports/lang/python27</path><td>python</tr>
+<tr><td>LibXML2<td><path>/usr/ports/devel/py-lxml</path><td>py27-lxml</tr>
+<tr><td>MySQL client<td><path>/usr/ports/databases/mysql55-client</path><td>mysql55-client</tr>
+<tr><td>MySQL server<td><path>/usr/ports/databases/mysql55-server</path><td>mysql55-server</tr>
+<tr><td>Python "db" interface<td><path>/usr/ports/databases/py-MySqldb</path><td>py27-MySQLdb</tr>
+<tr><td>Django 1.4<td><path>/usr/ports/www/py-django</path><td>py27-django</tr>
+<tr><td>VObject<td><path>/usr/ports/deskutils/py-vobject</path><td>py27-vobject</tr>
+<tr><td>PyYAML<td><path>/usr/ports/devel/py-yaml</path><td>py27-yaml</tr>
+<tr><td>xsltproc<td><path>/usr/ports/lib/libxslt</path><td>libxslt</tr>
+<tr><td>RRDTool<td><path>/usr/ports/databases/rrdtool</path><td>rrdtool</tr>
+<tr><td>Apache<td><path>/usr/ports/www/apache22</path><td>apache22</tr>
+<tr><td>wsgi<td><path>/usr/ports/www/mod_wsgi3</path><td>app22-mod_wsgi</tr>
+<tr><td>Django South 0.7.6<td><path>/usr/ports/databases/py-south</path><td>py27-south</tr>
+
+</table>
+
+</center>
+
+<p>
+
+On some platforms the Python sources (in particular, the header files
+and libraries needed when building Python extensions) are in a separate
+"development" package; on other platforms they are all part of a single
+package. If you get compilation errors trying to build a the package and
+the error message says something about the file <file>Python.h</file> being
+missing, this is almost certainly your problem.
+
+<p>
+
+After completing the installation steps in this section, you have finished
+installation and may proceed to the <a href="#next-steps">Next Steps</a><br>
+section.
+However, developers should consider installing the development tools, as
+described in the <a href="#install-src-devtools">Developers Tools</a> section.
+
+<p>
+
+<!*********************************************************>
+
+<a name="install-freebsd-upgrade"></a>
+<h3>3.4 Upgrading on FreeBSD</h3>
+
+<p>
+
+The FreeBSD Ports system may be used to install the <rpki>rpki.net</rpki>
+software.  This section describes how to upgrade software previously
+installed with the Ports system.
+
+<p>
+
+<!*************************************>
+
+<a name="install-freebsd-upgrade-manual"></a>
+<h4>3.4.1 Manual Upgrade</h4>
+
+<p>
+
+The FreeBSD ports system doesn't really understand upgrades.  Consequently,
+manual upgrade of the <rpki>rpki.net</rpki> software requires similar steps
+to manual installation, but it uses the <i>deinstall</i> and <i>reinstall</i>
+operations instead of plain <i>install</i>.
+
+<ol>
+
+<li>Re-install the <rpki>rpki.net</rpki> ports.
+
+<pre>
+    for port in rpki-rp rpki-ca
+    do
+        fetch http://download.rpki.net/FreeBSD_Packages/${port}-port.tgz
+        tar xf ${port}-port.tgz
+        cd ${port}
+        make deinstall
+        make reinstall
+        cd ..
+        rm -rf ${port}
+    done
+</pre>
+
+<p>
+
+<li>If the <rpki>rpki.net</rpki> Web Portal is used on a CA installation,
+the Apache-related ports may be re-installed using these shell commands:
+
+<pre>
+    for port in apache22 mod_wsgi3
+    do
+        fetch http://download.rpki.net/FreeBSD_Packages/${port}-port.tgz
+        tar xf ${port}-port.tgz
+        cd ${port}
+        make deinstall
+        make reinstall
+        cd ..
+        rm -rf ${port}
+    done
+</pre>
+
+</ol>
+
+<p>
+
+After an upgrade, you should check the newly-installed
+<path>/usr/local/etc/rpki.conf.sample</path> against your existing
+<path>/usr/local/etc/rpki.conf</path> in case any important options have
+changed.  The <rpki>rpki.net</rpki> configuration options are generally
+stable between versions, with sane defaults provided where possible.
+However, if you've done much customization to your <file>rpki.conf</file>
+you must keep track of this.
+
+<p>
+
+<!*************************************>
+
+<a name="install-freebsd-upgrade-auto"></a>
+<h4>3.4.2 Automated Upgrade with <cmd>rpki-portupgrade.sh</cmd></h4>
+
+<p>
+
+The <cmd>rpki-portupgrade.sh</cmd> script may be used to automate the download
+steps given in the "Manual Upgrade" section.
+
+<ol>
+
+<li>Download <cmd>rpki-portupgrade.sh</cmd>.
+
+<pre>
+  fetch http://download.rpki.net/FreeBSD_Packages/rpki-portupgrade.sh
+</pre>
+
+<li> Add information about the RPKI ports must be added to two variables
+in <path>/usr/local/etc/pkgtools.conf</path> before
+<cmd>rpki-portupgrade.sh</cmd> will know how to deal with these ports:
+
+<pre>
+    EXTRA_CATEGORIES = [
+        'rpki',
+    ]
+
+    ALT_INDEX = [
+        ENV['PORTSDIR'] + '/INDEX.rpki',
+    ]
+</pre>
+
+Once these steps have been completed, <cmd>rpki-portupgrade.sh</cmd> can be
+executed to install or upgrade the RPKI code.
+
+<pre>
+    sh rpki-portupgrade.sh
+</pre>
+
+<li>Customize the default <file>rpki.conf</file> for your environment
+as necessary.  The full path for this configuration file is
+<path>/etc/rpki.conf</path>.
+
+<p>
+
+In particular, you must change the <config>handle</config> and
+<config>rpkid_server_host</config> configuration fields.<br>
+There are detailed instructions for customizing the <file>rpki.conf</file>
+file in the <a href="config-reference#rpki.conf">Configuration File
+Reference</a>.
+
+<li>Whenever anything in <file>rpki.conf</file> is changed, you must restart
+the RPKI CA service for the changes to take effect.
+
+<pre>
+    $ sudo service rpki-ca restart
+</pre>
+
+</ol>
+
+<p>
+
+After completing the installation steps in this section, you have finished
+installation and may proceed to the <a href="#next-steps">Next Steps</a>
+section.
+However, developers should consider installing the development tools, as
+described in the <a href="#install-src-devtools">Developers Tools</a> section.
+
+<p>
+
+<!*********************************************************>
+
+<a name="install-src"></a>
+<h3>3.5 Installing From Source Code</h3>
+
+<p>
+
+At present, the entire RPKI tools collection is a single source tree with a
+shared <cmd>autoconf</cmd> configuration.  This may change in the future, but
+for now, this means that the build process is essentially the same regardless
+of which tools one wants to use.  Some of the tools have dependencies on
+external packages, although an effort has been make to keep these dependencies
+to a minimum.
+
+<p>
+
+Before attempting to build the <rpki>rpki.net</rpki> software from source, you
+will need to install any missing prerequisites.
+
+<p>
+
+Most of the tools require an RFC-3779-aware version of the OpenSSL libraries.
+If necessary, the build process will generate its own private copy of the
+OpenSSL libraries for this purpose.
+
+<p>
+
+Other than OpenSSL, most of the Relying-Party tools are fairly self-contained.
+The CA tools have a few additional dependencies, described below.
+
+<p>
+
+Initial development of this code has been on FreeBSD, so installation will
+probably be easiest on FreeBSD.  The software is tested on other platforms,
+such as Fedora, Ubuntu, Debian, and MacOSX.
+
+<p>
+
+<!*************************************>
+
+<a name="install-src-download"></a>
+<h4>3.5.1 Downloading the Source Code</h4>
+
+<p>
+
+It is recommended that <cmd>subversion</cmd> be used to obtain the source
+code.  To download:
+
+<pre>
+    $ svn checkout http://subvert-rpki.hactrn.net/trunk/
+</pre>
+
+Code snapshots are also available from
+<a href="http://download.rpki.net/">http://download.rpki.net/</a>
+as <cmd>xz</cmd>-compressed tarballs.
+
+<p>
+
+<!*************************************>
+
+<a name="install-src-prereqs"></a>
+<h4>3.5.2 Prerequisites Packages when Installing from Source Code</h4>
+
+<p>
+
+This section discusses installing the prerequisite software packages.  If
+your platform is Debian, Ubuntu, or FreeBSD, then you should consult the 
+appropriate sections that describe installing prerequisites on those systems.
+If you are using a different platform, you should continue reading this
+section.
+
+<p>
+
+The packages in the following table must be installed in order for the
+<rpki>rpki.net</rpki> software to work.  They must be installed <i>prior</i>
+to building the source code.  Each package's location is given so that it may
+be consulted to determine how the package may be installed on your platform.
+On some platforms (particularly MacOSX) the simplest way to install some of
+the Python packages may be the <cmd>easy_install</cmd> or <cmd>pip</cmd>
+tools that comes with Python.
+
+<p>
+
+A C compiler may be needed if any of the prerequisite packages must be
+built, rather than installed from a binary package. <cmd>gcc</cmd> and
+<cmd>Clang</cmd> are known to work.
+
+<p>
+
+<center>
+
+<table border=1>
+
+<tr align=center>
+<td width=150><b>Software Package</b>
+<td width=320><b>Package Location</b>
+</tr>
+
+<tr><td>Python 2.7<td>http://www.python.org</tr>
+<tr><td>LibXML2<td>http://codespeak.net/lxml</tr>
+<tr><td>MySQL client<td>http://www.mysql.com</tr>
+<tr><td>MySQL server<td>http://www.mysql.com</tr>
+<tr><td>Python "db" interface<td>http://sourceforge.net/projects/mysql-python</tr>
+<tr><td>Django 1.4<td>http:/www.djangoproject.com</i></tr>
+<tr><td>VObject<td>http://vobject.skyhouseconsulting.com</tr>
+<tr><td>PyYAML<td>http://pyyaml.org</tr>
+<tr><td>xsltproc<td>http://xmlsoft.org/XSLT</tr>
+<tr><td>RRDTool<td>http://www.rrdtool.org</tr>
+<tr><td>Apache<td>http://httpd.apache.org</tr>
+<tr><td>wsgi<td>http://www.freshports.org/www/mod_wsgi3</tr>
+<tr><td>Django South 0.7.6<td>http://south.aeracode.org</tr>
+
+</table>
+
+</center>
+
+<p>
+
+On some platforms the Python sources (in particular, the header files
+and libraries needed when building Python extensions) are in a separate
+"development" package; on other platforms they are all part of a single
+package. If you get compilation errors trying to build a the package and
+the error message says something about the file <file>Python.h</file> being
+missing, this is almost certainly your problem.
+
+<p>
+
+<!*************************************>
+
+<a name="install-src-build"></a>
+<h4>3.5.3 Building the Source Code</h4>
+
+<p>
+
+Once you have the prerequisite packages installed, you should be able to
+build the toolkit.  Go to the top-level directory (signified below as
+<arg>$top</arg>) in the distribution, run the <cmd>./configure</cmd> script
+and then run <cmd>make</cmd>:
+
+<pre>
+    $ cd $top
+    $ ./configure
+    $ make
+</pre>
+
+This should automatically build everything, in the right order.  A private
+copy of the OpenSSL libraries will be built with the proper options, if
+necessary, and linking the POW module against either the system OpenSSL
+libraries or the private OpenSSL libraries, as appropriate.
+
+<p>
+
+In theory, <cmd>./configure</cmd> will complain about any required packages
+which might be missing.
+
+<p>
+
+If you don't intend to run any of the CA tools, you can simplify the build
+and installation process by telling <cmd>./configure</cmd> that you only want
+to build the Relying-Party tools:
+
+<pre>
+    $ cd $top
+    $ ./configure --disable-ca-tools
+    $ make
+</pre>
+
+<p>
+
+<!*************************************>
+
+<a name="install-src-test"></a>
+<h4>3.5.4 Testing the Build</h4>
+
+<p>
+
+Assuming the build stage completed without obvious errors, the next step
+is to run some basic regression tests.
+
+<p>
+
+Some of the tests for the CA tools require MySQL databases to store their
+data.  To set up all the databases that the tests will need, run the SQL
+commands in <cmd>ca/tests/smoketest.setup.sql</cmd>.  The MySQL command line
+client is usually the easiest way to do this.
+
+<pre>
+    $ cd $top/ca
+    $ mysql -u root -p &lt; tests/smoketest.setup.sql
+</pre>
+
+To run the tests, run <cmd>make test</cmd>:
+
+<pre>
+    $ cd $top
+    $ make test
+</pre>
+
+To run a more extensive set of tests on the CA tool, run <cmd>make
+all-tests</cmd> in the <path>ca/</path> directory:
+
+<pre>
+    $ cd $top/ca
+    $ make all-tests
+</pre>
+
+Errors and problems should be apparent.  For example, any Python backtraces
+in the output indicate a problem.  If no errors are obvious, then your
+installation is should be okay.
+
+<p>
+
+<!*************************************>
+
+<a name="install-src-instbuild"></a>
+<h4>3.5.5 Installing the Build</h4>
+
+<p>
+
+Assuming the build and test phases went well, you should be ready to install
+the code. The <cmd>./configure</cmd> script attempts to figure out the
+"obvious" places to install the various programs for your platform.  For
+example,  binaries will be installed in <path>/usr/local/bin</path> or
+<path>/usr/local/sbin</path>.  Also, Python modules will be installed using
+the standard Python <cmd>distutils</cmd> and should end up wherever your
+system puts locally installed Python libraries.
+
+<p>
+
+The RPKI validator, <cmd>rcynic</cmd>, is a special case.  The install
+scripts may attempt to build a <syscall>chroot</syscall> jail and install
+<cmd>rcynic</cmd> in that environment.  This is straightforward in FreeBSD,
+but somewhat more complicated on other systems.  This complexity is primarily
+due to hidden dependencies on dynamic libraries.
+
+<p>
+
+To install the code, become root (e.g., <cmd>su</cmd> or <cmd>sudo</cmd>),
+then run <cmd>make install</cmd>:
+
+<pre>
+  $ cd $top
+  $ sudo make install
+</pre>
+
+<p>
+
+After completing the installation steps in this section, you have finished
+installation and may proceed to the <a href="#next-steps">Next Steps</a>
+section.
+However, developers should consider installing the development tools, as
+described in the <a href="#install-src-devtools">Developers Tools</a> section.
+
+<p>
+
+<!*************************************>
+
+<a name="install-src-devtools"></a>
+<h4>3.5.6 Developers Tools</h4>
+
+<p>
+
+There's a set of tools that only developers should need.  These tools are
+only used when modifying schemas or regenerating the documentation.  These
+tools are listed here for completeness, but most installations are likely
+to not need them.
+
+<ul>
+<li><a href="http://www.doxygen.org/">http://www.doxygen.org/</a>.  Doxygen in turn pulls in several other packages,
+notably Graphviz, pdfLaTeX, and Ghostscript.
+
+<ul>
+<li> FreeBSD: /usr/ports/devel/doxygen
+<li> Debian: doxygen
+<li> Ubuntu: doxygen (apt)
+</ul>
+
+<p>
+
+<li><a href="http://www.mbayer.de/html2text/">http://www.mbayer.de/html2text/</a>.  The documentation build process uses
+<cmd>xsltproc</cmd> and <cmd>html2text</cmd> to dump flat text versions of
+a few critical documentation pages.
+
+<ul>
+<li> FreeBSD: /usr/ports/textproc/html2text
+<li> Ubuntu: html2text (apt)
+</ul>
+
+<p>
+
+<li><a href="http://www.thaiopensource.com/relaxng/trang.html">http://www.thaiopensource.com/relaxng/trang.html</a>.  Trang is used to
+convert RelaxNG schemas from the human-readable "compact" form to the XML
+form that LibXML2 understands.  Trang in turn requires Java.
+
+<ul>
+<li> FreeBSD: /usr/ports/textproc/trang
+<li> Ubuntu: trang (apt)
+</ul>
+
+<p>
+
+<li><a href="http://search.cpan.org/dist/SQL-Translator/">http://search.cpan.org/dist/SQL-Translator/</a>.  SQL-Translator, also known
+as "SQL Fairy", includes code to parse an SQL schema and dump a description
+of it as Graphviz input.  SQL Fairy in turn requires Perl.
+
+<ul>
+<li> FreeBSD: /usr/ports/databases/p5-SQL-Translator
+<li> Ubuntu: sqlfairy (apt)
+</ul>
+
+<p>
+
+<li><a href="http://www.easysw.com/htmldoc/">http://www.easysw.com/htmldoc/</a>.  The documentation build process uses
+<cmd>htmldoc</cmd> to generate PDF from the project's Trac wiki.
+
+<ul>
+<li> FreeBSD: /usr/ports/textproc/htmldoc
+<li> Ubuntu: htmldoc (apt)
+</ul>
+
+</ul>
+
+<p>
+
+<!*****************************************************************************>
+
+<a name="next-steps"></a>
+<h2>4 Next Steps</h2>
+
+<p>
+
+Once you've finished installing the code, you will need to configure it.
+System configuration is discussed in the
+<a href="configure">RSI-EARS Step-By-Step Configuration
+Guide</a>.
+
+<p>
+
+Since CAs are generally also Relying Parties (if only so that they can check
+the results of their own actions), you will generally want to start by
+configuring the Relying-Party tools, then configure the CA tools if you're
+planning to use them.
+
+<p>
+
+<!*****************************************************************************>
+
+<a name="full-toc"></a>
+<h2>5 Full Table of Contents</h2>
+
+<p>
+
+<ul class="toc">
+<li><a href="#toc">Table of Contents</a>
+<p>
+<li><a href="#intro">1 Introduction</a><br>
+<p>
+<li><a href="#platform-possibilities">2 Platform Possibilities</a><br>
+<p>
+<li><a href="#software-install">3 <rpki>rpki.net</rpki> Software Installation</a>
+<ul class="toc">
+<li><a href="#install-linux">3.1 Installing on Debian and Ubuntu Using APT Packages</a>
+<ul class="toc">
+<li><a href="#install-linux-apt-setup">3.1.1 Initial APT Setup</a>
+<li><a href="#install-linux-apt">3.1.2  Installation Using APT Tools </a>
+<li><a href="#install-linux-prereqs">3.1.3 Prerequisites for Debian and Ubuntu</a>
+</ul>
+<p>
+<li><a href="#install-linux-upgrade">3.2 Upgrading rpki.net Software on Debian and Ubuntu</a>
+<p>
+<li><a href="#install-freebsd">3.3 Installing on FreeBSD Using Ports</a>
+<ul class="toc">
+<li><a href="#install-freebsd-manual">3.3.1 Manual Installation</a>
+<li><a href="#install-freebsd-auto">3.3.2 Automated Download and Install with rpki-portmaster.sh</a>
+<li><a href="#install-freebsd-prereqs">3.3.3 Prerequisite Software Packages for FreeBSD</a>
+</ul>
+<p>
+<li><a href="#install-freebsd-upgrade">3.4 Upgrading on FreeBSD</a>
+<ul class="toc">
+<li><a href="#install-freebsd-upgrade-manual">3.4.1 Manual Upgrade</a>
+<li><a href="#install-freebsd-upgrade-auto">3.4.2 Automated Upgrade with <cmd>rpki-portupgrade.sh</cmd></a>
+</ul>
+<p>
+<li><a href="#install-src">3.5 Installing From Source Code</a>
+<ul class="toc">
+<li><a href="#install-src-download">3.5.1 Downloading the Source Code</a>
+<li><a href="#install-src-prereqs">3.5.2 Prerequisites Packages when Installing from Source Code</a>
+<li><a href="#install-src-build">3.5.3 Building the Source Code</a>
+<li><a href="#install-src-test">3.5.4 Testing the Build</a>
+<li><a href="#install-src-instbuild">3.5.5 Installing the Build</a>
+<li><a href="#install-src-devtools">3.5.6 Developers Tools</a>
+</ul>
+<p>
+</ul>
+<li><a href="#next-steps">4 Next Steps</a><br>
+<p>
+<li><a href="#full-toc">5 Full Table of Contents</a>
+</ul>
+
+<p>
+
+<!*****************************************************************************>
+
+<p>
+<hr>
+<p>
+
+Sections of this document are derived or taken verbatim from Dragon
+Research Lab's <a href="http://rpki.net/wiki/doc/RPKI">RPKI Tools Manual</a>.
+
+<p>
+
+Copyright (c) 2015, Parsons, Inc<br>
+All rights reserved
+
+<br><br>
+
+</div>
+</div>
+
+
+
+	</div>
+
+	
+      </div>
+    </div>
+  </body>
+
+  <script type="application/ld+json">
+   {
+     "@context": "http://schema.org",
+     "@type": "Organization",
+     "url": "https://securerouting.net",
+     "logo": "/images/secure-routing-cloud.svg"
+   }
+  </script>
+  <script type="application/ld+json">
+   {
+     "@context": "http://schema.org",
+     "@type": "Organization",
+     "url": "https://securerouting.net",
+     "name": "Secure Routing",
+     "sameAs" : [
+       "https://www.youtube.com/channel/UCVOrJW51e8uu6aO_qnkk6qA"
+     ],
+   }
+  </script>
+</html>
+

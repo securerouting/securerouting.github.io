@@ -1,0 +1,3778 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <title>Secure Routing -- Protect Your Infrastructure</title>
+
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/ears.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+
+    <script src="/js/jquery.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script>
+     $(document).ready(function () {
+       $('.dropdown-toggle').dropdown();
+     });
+    </script>
+
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container-fluid">
+	<div class="navbar-header">
+	  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+	  </button>
+	  <a class="navbar-brand" href="/">Secure Routing</a>
+	</div>
+
+	<div class="collapse navbar-collapse" id="navbar-collapse">
+	  <ul class="nav navbar-nav earsnav">
+	    <!-- LEARN -->
+	    <li class="dropdown">
+	      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Learn <span class="caret"></span>
+	      </a>
+
+	      <ul class="dropdown-menu">
+		<li><a href="/sbs-guide">Step-by-Step Guide</a></li>
+		<li><a href="https://www.youtube.com/channel/UCVOrJW51e8uu6aO_qnkk6qA">Youtube Channel</a></li>
+		<li><a href="/specifications.html">Specifications</a></li>
+		<li><a href="https://datatracker.ietf.org/wg/sidr/">Join The SIDR Working Group</a></li>
+	      </ul>
+	    </li>
+
+	    <!-- TRY -->
+	    <li class="dropdown">
+	      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Try <span class="caret"></span>
+	      </a>
+
+	      <ul class="dropdown-menu">
+		<li><a href="/workshop.html"">The Demonstration Workshop</a></li>
+	      </ul>
+	    </li>
+
+	    <!-- DEPLOY -->
+	    <li class="dropdown">
+	      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Deploy <span class="caret"></span>
+	      </a>
+
+	      <!-- TRY MENU -->
+	      <ul class="dropdown-menu">
+		  <li><a href="/bird.html">Install BIRD</a></li>
+		  <li><a href="http://www-x.antd.nist.gov/bgpsrx/">Install Quagga</a></li>
+		  <li><a href="http://rpki.net">Install RPKI.NET</a></li>
+		  <li><a href="http://sourceforge.net/projects/rpstir">Install RPSTIR</a></li>
+	      </ul>
+	    </li>
+
+	    <!-- INCIDENTS BUTTON -->
+	    <li class="dropdown">
+	      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Routing Incidents<span class="caret"></span>
+	      </a>
+
+	      <!-- INCIDENTS MENU -->
+	      <ul class="dropdown-menu">
+		<li><a href="/incident">Database</a></li>
+		<li><a href="/timeline.html"">Timeline</a></li>
+	      </ul>
+	    </li>
+	  </ul>
+	</div>
+      </div>
+    </nav>
+
+    <div class="container ears-top">
+      <div class="row">
+	
+	<div class="col-md-12" role="main">
+	
+
+	  <div class="page-header">
+  <h1><a href="/sbs-guide">Routing Security Step-by-Step Guide</a></h1>
+</div>
+
+<div class="panel panel-primary">
+  <div class="panel-heading">MapResources User's Guide</div>
+<div class="panel-body">
+
+<link href="/css/sbs-guide.css" rel="stylesheet">
+
+<!*****************************************************************************>
+
+<!-------------------
+
+<h1>Conventions for Writers</h1>
+
+<p>
+
+These formatting conventions must be followed:
+
+<p>
+
+<table border=1>
+<tr align=center><td width=100><b>entity<b><td width=100><b>format tag</b><td width=275><b>example code</b><td width=150><b>formatted example</b></tr>
+<tr><td>argument<td align=center>arg<td>&lt;arg&gt;username&lt;/arg&gt;<td><arg>username</arg></tr>
+<tr><td>class<td align=center>class<td>&lt;class&gt;locobj&lt;/class&gt;<td><class>locobj</class></tr>
+<tr><td>command<td align=center>cmd<td>&lt;cmd&gt;apt-get&lt;/cmd&gt;<td><cmd>apt-get</cmd></tr>
+<tr><td>config field<td align=center>config<td>&lt;config&gt;rpkid_server_host&lt;/config&gt;<td><config>rpkid_server_host</config></tr>
+<tr><td>file<td align=center>file<td>&lt;file&gt;rpki.conf&lt;/file&gt;<td><file>rpki.conf</file></tr>
+<tr><td>module<td align=center>module<td>&lt;module&gt;locmodule&lt;/module&gt;<td><module>locmodule</module></tr>
+<tr><td>object<td align=center>obj<td>&lt;obj&gt;someobj&lt;/obj&gt;<td><obj>someobj</obj></tr>
+<tr><td>option<td align=center>opt<td>&lt;opt&gt;-verbose&lt;/opt&gt;<td><opt>-verbose</opt></tr>
+<tr><td>path<td align=center>path<td>&lt;path&gt;/etc/rpki.conf&lt;/path&gt;<td><path>/etc/rpki.conf</path></tr>
+<tr><td>routine<td align=center>call<td>&lt;call&gt;getpwname("root")&lt/call&gt;<td><call>getpwname("root")</call></tr>
+<tr><td>rpki.net<td align=center>rpki<td>&lt;rpki&gt;rpki.net&lt;/rpki&gt;<td><rpki>rpki.net</rpki></tr>
+<tr><td>subroutine call<td align=center>subr<td>&lt;subr&gt;foo()&lt/subr&gt;<td><subr>foo()</subr></tr>
+<tr><td>system call<td align=center>syscall<td>&lt;syscall&gt;stat("/woof")&lt/syscall&gt;<td><syscall>stat("/woof")</syscall></tr>
+</table>
+
+<p>
+
+This section must be deleted or commented out prior to release.
+
+<p>
+
+-------------------->
+
+<!*****************************************************************************>
+
+<a name="toc"></a>
+<h1>Table of Contents</h1>
+
+<p>
+
+<table align=center>
+<tr>
+<td valign=top>
+<ul class="toc">
+
+<li><a href="#intro">1 Introduction</a><br>
+<br>
+<li><a href="#sect-install">2 MapResources Installation</a><br>
+<ul class="toc">
+<li><a href="#sect-install-dependencies">2.1 Dependencies</a><br>
+<li><a href="#sect-install-installer">2.2 Installation</a><br>
+<li><a href="#sect-install-mongodb">2.3 MongoDB Setup</a><br>
+<li><a href="#sect-install-routeviews">2.4 Route Views Database Setup</a><br>
+</ul>
+<br>
+<li><a href="#sect-examples">3 MapResources Examples</a><br>
+<br>
+<li><a href="#sect-map-whois-ref">4 <cmd>map_whois.py</cmd> Usage</a><br>
+</ul>
+<br>
+
+<td>
+<ul class="toc">
+
+<li><a href="#sect-map-modules">5 <module>map_resources</module> Package</a><br>
+
+<ul class="toc">
+<li><a href="#sect-mod-analyze">5.1 <module>map_resources</module> Module</a><br>
+
+<ul class="toc">
+<li><a href="#man-analyze-analyzeoptparser">5.1.1 <class>map_resources.analyze.AnalyzeOptParser</class> Class</a><br>
+<li><a href="#man-analyze-rsrcreporter">5.1.2 <class>map_resources.analyze.ResourceReporter</class> Class</a><br>
+<li><a href="#man-analyze-whoisanalyzer">5.1.3 <class>map_resources.analyze.WhoisAnalyzer</class> Class</a><br>
+</ul>
+<br>
+
+<li><a href="#sect-mod-fetch-whois">5.2 <module>map_resources.fetch_whois</module> Module</a><br>
+<ul class="toc">
+<li><a href="#man-fwhois-asncollection">5.2.1 <class>map_resources.fetch_whois.ASNCollection</class> Class</a><br>
+<li><a href="#man-fwhois-cidrcollection">5.2.2 <class>map_resources.fetch_whois.CIDRCollection</class> Class</a><br>
+<li><a href="#man-fwhois-dbstore">5.2.3 <class>map_resources.fetch_whois.DBStore</class> Class</a><br>
+<li><a href="#man-fwhois-genericstore">5.2.4 <class>map_resources.fetch_whois.GenericStore</class> Class</a><br>
+<li><a href="#man-fwhois-hashstore">5.2.5 <class>map_resources.fetch_whois.HashStore</class> Class</a><br>
+<li><a href="#man-fwhois-ip-collection">5.2.6 <class>map_resources.fetch_whois.IPCollection</class> Class</a><br>
+<li><a href="#man-fwhois-netcollection">5.2.7 <class>map_resources.fetch_whois.NetCollection</class> Class</a><br>
+<li><a href="#man-fwhois-orgcollection">5.2.8 <class>map_resources.fetch_whois.OrgCollection</class> Class</a><br>
+<li><a href="#man-fwhois-poccollection">5.2.9 <class>map_resources.fetch_whois.POCCollection</class> Class</a><br>
+<li><a href="#man-fwhois-urlcollection">5.2.10 <class>map_resources.fetch_whois.URLCollection</class> Class</a><br>
+<li><a href="#man-fwhois-whoiscollection">5.2.11 <class>map_resources.fetch_whois.WhoisCollection</class> Class</a><br>
+</ul>
+<br>
+
+<li><a href="#sect-mod-whois-rv-cmp">5.3 <module>map_resources.whois_rv_cmp</module> Module</a><br>
+<ul class="toc">
+<li><a href="#man-wrvcmp-rvcomparator">5.3.1 <class>map_resources.whois_rv_cmp.RVComparator</class> Class</a><br>
+<li><a href="#man-wrvcmp-rvcomparatorres">5.3.2 <class>map_resources.whois_rv_cmp.RVComparatorRes</class> Class</a><br>
+<li><a href="#man-wrvcmp-rvfetcher">5.3.3 <class>map_resources.whois_rv_cmp.RVFetcher</class> Class</a><br>
+</ul>
+</ul>
+<br>
+
+<li><a href="#full-toc">6 Full Table of Contents</a><br>
+<br>
+
+</ul>
+
+<br>
+</td>
+
+<td width=100>&nbsp;
+
+</table>
+
+<p>
+
+<!*****************************************************************************>
+
+<a name="intro"></a>
+<h2>1 Introduction</h2>
+
+<p>
+
+MapResources - A Whois Resource Discovery Tool.
+
+<p>
+
+There a number of reasons why an organization may wish to build an
+inventory of all routing resources (ASNs, network blocks) that it holds.
+While much of this information can be found in Whois registries, the
+process of building such a list and the maintenance of such a list over
+time is often non-trivial.  This is because organizations, through
+mergers and splits,  may change in form and composition over time.  The
+Whois database itself may become stale from not receiving timely
+updates, or could simply become fractured enough over time such that no
+one person has full knowledge of the organizational routing resources.
+
+<p>
+
+Clearly, an automated interface to Whois is required.
+
+<p>
+
+ARIN, the Regional Internet Registry for the North America region, offers
+access to its Whois database through a RESTful API.  While ARIN does not
+itself provide a tool to automate Whois access, the RESTful API provides
+the necessary building block to implement such capability.  The MapResources
+package is an implementation of this capability.
+
+<p>
+
+A starting point in the form of a known POC handle, organization handle,
+net handle, or ASN number is assumed.  Using information contained within
+the <obj>whois</obj> object, the MapResources tool identifies other resource
+dependencies and  makes further queries through ARIN's RESTful API in order
+to find other resources that the organization may hold.  The end result is
+a report that constitutes a rough resource inventory and a network graph
+that depicts how these resources are related to one another.
+
+<p>
+
+The main driver utility program for this package is <cmd>map_whois</cmd>.
+The <opt>-h</opt> option to this script provides more information on the
+different options that are available to the user.  This user's guide contains
+a <a href="#sect-map-whois-ref">man-page</a> for <cmd>map_whois.py</cmd>.
+
+<p>
+
+Even though most interfaces in the <module>map_resources</module> module
+are marked as public, they are still in flux and subject to change.
+
+<p>
+
+This document is prepared under Contract Number HSHQDC-14-C-B0035 for
+DHS S&amp;T CSD
+
+<p>
+
+<!*****************************************************************************>
+
+<a name="sect-install"></a>
+<h2>2 MapResources Installation</h2>
+
+<p>
+
+The MapResources software may be installed using the instructions given
+in this section.  Prior to installing the package, ensure that the packages
+in the dependencies list are already installed.
+
+<p>
+
+<!*********************************************************>
+
+<a name="sect-install-dependencies"></a>
+<h3>2.1 Dependencies</h3>
+
+<p>
+
+The MapResources package has the following external dependencies.  These
+packages must be installed prior to installing the MapResources package.
+
+<ul>
+<li>pymongo
+<li>pprint
+<li>urllib
+<li>requests
+<li>xmltodict
+<li>pygraphviz
+<li>networkx
+<li>matplotlib
+<li>json2html
+<li>sqlite3
+<li>ipaddress
+</ul>
+
+Some of these Python packages may have additional library and system
+package dependencies.  For example, <module>pygraphviz</module> has a
+dependency on the <module>Graphviz</module> package.
+
+<p>
+
+<!*********************************************************>
+
+<a name="sect-install-installer"></a>
+<h3>2.2 Installation</h3>
+
+<p>
+
+The package can be installed by running the <cmd>setup.py</cmd> script
+as follows:
+
+<pre>
+    $ python setup.py install
+</pre>
+
+<p>
+
+<!*********************************************************>
+
+<a name="sect-install-mongodb"></a>
+<h3>2.3 MongoDB Setup</h3>
+
+<p>
+
+In order to use MongoDB as the persistent data store, follow directions
+given at <a href="http://docs.mongodb.org/manual/installation/">http://docs.mongodb.org/manual/installation/</a>
+in order to install MongoDB.
+
+<p>
+
+<!*********************************************************>
+
+<a name="sect-install-routeviews"></a>
+<h3>2.4 Route Views Database Setup</h3>
+
+<p>
+
+When trying to compare against Route Views data, the scripts in this
+package expect the Route Views data to be stored in a database that
+has the following schema.
+
+<p>
+
+<ul>
+<li>Routeadv Table
+
+<table border=1>
+<tr><th>Column		<th>Type</tr>
+<tr><td>advId		<td>integer primary key autoincrement
+<tr><td>at		<td>integer
+<tr><td>prefix		<td>varchar(255)
+<tr><td>prefixStart	<td>int
+<tr><td>prefixEnd	<td>int
+<tr><td>sourceAddr	<td>varchar(255)
+<tr><td>sourceAS	<td>integer
+<tr><td>originated	<td>int
+<tr><td>nexthop		<td>varchar(255)
+<tr><td>lastAS		<td>integer
+<tr><td>asciiPath	<td>varchar(4096)
+</table>
+
+<p>
+
+<li>Path Table
+
+<table border=1>
+<tr><th> Column			<th>Type
+<tr><td><arg>pathId</arg>	<td>integer primary key autoincrement
+<tr><td><arg>advId</arg>	<td>integer REFERENCES routeadv(advId)
+<tr><td><arg>fromAS</arg>	<td>integer
+<tr><td><arg>toAS</arg>		<td>integer
+<tr><td><arg>count</arg>	<td>integer
+</table>
+
+</ul>
+
+<p>
+
+<!*****************************************************************************>
+
+<a name="sect-examples"></a>
+<h2>3 MapResources Examples</h2>
+
+The following examples are for illustration purposes only.  The resources
+listed below were found at a particular instance in time.  For a more accurate
+representation of organizational resources the ARIN <i>whois</i> database
+should be queried directly.
+
+<ol>
+
+<!------------------>
+
+<li>Initiate Search from an Organizational Handle<br>
+
+Suppose we wish to obtain the graph of resources assigned to ARIN.  We know
+that one of the organizational handles for ARIN is 'ARIN', thus we can
+use this handle as one of our starting points:
+
+<pre>
+    $ python map_whois.py -X -o ARIN -g ARIN.svg
+</pre>
+
+<p>
+
+The <opt>-o</opt> option specifies the organizational handle of 'ARIN',
+while the <opt>-g</opt> option specifies the name of the file for the
+resource graph.
+
+<p>
+
+The <opt>-X</opt> option in the above command specifies that no caching
+is to be performed during query lookups.  If the <opt>-H</opt> option
+were used, the script would use a hash store as the caching store.
+
+<p>
+
+The hash data store allows scripts that wrap around the
+<module>map_resources</module> module to make use of cached values in
+subsequent calls to the graph-generation routine.  However, the hash data
+is still non-persistent.  In order to use a persistent data store the
+above script should be called with the '<opt>-D host:port</opt>' option.
+The <opt>-D</opt> option is the default.
+
+<p>
+
+The graph produced by the above command is shown below:
+
+<p>
+
+<center>
+<img src="/images/map-resources-example1.svg" width=352 height=374>
+</center>
+
+<p>
+
+We note the following:
+
+<ul>
+<li>Only a single network block is shown.  For ARIN, this likely
+represents only one of many network blocks that are assigned to it.
+
+<li>The ARIN block is grayed out.  This indicates that the number of resource
+dependencies from the ARIN block exceeded some threshold.  The hover text that
+appears over the grayed block indicates that the number of resources for
+<obj>http://whois.arin.net/rest/org/ARIN/nets</obj> is 51, which is clearly
+above our default threshold of 25.  </ul>
+
+<p>
+
+<!------------------>
+
+<li>Initiate Search from an Organizational Handle, with a Larger Threshold<br>
+
+If we re-run the above command (this time, with a local DB store) with
+the <opt>-t 51</opt> option, we get a different output:
+
+<pre>
+    $ python map_whois.py -o ARIN -t 51 -g ARIN.svg
+</pre>
+
+<p>
+
+<center>
+<img src="/images/map-resources-example2.svg">
+</center>
+
+<p>
+
+<!------------------>
+
+<li>Initiate search from multiple handles<br>
+
+A search for 'ARIN' on <obj>http://whois.arin.net</obj> indicates that the
+AS10745 and AS394018 are also assigned to ARIN.  Since they were not found
+using the ARIN organization handle as the starting point, we can renew the
+search using multiple starting handles.  Since we are making use of a local
+persistent data store, resources that were fetched previously are not
+re-queried.
+
+<p>
+
+The command that we use and the image that is produced are as follows:
+
+<pre>
+    $ python map_whois.py -o ARIN -a AS10745 -a AS394018 -t 51 -g ARIN.svg
+</pre>
+
+<p>
+
+<center>
+<img src="/images/map-resources-example3.svg">
+</center>
+
+<p>
+
+<!------------------>
+
+<li>Comparison Against Route Views<br>
+
+The <opt>-R</opt> option enables <cmd>map_whois.py</cmd> to find new resource
+handles from a comparison with Route Views data.
+
+<p>
+
+NOTE: The Route Views data has to be ingested into a database in order
+to be able to use this option.
+
+<p>
+
+New resources can be found in two ways:
+
+<ol>
+<li>ASNs that were previously unknown, but which originated known prefixes.
+
+<li>Prefixes that were previously unknown, but which are originated by
+known ASNs.
+</ol>
+
+<p>
+
+In addition, the <opt>-R</opt> option also checks whether any known prefixes
+were originated by any unknown ASNs.
+
+<p>
+
+For example, given an SQLite file <file>rib.sqlite</file> containing the Route
+Views RIB data, the following command lists a number of "unknown" ASNs:
+
+<pre>
+    $ python map_whois.py -o ARIN -a AS10745 -a AS394018 -t 51 -g ARIN.svg -R rib.sqlite
+</pre>
+
+<p>
+
+However, most (if not all) such ASNs correspond to different clusters of
+resources that belong to other organizations that are recipients of network
+resources from ARIN.
+
+<p>
+
+<!------------------>
+
+<li>Generation of a Report<br>
+Determining a complete list of starting handles is an iterative
+process.  Once a list of handles has been obtained, a report listing out
+the different resources can be generated using the <opt>-r</opt> option:
+
+<pre>
+    $ python map_whois.py -o ARIN -a AS10745 -a AS394018 -t 51 -g ARIN.svg -r report.html
+</pre>
+
+<p>
+
+The report formatting is highly primitive and is a work in progress.
+
+</ol>
+
+
+<p>
+
+<!*****************************************************************************>
+
+<a name="sect-map-whois-ref"></a>
+<h2>4 <cmd>map_whois.py</cmd> Usage</h2>
+
+<p>
+
+The <cmd>map_whois.py</cmd> enables one to discover network resources
+in ARIN's <i>whois</i> database that could belong to an organization.
+A starting point in the form of a known POC handle, organization handle,
+net handle, or ASN number is assumed.  The tool thereafter queries ARIN's
+RESTful API in order to detect other resources that the organization
+may hold.
+
+<p>
+
+Usage:
+<pre>
+    map_whois [-h] [-v] [-a ASN] [-p POC] [-o ORG] [-n NET] [-c CIDR]
+        [-i IP] [-u URL] [-t THRESHOLD] [-l] [-s] [-f {png,svg}] [-R RVDB]
+        [-L RESOURCELIST] [-j JSONFILE] [-g GRAPHFILE] [-r REPORTFILE]
+        [-X | -H | -D DBSTORE]
+
+    optional arguments:
+
+        -h, --help
+            show this help message and exit
+
+        -v, --verbose
+            increase output verbosity
+
+        -a ASN, --asn ASN
+            Start from the given ASN handle
+
+        -p POC, --poc POC
+            Start from the given POC handle
+
+        -o ORG, --org ORG
+            Start from the given Org handle
+
+        -n NET, --net NET
+            Start from the given Net handle
+
+        -c CIDR, --cidr CIDR
+            Start from the given CIDR block
+
+        -i IP, --ip IP
+            Start from the given IP address
+
+        -u URL, --url URL
+            Start from the given domain
+
+        -t THRESHOLD, --threshold THRESHOLD
+            Maximum number of dependencies to follow
+
+        -l, --longform
+            Dsplay detailed information
+
+        -s, --showgraph
+            Dsplay the graph
+
+        -f {png,svg}, --format {png,svg}
+            Graphviz file format to use
+
+        -R RVDB, --rvdb RVDB
+            Check against given Route Views Database file
+
+        -L RESOURCELIST, --resourcelist RESOURCELIST
+            Extract resource handles from the given file. Each line
+            of the file should be formatted as <type>:<value>, where
+            the different supported types are 'asn', 'poc', 'org',
+            'net', 'cidr', 'ip' and 'url'.
+
+        -j JSONFILE, --jsonfile JSONFILE
+            Output resource information in json format
+
+        -g GRAPHFILE, --graphfile GRAPHFILE
+            Output graph image
+
+        -r REPORTFILE, --reportfile REPORTFILE
+            Output report
+
+        -X, --nostore
+            Do not use any data store
+
+        -H, --hashstore
+            Use an indexed hash store
+
+        -D DBSTORE, --dbstore DBSTORE
+            Use a DB store and issue queries if needed
+
+</pre>
+
+<p>
+
+<!*****************************************************************************>
+
+<a name="sect-map-modules"></a>
+<h2>5 <module>map_resources</module> Package</h2>
+
+<p>
+
+The <module>map_resources</module> package enables one to query and inspect
+ARIN <i>whois</i> objects.
+
+<p>
+
+This package exports the following classes:
+
+<p>
+
+Data Stores:
+
+<ul>
+<li>GenericStore: No caching data store (base class)
+	<ul>
+		<li>HashStore: Data store with hash back-end
+		<li>DBStore: Data store with MongoDB as the back-end
+	</ul>
+</ul>
+
+Whois Collection Objects:
+
+<ul>
+<li>WhoisCollection: Base class
+
+	<ul>
+		<li>POCCollection: Point of Contact Collection
+
+		<ul>
+			<li>URLCollection: URL Collection (Ephemeral Class)
+		</ul>
+
+		<li>OrgCollection: Organization Collection
+
+		<li>NetCollection: Network resource collection
+
+		<ul>
+			<li>IPCollection: IP address collection (Ephemeral Class)
+
+			<li>CIDRCollection: CIDR block Collection (Ephemeral Class)
+		</ul>
+
+		<li>ASNCollection: Autonomous System Number Collection
+	</ul>
+</ul>
+
+Analysis and reporting:
+
+<ul>
+<li>WhoisAnalyzer: Cluster analyzer
+<li>ResourceReporter: formats cluster information for reporting
+</ul>
+
+CLI:
+
+<ul>
+<li>AnalyzeOptParser: Parse command line options
+</ul>
+
+RouteViews Interface:
+
+<ul>
+<li>RVFetcher: Fetch Route Views data from local DB
+<li>RVComparator: Compare <i>whois</i> and Route Views data
+<li>RVComparatorRes: Container for <module>RVComparator</module> results
+</ul>
+
+
+<p>
+
+<!*****************************************************************************>
+
+<a name="sect-mod-analyze"></a>
+<h3>5.1 <module>map_resources</module> Module</h3>
+
+<p>
+
+The <module>map_resources</module> module analyzes the data that were fetched
+through the ARIN RESTful API and generates reportable output.  It also
+implements the helper class that is used for processing command-line input to
+any driver scripts.
+
+<p>
+
+Attributes:<br>
+<i>verbose</i>: (boolean) Turns on verbosity of log messages.
+
+<p>
+
+<!*********************************************************>
+
+<a name="man-analyze-analyzeoptparser"></a>
+<h4>5.1.1 <class>map_resources.analyze.AnalyzeOptParser</class> Class</h4>
+
+<p>
+
+This class is used to parse options related to any
+<class>WhoisAnalyzer</class> driver script.
+
+<p>
+
+Constructor:  <class>map_resources.analyze.AnalyzeOptParser(prog)</class>
+
+<p>
+
+Constructor Arguments:
+<ul>
+<li><arg>prog</arg>: (string) Name of the program.
+</ul>
+
+<p>
+
+<!*************************************>
+
+<a name="man-analyze-aop-add_stores"></a>
+<h5>5.1.1.1 <subr>add_stores()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>add_stores()</subr>
+
+<p>
+
+Register the options associated with different data-store types.
+
+<p>
+
+<!*************************************>
+
+<a name="man-analyze-aop-get_help"></a>
+<h5>5.1.1.2 <subr>get_help()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>get_help()</subr>
+
+<p>
+
+Return the formatted help text.
+
+<p>
+
+Return Values:<br>
+<manrc>String value containing formatted help text.</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-analyze-aop-host_port"></a>
+<h5>5.1.1.3 <subr>host_port()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>host_port(s)</subr>
+
+<p>
+
+A simple type for a <arg>host:port</arg> identifier.
+
+<p>
+
+Throws <opt>argparse.ArgumentTypeError</opt> if the provided string
+is not formatted as <arg>hostname:port</arg>.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>s</arg>: (string) A string of the form <arg>hostname:port</arg>.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>
+The host (string) and port (int) tuple.
+</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-analyze-aop-parse"></a>
+<h5>5.1.1.4 <subr>parse()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>parse(argv)</subr>
+
+<p>
+
+Parse the list of options.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>argv</arg>: (list) A list of arguments.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>A <class>dict</class> structure that contains different analyzer
+options.</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-analyze-aop-parse_objs"></a>
+<h5>5.1.1.5 <subr>parse_objs()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>parse_objs(p)</subr>
+
+<p>
+
+Extract object handles and types from the provided options.  The object
+handle could come from a file or from the relevant option associated with
+each resource type.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>p</arg>: (Namespace) Contains various command-line parameters.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>A <class>dict</class> object whose keys correspond to the different
+handle identifiers and whose values correspond to the resource types.</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-analyze-aop-parse_objs_from_file"></a>
+<h5>5.1.1.6 <subr>parse_objs_from_file()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>parse_objs_from_file(rsrcfile)</subr>
+
+<p>
+
+Extract resource handles from the given file.  Each line of the file should
+be formatted as "<arg>&lt;type&gt;:&lt;value&gt;</arg>", where the different
+supported types are 'asn', 'cidr', 'ip', 'net', 'org', 'poc', and 'url'.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>rsrcfile</arg>: (file handle) The file to be parsed.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>
+A <class>dict</class> object containing a mapping between the resource
+handle and the resource type.
+</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-analyze-aop-parse_store"></a>
+<h5>5.1.1.7 <subr>parse_store()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>parse_store(p)</subr>
+
+<p>
+
+Extract the store type from the provided options.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>p</arg>: (Namespace) Contains various command-line parameters.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>A <class>GenericStore</class> object corresponding to the selected
+data-store type.</manrc>
+
+<p>
+
+<!*********************************************************>
+
+<a name="man-analyze-rsrcreporter"></a>
+<h4>5.1.2 <class>map_resources.analyze.ResourceReporter</class> Class</h4>
+
+<p>
+
+This class formats cluster information for reporting.
+
+<p>
+
+Constructor:  <class>map_resources.analyze.ResourceReporter(analyzer, resources, links)</class>
+
+<p>
+
+Constructor Arguments:
+<ul>
+<li><arg>analyzer</arg> - The <class>WhoisAnalyzer</class> object.
+<li><arg>resources</arg> - The cluster information to report about.
+<li><arg>links</arg> - The links associated with the clusters.
+</ul>
+
+<p>
+
+<!*************************************>
+
+<a name="man-analyze-rrep-display-graph"></a>
+<h5>5.1.2.1 <subr>display_graph()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>display_graph()</subr>
+
+<p>
+
+Display the resource graph using <module>matplotlib</module>.
+
+<p>
+
+Return Values:<br>
+<manrc>None.</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-analyze-rrep-get-agraph"></a>
+<h5>5.1.2.2 <subr>get_agraph()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>get_agraph(G, o)</subr>
+
+<p>
+
+Generate a Graphviz <i>Agraph</i> from graph information.  Produce the
+<i>Agraph</i> from the <arg>networkx</arg> object.  Also set node attributes
+from the values stored in the different <arg>WhoisCollection</arg> objects.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li>G(Graph): A networkx graph object.
+<li>o(dict): A <class>dict</class> of object collections indexed by
+the origin handle.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>A <cmd>graphviz</cmd> Agraph.</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-analyze-rrep-get-asninfo"></a>
+<h5>5.1.2.3 <subr>get_asninfo()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>get_asninfo(loc)</subr>
+
+<p>
+
+Generate ASN information.  Build a <class>dict</class> structure that contains
+ASN-related information.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>loc</arg>: (string) The object identifier.
+</ul>
+
+<p>
+
+Return Values:<br>
+
+<manrc>
+A <class>dict</class> structure with the following keys:
+<ul>
+<li>'<i>handle</i>': ASN handle
+</ul>
+</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-analyze-rrep-get-clusterinfo"></a>
+<h5>5.1.2.4 <subr>get_clusterinfo()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>get_clusterinfo(terse=True, rvf=None)</subr>
+
+<p>
+
+Return cluster information.  Build a list of cluster information along with
+relevant network information for reporting.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>terse</arg>: (boolean) If True, produce terse details.
+<li><arg>rvf</arg>: (RouteViewsFetcher) If not None, fetch information from a
+RouteViews database to augment reported cluster information.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>A <class>dict</class> that contains for each cluster, a list of
+resources against each resource type and additional information for each
+resource type that may be obtained from other data sources.</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-analyze-rrep-get-netinfo"></a>
+<h5>5.1.2.5 <subr>get_netinfo()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>get_netinfo(loc, rvf=None)</subr>
+
+<p>
+
+Generate network information.  Build a <class>dict</class> structure
+that contains information such as the registration date, the different
+<obj>netblock</obj>s, and the network handle.  Also fetch information
+from the routing table if we have access to a Route Views database.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>loc</arg>: (string) The object identifier.
+<li><arg>rvf</arg>: (RouteViewsFetcher) If not None, fetch information such
+as routed <obj>netblock</obj>s and origination AS in order to determine if
+any network resources are originated by resources in a different cluster.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>
+A <class>dict</class> structure with the following keys:
+<ul>
+<li>'<i>handle</i>': network handle
+<li>'<i>registration</i>': registration date
+<li>'<i>netblocks</i>': a JSONized string of a list of network blocks
+<li>'<i>routed</i>': a JSONized string of a list of routed network blocks
+</ul>
+</manrc>
+<p>
+
+<!*************************************>
+
+<a name="man-analyze-rrep-get-orginfo"></a>
+<h5>5.1.2.6 <subr>get_orginfo()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>get_orginfo(loc)</subr>
+
+<p>
+
+Build a <class>dict</class> structure that contains organization-related
+information.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>loc</arg>: (string) The object identifier.
+</ul>
+
+<p>
+
+Return Values:<br>
+
+<manrc>
+A <class>dict</class> structure with the following keys:
+<ul>
+<li>'<arg>handle</arg>': organizational handle
+</ul>
+</manrc>
+<p>
+
+<!*************************************>
+
+<a name="man-analyze-rrep-get-pocinfo"></a>
+<h5>5.1.2.7 <subr>get_pocinfo()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>get_pocinfo(loc)</subr>
+
+<p>
+
+Build a <class>dict</class> structure that contains Point of Contact-related
+information.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>loc</arg>: (string) The object identifier.
+</ul>
+
+<p>
+
+Return Values:<br>
+
+<manrc>
+A <class>dict</class> structure with the following keys:
+<ul>
+<li>'<arg>handle</arg>': POC handle
+</ul>
+</manrc>
+<p>
+
+<!*************************************>
+
+<a name="man-analyze-rrep-plot-graph"></a>
+<h5>5.1.2.8 <subr>plot_graph()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>plot_graph(outputfile=None)</subr>
+
+<p>
+
+Build a graph of <i>whois</i> resources.
+
+<p>
+
+Use <cmd>graphviz</cmd> to build the graph. Default format is <opt>neato</opt>
+The graph format is either <opt>png</opt> or <opt>svg</opt>. An <opt>svg</opt>
+image can show tool-tips.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>outputfile(file handle): If not None, write graph to this file.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>A base64-encoded image of the <i>whois</i> resource graph.</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-analyze-rrep-plot-resources"></a>
+<h5>5.1.2.9 <subr>plot_resources()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>plot_resources()</subr>
+
+<p>
+
+Scatter Plot the number of URLs and IPs in each cluster.
+
+<p>
+
+Produce a Scatter Plot number of URLs and IPs in each cluster.  <arg>X[]</arg>
+is the cluster ID.  <arg>Y[]</arg> is the number of elements.
+
+<p>
+
+Finally annotate the top 10 clusters in terms of resource density.
+
+<p>
+
+Return Values:<br>
+<manrc>A base64-encoded image of the scatter plot.</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-analyze-rrep-write-report"></a>
+<h5>5.1.2.10 <subr>write_report()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>write_report(rh, clusterplot=False, clustergraph=False, terse=True, rvf=None)</subr>
+
+<p>
+
+Write cluster information.
+
+<p>
+
+Arguments:<br>
+
+<ul>
+
+<li><arg>rh</arg>: (file handle) If not None, the target file to
+write the HTML report into.
+<li><arg>clusterplot</arg>: (boolean) If True, generate and write
+cluster plot information to report.
+<li><arg>clustergraph</arg>: (boolean) If True, generate and write
+network resource information to report.
+<li><arg>terse</arg>: (boolean) If True, produce terse details.
+<li><arg>rvf</arg>: (RouteViewsFetcher) If not None, use this
+object to augment report with RouteViews-derived information.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>None.</manrc>
+
+<p>
+
+<!*********************************************************>
+
+<a name="man-analyze-whoisanalyzer"></a>
+<h4>5.1.3 <class>map_resources.analyze.WhoisAnalyzer</class> Class</h4>
+
+<p>
+
+Define a class for analyzing a list of collection objects.
+
+<p>
+
+Constructor:  <class>map_resources.analyze.WhoisAnalyzer(threshold=25, store=None)</class>
+
+<p>
+
+Constructor Arguments:
+<ul>
+<li><arg>threshold</arg>: (int) If the number of node dependencies
+exceed this limit the dependencies are not followed.
+<li><arg>store</arg>: (<class>GenericStore</class>) The store to use
+for fetching data.
+</ul>
+
+<p>
+
+<!*************************************>
+
+<a name="man-analyze-whois-analyze"></a>
+<h5>5.1.3.1 <subr>analyze()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>analyze(objlist)</subr>
+
+<p>
+
+Analyze a list of handles.  Each handle in the list is used as
+a starting point for the collection of resources through the
+<subr>process_new_collection()</subr> method.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>objlist</arg>: (<class>dict</class>) A <class>dict</class> of
+handles->type mappings.
+</ul>
+
+Return Values:<br>
+<manrc>None.</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-analyze-whois-append_message"></a>
+<h5>5.1.3.2 <subr>append_message()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>append_message(msg)</subr>
+
+<p>
+
+Append a new message to the <obj>analyzer</obj> object.
+
+<p>
+
+Return Values:<br>
+<manrc>None.</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-analyze-whois-fetch"></a>
+<h5>5.1.3.3 <subr>fetch()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>fetch(ctype, loc)</subr>
+
+<p>
+
+Fetch the data corresponding to the given <arg>ctype</arg> and <arg>loc</arg>
+strings.  If we have a collection object, try fetching through that first in
+order to get the benefit of caching.  Otherwise look at the data store.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>ctype</arg>: (string) Collection type.
+<li><arg>loc</arg>: (string) The ID string.
+</ul>
+
+Return Values:<br>
+<manrc>The result object structure.</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-analyze-whois-generate_clusters"></a>
+<h5>5.1.3.4 <subr>generate_clusters()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>generate_clusters()</subr>
+
+<p>
+
+Group resources according to their subgraphs.
+
+<p>
+
+Return Values:<br>
+<manrc>
+A tuple consisting of a <class>dict</class> of resources, a
+<class>dict</class> of links in the graph, and a <class>list</class>
+of handles whose dependency threshold was exceeded.
+</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-analyze-whois-generate_results"></a>
+<h5>5.1.3.5 <subr>generate_results()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>generate_results(reportfile, jsonfile, showgraph, outputfile,
+terse=True, rvf=None)</subr>
+
+<p>
+
+Generate various result components.  The different result components can
+include a report file, a JSON structure with cluster information, a Graphviz
+graph, and a plot of the graph using <module>matplotlib</module>.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>reportfile</arg>: (file handle) If not None, the target
+file to write the HTML report into.
+<li><arg>jsonfile</arg>: (file handle) If not None, the target file to
+write JSONized cluster information into.
+<li><arg>showgraph</arg>: (boolean) If True, display network graph
+plot using <module>matplotlib</module>.
+<li><arg>outputfile</arg>: (filehandle) If True, write <cmd>graphviz</cmd>
+image to this file.
+<li><arg>terse</arg>: (boolean) If True, produce terse details.
+<li><arg>rvf</arg>: (RouteViewsFetcher) If not None, use this
+object to augment report with RouteViews-derived information.
+</ul>
+
+Return Values:<br>
+<manrc>None.</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-analyze-whois-get_resobj"></a>
+<h5>5.1.3.6 <subr>get_resobj()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>get_resobj()</subr>
+
+<p>
+
+Get the collection container object.
+
+<p>
+
+Return Values:<br>
+<manrc>
+The <class>WhoisCollection</class> object that serves as the
+handle to the collection container.
+</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-analyze-whois-pack"></a>
+<h5>5.1.3.7 <subr>pack()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>pack(resources, links)</subr>
+
+<p>
+
+Pack resources and links into a <class>dict</class>.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>resources</arg>:  (<class>dict</class>) A <class>dict</class> of
+resources indexed by type.
+<li><arg> links</arg>:  (<class>dict</class>) A <class>dict</class> of links.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>
+A <class>dict</class> that has the following keys:
+
+<ul>
+<li>'<arg>resources</arg>'
+<li>'<arg>links</arg>'
+</ul>
+</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-analyze-whois-process_new_collection"></a>
+<h5>5.1.3.8 <subr>process_new_collection()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>process_new_collection(t, h, comment=None)</subr>
+
+<p>
+
+Create a new collection object with the given type.  Reuse the cache and
+the data store if available, but don't link to any other collection object.
+Finally, subsume the resulting object into the main collection container
+object within <obj>self</obj>.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>t</arg>: (string) Collection type.
+<li><arg>h</arg>: (string) The collection handle.
+</ul>
+
+Return Values:<br>
+<manrc>None.</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-analyze-whois-unpack"></a>
+<h5>5.1.3.9 <subr>unpack()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>unpack(clustobj)</subr>
+
+<p>
+
+Unpack a <class>dict</class> containing resources and links.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>clustobj</arg>: (<class>dict</class>) A <class>dict</class> that
+has '<arg>resources</arg>' and '<arg>links</arg>' as two of its keys.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>
+A tuple of two elements:
+<ul>
+<li>
+<li>A <class>dict</class> of resources indexed by type.
+<li>A <class>dict</class> of links.
+</ul>
+</manrc>
+
+<p>
+
+<!*****************************************************************************>
+
+<a name="sect-mod-fetch-whois"></a>
+<h3>5.2 <module>map_resources.fetch_whois</module> Module</h3>
+
+<p>
+
+Query ARIN <i>whois</i> objects.  This module provides the functionality to
+query the ARIN RESTful API for all resource dependencies starting from the
+given ASN, POC, Org or Net handle.
+
+<p>
+
+Attributes:
+<ul>
+<li><arg>verbose</arg>: (boolean) Turns on verbosity of log messages.
+</ul>
+
+<p>
+
+<!*********************************************************>
+
+<a name="man-fwhois-asncollection"></a>
+<h4>5.2.1 <class>map_resources.fetch_whois.ASNCollection</class> Class</h4>
+
+<p>
+
+ASN Resource Class
+
+<p>
+
+Constructor:  <class>map_resources.fetch_whois.ASNCollection(origin_handle, origin=None, store=None, cache={}, tt=None)</class>
+
+<p>
+
+Constructor Arguments:
+<ul>
+<li><arg>origin_handle</arg>: (string) The handle that identifies the container.
+<li><arg>origin</arg>: (<class>WhoisCollection</class>) The parent container
+object.
+<li><arg>store</arg>: (<class>GenericStore</class>) The store associated with
+this collection object.
+<li><arg>cache</arg>: (<class>dict</class>) Any pre-cached values.
+<li><arg>tt</arg>: (string) An initial tool-tip.
+</ul>
+
+<p>
+
+Bases:  <class>map_resources.fetch_whois.WhoisCollection</class>
+
+<p>
+
+<!*************************************>
+
+<a name="man-fwhois-asncllct-slurp"></a>
+<h5>5.2.1.1 <subr>slurp()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>slurp(base, threshold)</subr>
+
+<p>
+
+Look for all objects that can be reached from this ASN container.
+ASN collections may be comprised of POC and Org collections.
+
+Arguments:<br>
+<ul>
+<li><arg>base</arg>:  (string) The base URL for lookups.
+<li><arg>threshold</arg>:  (int) If the number of node dependencies exceeds
+this limit the dependencies are not followed.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>None.</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-fwhois-asncllct-slurp_set"></a>
+<h5>5.2.1.2 <subr>slurp_set()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>slurp_set(base, threshold)</subr>
+
+<p>
+
+Find the ASN handle and slurp data.  ASN resources may be found in XML
+elements named <arg>asnPocLinkRef</arg> or <arg>asnRef</arg>.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>base</arg>:  (string) The base URL for lookups.
+<li><arg>threshold</arg>:  (int) If the number of node dependencies exceeds
+this limit the dependencies are not followed.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>None.</manrc>
+
+<p>
+
+<!*********************************************************>
+
+<a name="man-fwhois-cidrcollection"></a>
+<h4>5.2.2 <class>map_resources.fetch_whois.CIDRCollection</class> Class</h4>
+
+<p>
+
+IP container class (ephemeral).
+
+<p>
+
+Constructor:  <class>map_resources.fetch_whois.CIDRCollection(origin_handle, origin=None, store=None, cache={}, tt=None)</class>
+
+<p>
+
+Constructor Arguments:
+<ul>
+<li><arg>origin_handle</arg>: (string) The handle that identifies the container.
+<li><arg>origin</arg>: (<class>WhoisCollection</class>) The parent container
+object.
+<li><arg>store</arg>: (<class>GenericStore</class>) The store associated with
+this collection object.
+<li><arg>cache</arg>: (<class>dict</class>) Any pre-cached values.
+<li><arg>tt</arg>: (string) An initial tool-tip.
+</ul>
+
+<p>
+
+Bases:  <class>map_resources.fetch_whois.NetCollection</class>
+
+<p>
+
+<!*************************************>
+
+<a name="man-fwhois-cidrcllct-slurp"></a>
+<h5>5.2.2.1 <subr>slurp()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>slurp(handle, threshold)</subr>
+
+<p>
+
+Look for all objects that can be reached from this CIDR block.  Look for the
+associated <obj>NetCollection</obj> object and perform the slurp operation
+over that object.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>handle</arg>:  (string) The origin handle for the slurp operation.
+<li><arg>threshold</arg>:  (int) If the number of node dependencies exceeds
+this limit the dependencies are not followed.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>None.</manrc>
+
+<p>
+
+<!*********************************************************>
+
+<a name="man-fwhois-dbstore"></a>
+<h4>5.2.3 <class>map_resources.fetch_whois.DBStore</class> Class</h4>
+
+<p>
+
+Wrapper around a MongoDB data store.
+
+<p>
+
+Constructor:  <class>map_resources.fetch_whois.DBStore(dbhost, dbport, local=False)</class>
+
+<p>
+
+Bases: <class>map_resources.fetch_whois.GenericStore</class>
+
+<p>
+
+<!*************************************>
+
+<a name="man-fwhois-dbstore-fetch"></a>
+<h5>5.2.3.1 <subr>fetch()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>fetch(ctype, idstr)</subr>
+
+<p>
+
+Fetch data for the given ID string and collection type.  First look at the
+MongoDB store for any matching data.  If found, return that data; if not,
+fetch new data but only if we are not limiting lookups to already-cached
+values.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>ctype</arg>: The collection type.
+<li><arg>idstr</arg>: The location reference for the <i>whois</i> object.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>The mongoDB collection object, if found.</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-fwhois-dbstore-find-collection"></a>
+<h5>5.2.3.2 <subr>find_collection()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>find_collection(ctype)</subr>
+
+<p>
+
+Find the DB collection associated with the given object type.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>ctype</arg>: (string) The collection object type.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>The mongoDB collection object.</manrc>
+
+<p>
+
+<!*********************************************************>
+
+<a name="man-fwhois-genericstore"></a>
+<h4>5.2.4 <class>map_resources.fetch_whois.GenericStore</class> Class</h4>
+
+<p>
+
+Base class for all data stores with no caching support.
+
+<p>
+
+Constructor:  <class>map_resources.fetch_whois.GenericStore</class>
+
+<p>
+
+<!*************************************>
+
+<a name="man-fwhois-genstore-fetch"></a>
+<h5>5.2.4.1 <subr>fetch()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>fetch(ctype, idstr)</subr>
+
+<p>
+
+Fetch data for the given ID string and collection type.
+No caching is done in this routine. Just query and return.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>ctype</arg>: (string) The collection type.
+<li><arg>idstr</arg>: (string) The ID string.
+</ul>
+
+Return Values:<br>
+<manrc>A <class>dict</class> object representing the result.</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-fwhois-genstore-fetch-associated"></a>
+<h5>5.2.4.2 <subr>fetchAssociated()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>fetchAssociated(obj, idstr)</subr>
+
+<p>
+
+Fetch an object's associated data, given an ID string.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>obj</arg>: (string) The object for which we are seeking
+associated data.
+<li><arg>idstr</arg>: (string) The ID string.
+</ul>
+
+Return Values:<br>
+<manrc>A <class>dict</class> object representing the result.</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-fwhois-genstore-get-idstr"></a>
+<h5>5.2.4.3 <subr>get_idstr()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>get_idstr(typepfx, handle)</subr>
+
+<p>
+
+Determine the set of IDs for the given type and handle.  This is the default
+way of constructing an ID.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>typepfx</arg>: (string) The collection type.
+<li><arg>handle</arg>: (string) The resource handle.
+</ul>
+
+Return Values:<br>
+<manrc>A list of ID strings.</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-fwhois-genstore-query"></a>
+<h5>5.2.4.4 <subr>query()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>query(idstr)</subr>
+
+<p>
+
+Query the data store for the given ID string.  This is the common query
+method for all types of data stores.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>idstr</arg>: (string) The ID string.
+</ul>
+
+Return Values:<br>
+<manrc>A <class>dict</class> object representing the result.</manrc>
+
+
+<!*********************************************************>
+
+<a name="man-fwhois-hashstore"></a>
+<h4>5.2.5 <class>map_resources.fetch_whois.HashStore</class> Class</h4>
+
+<p>
+
+Implementation of a simple hash data store (non-persistent).
+
+<p>
+
+Constructor:  <class>map_resources.fetch_whois.HashStore</class>
+
+<p>
+
+Bases: <class>map_resources.fetch_whois.GenericStore</class>
+
+<p>
+
+<!*************************************>
+
+<a name="man-fwhois-hashstore-fetch"></a>
+<h5>5.2.5.1 <subr>fetch()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>fetch(ctype, idstr)</subr>
+
+<p>
+
+Fetch data for the given ID string and collection type.  First look at the
+hash for any matching data. If found return that data; if not fetch new data.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>ctype</arg>: (string) The collection type.
+<li><arg>idstr</arg>: (string) The ID string.
+</ul>
+
+Return Values:<br>
+<manrc>A <class>dict</class> object representing the result.</manrc>
+
+<p>
+
+<!*********************************************************>
+
+<a name="man-fwhois-ip-collection"></a>
+<h4>5.2.6 <class>map_resources.fetch_whois.IPCollection</class> Class</h4>
+
+<p>
+
+IP container class (ephemeral).
+
+<p>
+
+Constructor:  <class>map_resources.fetch_whois.IPCollection(origin_handle, origin=None, store=None, cache={}, tt=None)</class>
+
+<p>
+
+Constructor Arguments:
+<ul>
+<li><arg>origin_handle</arg>: (string) The handle that identifies the container.
+<li><arg>origin</arg>: (<class>WhoisCollection</class>) The parent container
+object.
+<li><arg>store</arg>: (<class>GenericStore</class>) The store associated with
+this collection object.
+<li><arg>cache</arg>: (<class>dict</class>) Any pre-cached values.
+<li><arg>tt</arg>: (string) An initial tool-tip.
+</ul>
+
+<p>
+
+Bases:  <class>map_resources.fetch_whois.NetCollection</class>
+
+<p>
+
+<!*************************************>
+
+<a name="man-fwhois-ipcllct-slurp"></a>
+<h5>5.2.6.1 <subr>slurp()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>slurp(handle, threshold)</subr>
+
+<p>
+
+Look for all objects that can be reached from this IP address.  Look for the
+associated <obj>NetCollection</obj> object and perform the slurp operation
+over that object.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>handle</arg>:  (string) The origin handle for the slurp operation.
+<li><arg>threshold</arg>:  (int) If the number of node dependencies exceeds
+this limit the dependencies are not followed.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>None.</manrc>
+
+<p>
+
+<!*********************************************************>
+
+<a name="man-fwhois-netcollection"></a>
+<h4>5.2.7 <class>map_resources.fetch_whois.NetCollection</class> Class</h4>
+
+<p>
+
+Net resource class.
+
+<p>
+
+Constructor:  <class>map_resources.fetch_whois.NetCollection(origin_handle, origin=None, store=None, cache={}, tt=None)</class>
+
+<p>
+
+Constructor Arguments:
+<ul>
+<li><arg>origin_handle</arg>: (string) The handle that identifies the container.
+<li><arg>origin</arg>: (<class>WhoisCollection</class>) The parent container
+object.
+<li><arg>store</arg>: (<class>GenericStore</class>) The store associated with
+this collection object.
+<li><arg>cache</arg>: (<class>dict</class>) Any pre-cached values.
+<li><arg>tt</arg>: (string) An initial tool-tip.
+</ul>
+
+<p>
+
+Bases:  <class>map_resources.fetch_whois.WhoisCollection</class>
+
+<p>
+
+<p>
+
+<!*************************************>
+
+<a name="man-fwhois-netcllct-slurp"></a>
+<h5>5.2.7.1 <subr>slurp()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>slurp(handle, threshold)</subr>
+
+<p>
+
+Look for all objects that can be reached from this Net container.
+Net collections may be comprised of POC or Org collections.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>base</arg>:  (string) The base URL for lookups.
+<li><arg>threshold</arg>:  (int) If the number of node dependencies exceeds
+this limit the dependencies are not followed.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>None.</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-fwhois-netcllct-slurp-set"></a>
+<h5>5.2.7.2 <subr>slurp_set()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>slurp_set(base, threshold)</subr>
+
+<p>
+
+Find the Net handle and slurp data.  Net resources may be found in XML
+elements named <arg>netPocLinkRef</arg> or <arg>netRef</arg>.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>base</arg>:  (string) The base URL for lookups.
+<li><arg>threshold</arg>:  (int) If the number of node dependencies exceeds
+this limit the dependencies are not followed.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>None.</manrc>
+
+<p>
+
+<!*********************************************************>
+
+<a name="man-fwhois-orgcollection"></a>
+<h4>5.2.8 <class>map_resources.fetch_whois.OrgCollection</class> Class</h4>
+
+<p>
+
+Organization Resource Class
+
+<p>
+
+Constructor:  <class>map_resources.fetch_whois.OrgCollection(origin_handle, origin=None, store=None, cache={}, tt=None)</class>
+
+<p>
+
+Constructor Arguments:
+<ul>
+<li><arg>origin_handle</arg>: (string) The handle that identifies the container.
+<li><arg>origin</arg>: (<class>WhoisCollection</class>) The parent container
+object.
+<li><arg>store</arg>: (<class>GenericStore</class>) The store associated with
+this collection object.
+<li><arg>cache</arg>: (<class>dict</class>) Any pre-cached values.
+<li><arg>tt</arg>: (string) An initial tool-tip.
+</ul>
+
+<p>
+
+Bases:  <class>map_resources.fetch_whois.WhoisCollection</class>
+
+<p>
+
+<!*************************************>
+
+<a name="man-fwhois-orgcllct-slurp"></a>
+<h5>5.2.8.1 <subr>slurp()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>slurp(handle, threshold)</subr>
+
+<p>
+
+Look for all objects that can be reached from this Org container.
+Org collections may be comprised of POC, ASN and Net collections.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>base</arg>:  (string) The base URL for lookups.
+<li><arg>threshold</arg>:  (int) If the number of node dependencies exceeds
+this limit the dependencies are not followed.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>None.</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-fwhois-orgcllct-slurp-set"></a>
+<h5>5.2.8.2 <subr>slurp_set()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>slurp_set(base, threshold)</subr>
+
+<p>
+
+Find the Org handle and slurp data.  Orgs may be found in XML elements named
+<arg>orgPocLinkRef</arg> or <arg>orgRef</arg>.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>base</arg>:  (string) The base URL for lookups.
+<li><arg>threshold</arg>:  (int) If the number of node dependencies exceeds
+this limit the dependencies are not followed.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>None.</manrc>
+
+<p>
+
+
+<!*********************************************************>
+
+<a name="man-fwhois-poccollection"></a>
+<h4>5.2.9 <class>map_resources.fetch_whois.POCCollection</class> Class</h4>
+
+<p>
+
+Point of Contact Resource Class.
+
+<p>
+
+Constructor:  <class>map_resources.fetch_whois.POCCollection(origin_handle, origin=None, store=None, cache={}, tt=None)</class>
+
+<p>
+
+Constructor Arguments:
+<ul>
+<li><arg>origin_handle</arg>: (string) The handle that identifies the container.
+<li><arg>origin</arg>: (<class>WhoisCollection</class>) The parent container
+object.
+<li><arg>store</arg>: (<class>GenericStore</class>) The store associated with
+this collection object.
+<li><arg>cache</arg>: (<class>dict</class>) Any pre-cached values.
+<li><arg>tt</arg>: (string) An initial tool-tip.
+</ul>
+
+<p>
+
+Bases:  <class>map_resources.fetch_whois.WhoisCollection</class>
+
+<p>
+
+<!*************************************>
+
+<a name="man-fwhois-poccllct-slurp-set"></a>
+<h5>5.2.9.1 <subr>slurp()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>slurp(handle, threshold)</subr>
+
+<p>
+
+Look for all objects that can be reached from this POC container.
+POC collections may be comprised of Org, ASN and Net collections.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>handle</arg>:  (string) The origin handle for the slurp
+<li><arg>threshold</arg>:  (int) If the number of node dependencies exceeds
+this limit the dependencies are not followed.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>None.</manrc>
+
+<p>
+
+<p>
+
+<!*************************************>
+
+<a name="man-fwhois-poccllct-slurp-set"></a>
+<h5>5.2.9.2 <subr>slurp_set()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>slurp_set(base, threshold)</subr>
+
+<p>
+
+Find the POC handle and slurp data.  POCs may be found in XML elements
+named <arg>pocLinkRef</arg> or <arg>pocRef</arg>.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>base</arg>:  (string) The base URL for lookups.
+<li><arg>threshold</arg>:  (int) If the number of node dependencies exceeds
+this limit the dependencies are not followed.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>None.</manrc>
+
+<p>
+
+<!*********************************************************>
+
+<a name="man-fwhois-urlcollection"></a>
+<h4>5.2.10 <class>map_resources.fetch_whois.URLCollection</class> Class</h4>
+
+<p>
+
+Constructor:  <class>map_resources.fetch_whois.URLCollection(origin_handle, origin=None, store=None, cache={}, tt=None)</class>
+
+<p>
+
+Constructor Arguments:
+<ul>
+<li><arg>origin_handle</arg>: (string) The handle that identifies the container.
+<li><arg>origin</arg>: (<class>WhoisCollection</class>) The parent container
+object.
+<li><arg>store</arg>: (<class>GenericStore</class>) The store associated with
+this collection object.
+<li><arg>cache</arg>: (<class>dict</class>) Any pre-cached values.
+<li><arg>tt</arg>: (string) An initial tool-tip.
+</ul>
+
+<p>
+
+Bases:  <class>map_resources.fetch_whois.POCCollection</class>
+
+<p>
+
+<!*************************************>
+
+<a name="man-fwhois-urlcllct-slurp"></a>
+<h5>5.2.10.1 <subr>slurp()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>slurp(handle, threshold)</subr>
+
+<p>
+
+Look for all objects that can be reached from this URL.  Look for
+the associated <obj>POCCollection</obj> object and perform the slurp
+operation over that object.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>handle</arg>:  (string) The origin handle for the slurp
+<li><arg>threshold</arg>:  (int) If the number of node dependencies exceeds
+this limit the dependencies are not followed.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>None.</manrc>
+
+<!*********************************************************>
+
+<a name="man-fwhois-whoiscollection"></a>
+<h4>5.2.11 <class>map_resources.fetch_whois.WhoisCollection</class> Class</h4>
+
+<p>
+
+Base class for all <obj>Whois</obj> collection objects.
+
+<p>
+
+Constructor:  <class>map_resources.fetch_whois.WhoisCollection(origin_handle, origin=None, store=None, cache={}, tt=None)</class>
+
+<p>
+
+Constructor Arguments:
+<ul>
+<li><arg>origin_handle</arg>: (string) The handle that identifies the container.
+<li><arg>origin</arg>: (<class>WhoisCollection</class>) The parent container
+object.
+<li><arg>store</arg>: (<class>GenericStore</class>) The store associated with
+this collection object.
+<li><arg>cache</arg>: (<class>dict</class>) Any pre-cached values.
+<li><arg>tt</arg>: (string) An initial tool-tip.
+</ul>
+
+<p>
+
+<!*************************************>
+
+<a name="man-fwhois-whoiscllct-add-collection"></a>
+<h5>5.2.11.1 <subr>add_collection()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>add_collection(col)</subr>
+
+<p>
+
+Add a new associated collection to the current object.  Collections are
+indexed by the origin handle.  There can be multiple collections per origin
+handle.  As part of adding the collection also update the cache from the
+to-be-added collection to the main (parent) collection holder.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>col</arg>:  (<class>WhoisCollection</class>) The collection object
+to be added.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>None.</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-fwhois-whoiscllct-add-link"></a>
+<h5>5.2.11.2 <subr>add_link()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>add_link(handle)</subr>
+
+<p>
+
+Create a link between the current object and the given handle.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>handle</arg>: (string) The handle of the collection to link with.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>None.</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-fwhois-whoiscllct-add-tooltip"></a>
+<h5>5.2.11.3 <subr>add_tooltip()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>add_tooltip(handle, msg)</subr>
+
+<p>
+
+Append a new tool-tip to the list indexed by the given handle.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>handle</arg>: (string) The handle to associate the tool-tip
+with.
+<li><arg>msg</arg>: (string) The tool-tip message.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>None.</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-fwhois-whoiscllct-do-slurp"></a>
+<h5>5.2.11.4 <subr>do_slurp()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>do_slurp(threshold)</subr>
+
+<p>
+
+Entry point for looking up resource objects.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>threshold</arg>:  (int) If the number of node dependencies exceeds
+this limit, the dependencies are not followed.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>None.</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-fwhois-whoiscllct-fetch-associated-obj"></a>
+<h5>5.2.11.5 <subr>fetchAssociatedObj()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>fetchAssociatedObj(idstr)</subr>
+
+<p>
+
+Get associated data for given idstr.  This method asks the data store for
+any associated objects.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>idstr</arg>: (string) Object ID string.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>
+A tuple with two values: the first is whether the data was cached or not;
+and the second is the actual result object.
+</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-fwhois-whoiscllct-fetch-obj"></a>
+<h5>5.2.11.6 <subr>fetchObj()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>fetchObj(typepfx, handle, cache=True)</subr>
+
+<p>
+
+Get data corresponding to the given handle and collection type.  This method
+first constructs the ID string(s) corresponding to the handle and then calls
+<subr>get_data()</subr> to get the actual result object.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>typepfx</arg>:  (string) Collection type.
+<li><arg>handle</arg>: (string) Resource handle.
+<li><arg>cache</arg>:  (boolean) If true, any data returned by
+<subr>get_data()</subr> is cached.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>
+A list of object tuples. Each object tuple contains three values: the first is
+whether or not the data was fresh (not cached); the second is the ID string,
+and the third is the result object.
+</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-fwhois-whoiscllct-get-cache"></a>
+<h5>5.2.11.7 <subr>get_cache()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>get_cache()</subr>
+
+<p>
+
+Return the cache structure for the collection object.
+
+<p>
+
+Return Values:<br>
+<manrc>
+A <class>dict</class> value that holds the cache information for
+the <class>WhoisCollection</class> object.
+</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-fwhois-whoiscllct-get-collections"></a>
+<h5>5.2.11.8 <subr>get_collections()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>get_collections(recurse=True)</subr>
+
+<p>
+
+Get list of collections associated with the given object.  Return all
+objects below and including the current one grouped by their handle.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>recurse</arg>:  (boolean) Return collection objects by
+traversing all collections that are linked through previous calls
+to <subr>add_collection()</subr>.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>
+A <class>dict</class> of lists of <class>WhoisCollection</class> objects. The
+keys of the <class>dict</class> are the origin handles that were used in
+the construction of the associated <class>WhoisCollection</class> objects.
+</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-fwhois-whoiscllct-get-data"></a>
+<h5>5.2.11.9 <subr>get_data()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>get_data(ctype, idstr)</subr>
+
+<p>
+
+Get data corresponding to the given ID string and collection type.
+First check if the data exists in the cache. If it doesn't then look
+for data in the data store.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>ctype</arg>:  (string) Collection type.
+<li><arg>idstr</arg>:  (string) ID string.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>
+A tuple of two values, where the first is a boolean value that
+indicates whether or not the data was cached, and the second is
+the result <class>dict</class> object.
+</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-fwhois-whoiscllct-get-draw-attribs"></a>
+<h5>5.2.11.10 <subr>get_draw_attribs()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>get_draw_attribs(node_h, a)</subr>
+
+<p>
+
+Get the different attributes of this collection.
+
+<p>
+
+Return Values:<br>
+<manrc>
+A <class>dict</class> structure that contains the following
+attributes for the collection object:
+<ul>
+<li><arg>shape</arg>: the shape to use in any graphical representation.
+<li><arg>style</arg>: the figure style, such as its filled status.
+<li><arg>fillcolor</arg>: the fillcolor to use.
+<li><arg>pencolor</arg>: the pencolor to use. penwidth: the pen-width to use.
+</ul>
+</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-fwhois-whoiscllct-get-links"></a>
+<h5>5.2.11.11 <subr>get_links()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>get_links(recurse=True)</subr>
+
+<p>
+
+Get the list of links associated with the given object.  For each object
+below and including the current node return the list of connected nodes.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>recurse</arg>:  (boolean) Return links by traversing
+all collections that are linked through previous calls to
+<subr>add_collection()</subr>.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>
+A <class>dict</class> of lists of handles. The keys of the <class>dict</class>
+are the origin handles that were used in the construction of the associated
+<class>WhoisCollection</class> objects.
+</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-fwhois-whoiscllct-get-parent"></a>
+<h5>5.2.11.12 <subr>get_parent()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>get_parent()</subr>
+
+<p>
+
+Return the parent object for the object.
+
+<p>
+
+Return Values:<br>
+<manrc>
+The <class>WhoisContainer</class> object corresponding to the parent.
+</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-fwhois-whoiscllct-get-parent-handle"></a>
+<h5>5.2.11.13 <subr>get_parent_handle()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>get_parent_handle()</subr>
+
+<p>
+
+Return the origin (parent) handle for the object.
+
+<p>
+
+Return Values:<br>
+<manrc>
+The string value for the origin handle.
+</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-fwhois-whoiscllct-get-resources"></a>
+<h5>5.2.11.14 <subr>get_resources()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>get_resources(recurse=True)</subr>
+
+<p>
+
+Get the list of resources associated with the given object.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>recurse</arg>:  (boolean) Return resources by traversing
+all collections that are linked through previous calls to
+<subr>add_collection()</subr>.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>
+A <class>dict</class> of lists of resources.  The keys are the resource types.
+</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-fwhois-whoiscllct-get-store"></a>
+<h5>5.2.11.15 <subr>get_store()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>get_store()</subr>
+
+<p>
+
+Get the store associated with this object.
+
+<p>
+
+Return Values:<br>
+<manrc>
+The <class>GenericStore</class> object that is associated with the
+given collection object.
+</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-fwhois-whoiscllct-get-tooltip"></a>
+<h5>5.2.11.16 <subr>get_tooltip()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>get_tooltip(recurse=True)</subr>
+
+<p>
+
+Get the list of tool-tips associated with the given object.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>recurse</arg>:  (boolean) Return tool-tips by traversing
+all collections that are linked through previous calls to
+<subr>add_collection()</subr>.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>
+A <class>dict</class> of lists of tool-tips.  The keys are the origin handles.
+</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-fwhois-whoiscllct-get-type"></a>
+<h5>5.2.11.17 <subr>get_type()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>get_type()</subr>
+
+<p>
+
+Get the collection type for the given collection object.
+
+<p>
+
+Return Values:<br>
+<manrc>
+A string value corresponding to the type of the <i>whois</i> collection object.
+</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-fwhois-whoiscllct-set-limit-exceeded"></a>
+<h5>5.2.11.18 <subr>set_limit_exceeded()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>set_limit_exceeded(handle, idstr, lim)</subr>
+
+<p>
+
+Set the object state to indicate too many dependencies.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>handle</arg>: (string) The handle against which the limit-exceeded
+state is to be associated.
+<li><arg>idstr</arg>: (string) The ID string that triggered the
+limit-exceeded event.
+<li><arg>lim</arg>:  (int) The number of dependencies that were detected.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>None.</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-fwhois-whoiscllct-slurp-common"></a>
+<h5>5.2.11.19 <subr>slurp_common()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>slurp_common(p, idstr, threshold)</subr>
+
+<p>
+
+Common convenience function for data slurping.  If we're presented with a
+<class>dict</class>, look for the handle in all the list elements; if not,
+check in the provided list.  Do not process those objects whose child
+collections have a number of elements greater than a particular threshold.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>p</arg>:  (string) The link reference to process.
+<li><arg>idstr</arg>:  (string) Object ID string.
+<li><arg>threshold</arg>:  (int) If the number of node dependencies exceed
+this limit, the dependencies are not followed.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>None.</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-fwhois-whoiscllct-subsume"></a>
+<h5>5.2.11.20 <subr>subsume()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>subsume(col)</subr>
+
+<p>
+
+Subsume the new collection object.  Merge various pertinent data associated
+with the new collection object into the current collection object.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>col</arg>:  (<class>WhoisCollection</class>) The collection object
+that to be subsumed.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>None.</manrc>
+
+<!*****************************************************************************>
+
+<a name="sect-mod-whois-rv-cmp"></a>
+<h3>5.3 <module>map_resources.whois_rv_cmp</module> Module</h3>
+
+<p>
+
+This module serves as the interface between the <obj>WhoisAnalyzer</obj>
+object and the database view of <module>RouteViews</module> data. The
+Route Views data must first be pre-populated within a database.
+Get data from a local database instance of <module>RouteViews</module>.
+
+<p>
+
+This module provides three classes:
+
+<ul>
+
+<li>
+<a href="#man-wrvcmp-rvcomparator"><class>RVComparator</class></a>:
+Does some comparisons between a set of ASNs and network block data
+and the <module>RouteViews</module> DB.
+
+<li>
+<a href="#man-wrvcmp-rvcomparatorres"><class>RVComparatorRes</class></a>:
+Class for encapsulating the comparator result.
+
+<li>
+<a href="#man-wrvcmp-rvfetcher"><class>RVFetcher</class></a>:
+Provides a simple interface to fetch <obj>netblocks</obj> from the database.
+
+</ul>
+
+<p>
+
+Attributes:
+<ul>
+<li><arg>verbose</arg>:  (boolean) Turns on verbosity of log messages.
+</ul>
+
+<!*********************************************************>
+
+<a name="man-wrvcmp-rvcomparator"></a>
+<h4>5.3.1 <class>map_resources.whois_rv_cmp.RVComparator</class> Class</h4>
+
+<p>
+
+Comparison between <obj>Whois</obj> objects and Route Views data.
+
+<p>
+
+Constructor:  <class>map_resources.whois_rv_cmp.RVComparator(dbfile)</class>
+
+<p>
+
+<!*************************************>
+
+<a name="man-wrvcmp-rvcomp-add-asn"></a>
+<h5>5.3.1.1 <subr>add_asn()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>add_asn(asn)</subr>
+
+<p>
+
+Add the ASN to the SQL query.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>asn</arg>: (string) The ASN handle.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>
+True if the ASN was added.
+</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-wrvcmp-rvcomp-add-net"></a>
+<h5>5.3.1.2 <subr>add_net()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>add_net(startAddr, endAddr, oaslist)</subr>
+
+<p>
+
+Add the network block to the SQL query.  IPv6 address blocks are ignored.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>startAddr</arg>:  (string) The start address in the block.
+<li><arg>endAddr</arg>:  (string) The end address in the block.
+<li><arg>oaslist</arg>:  (list)  A list of origin ASNs associated
+with this <obj>netblock</obj>.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>
+True if the network block was added.
+</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-wrvcmp-rvcomp-compare"></a>
+<h5>5.3.1.3 <subr>compare()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>compare()</subr>
+
+<p>
+
+Compare known resources against Route Views data.
+Issue the SQL query, check which prefixes and ASNs are unknown.
+
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>
+An <obj>RVComparatorRes</obj> object that encapsulates the
+results of the comparison.
+</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-wrvcmp-rvcomp-compare-resources"></a>
+<h5>5.3.1.4 <subr>compare_resources()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>compare_resources(resob)</subr>
+
+<p>
+
+Register known resources and compare against Route Views.
+Register all ASNs and Net objects from the <obj>WhoisAnalyzer</obj>
+object and then call <subr>compare()</subr> in order to check for
+differences against Route Views data.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>resob</arg>:  (<obj>WhoisAnalyzer</obj>) Object that holds the
+list of ASN and Net resources we are interested in analyzing.
+
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>
+An <obj>RVComparatorRes</obj> object that encapsulates the
+results of the comparison.
+</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-wrvcmp-rvcomp-is-pfx-known"></a>
+<h5>5.3.1.5 <subr>is_pfx_known()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>is_pfx_known(start, end)</subr>
+
+<p>
+
+Check if the given network block is one that we know about.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>start</arg>:  (string) Network block start.
+<li><arg>end</arg>:  (string) Network block end.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>
+True if the network block exists in our list.<br>
+False if not.
+</manrc>
+
+
+<!*********************************************************>
+
+<a name="man-wrvcmp-rvcomparatorres"></a>
+<h4>5.3.2 <class>map_resources.whois_rv_cmp.RVComparatorRes</class> Class</h4>
+
+<p>
+
+Class for encapsulating the comparator result.
+
+<p>
+
+Constructor:  <class>map_resources.whois_rv_cmp.RVComparatorRes</class>
+
+<p>
+
+<!*************************************>
+
+<a name="man-wrvcmp-rvcompres-add-unknown-asn"></a>
+<h5>5.3.2.1 <subr>add_unknown_asn()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>add_unknown_asn(asn, pfxlist)</subr>
+
+<p>
+
+Register the previously unknown ASN that was found to originate a
+known prefix.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>asn</arg>: The (unknown) ASN originating the prefix.
+<li><arg>pfx</arg>: The prefix from a known block that was originated.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>
+None.
+</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-wrvcmp-rvcompres-add-unknown-oasn"></a>
+<h5>5.3.2.2 <subr>add_unknown_oasn()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>add_unknown_oasn(asn, pfx)</subr>
+
+<p>
+
+Register the ASN originating a known prefix but was not
+configured as the originating AS in <i>whois</i>.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>asn</arg>:  The (known) ASN originating the prefix.
+<li><arg>pfx</arg>:  The prefix from a known block that was originated.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>
+None.
+</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-wrvcmp-rvcompres-add-unknown-pfx"></a>
+<h5>5.3.2.3 <subr>add_unknown_pfx()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>add_unknown_pfx(asn, pfx)</subr>
+
+<p>
+
+Register the previously unknown prefix that was originated from a known ASN.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>asn</argv>:  The known ASN originating the prefix.
+<li><arg>pfx</arg>:  The unknown prefix that was originated.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>
+None.
+</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-wrvcmp-rvcompres-get-unknown-asn"></a>
+<h5>5.3.2.4 <subr>get_unknown_asn()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>get_unknown_asn()</subr>
+
+<p>
+
+Return the list of unknown ASNs.
+
+<p>
+
+Return Values:<br>
+<manrc>
+A <class>dict</class> structure that maps ASNs to the prefix values.
+</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-wrvcmp-rvcompres-get-unknown-oasn"></a>
+<h5>5.3.2.5 <subr>get_unknown_oasn()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>get_unknown_oasn()</subr>
+
+<p>
+
+Return the list of unknown originating ASNs.
+
+<p>
+
+Return Values:<br>
+<manrc>
+A <class>dict</class> structure that maps ASNs to the prefix values.
+</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-wrvcmp-rvcompres-get-unknown-pfx"></a>
+<h5>5.3.2.6 <subr>get_unknown_pfx()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>get_unknown_pfx()</subr>
+
+<p>
+
+Return the list of unknown prefixes.
+
+<p>
+
+Return Values:<br>
+<manrc>
+A <class>dict</class> structure that maps prefixes to the ASNs
+they were originated from.
+</manrc>
+
+<p>
+
+<!*************************************>
+
+<a name="man-wrvcmp-rvcompres-process-unknown-resources"></a>
+<h5>5.3.2.7 <subr>process_unknown_resources()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>process_unknown_resources(analyzer)</subr>
+
+<p>
+
+Process all unknown dependencies.  Feed all unknown dependencies that were
+detected in Routeviews through the <class>WhoisAnalyzer</class> object.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>analyzer</arg>:  (<class>WhoisAnalyzer</class>) The analyzer object.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>
+None.
+</manrc>
+
+<!*********************************************************>
+
+<a name="man-wrvcmp-rvfetcher"></a>
+<h4>5.3.3 <class>map_resources.whois_rv_cmp.RVFetcher</class> Class</h4>
+
+<p>
+
+Class to fetch objects from route views.
+
+<p>
+
+Constructor:  <class>map_resources.whois_rv_cmp.RVFetcher(dbfile)</class>
+
+<p>
+
+<!*************************************>
+
+<a name="man-wrvcmp-rvfetcher-find-netblocks"></a>
+<h5>5.3.3.1 <subr>find_netblocks()</subr></h5>
+
+<p>
+
+Synopsis:  <subr>find_netblocks(start, end)</subr>
+
+<p>
+
+Look up all <obj>netblocks</obj> that fall between the <arg>start</arg> and
+<arg>end</arg> prefix bounds.  IPv6 address blocks are ignored.
+
+<p>
+
+Arguments:<br>
+<ul>
+<li><arg>start</arg>:  (string) Start prefix.
+<li><arg>end</arg>:  (string) End prefix.
+</ul>
+
+<p>
+
+Return Values:<br>
+<manrc>
+A cursor iterator that holds the results of the look-up.
+</manrc>
+
+<p>
+
+<!*****************************************************************************>
+
+<a name="full-toc"></a>
+<h2>6 Full Table of Contents</h2>
+
+<ul class="toc">
+
+<li><a href="#toc">Table of Contents</a><br>
+<br>
+
+<li><a href="#intro">1 Introduction</a><br>
+<br>
+
+<li><a href="#sect-install">2 MapResources Installation</a><br>
+<ul class="toc">
+<li><a href="#sect-install-dependencies">2.1 Dependencies</a><br>
+<li><a href="#sect-install-installer">2.2 Installation</a><br>
+<li><a href="#sect-install-mongodb">2.3 MongoDB Setup</a><br>
+<li><a href="#sect-install-routeviews">2.4 Route Views Database Setup</a><br>
+</ul>
+<br>
+
+<li><a href="#sect-examples">3 MapResources Examples</a><br>
+<br>
+
+<li><a href="#sect-map-whois-ref">4 <cmd>map_whois.py</cmd> Usage</a><br>
+<br>
+
+<li><a href="#sect-map-modules">5 <module>map_resources</module> Package</a><br>
+<ul class="toc">
+<li><a href="#sect-mod-analyze">5.1 <module>map_resources</module> Module</a><br>
+<table>
+<tr>
+<td>
+<ul class="toc">
+<li><a href="#man-analyze-analyzeoptparser">5.1.1 <class>map_resources.analyze.AnalyzeOptParser</class> Class</a><br>
+<ul class="toc">
+<li><a href="#man-analyze-aop-add_stores">5.1.1.1 <subr>add_stores()</subr></a><br>
+<li><a href="#man-analyze-aop-get_help">5.1.1.2 <subr>get_help()</subr></a><br>
+<li><a href="#man-analyze-aop-host_port">5.1.1.3 <subr>host_port()</subr></a><br>
+<li><a href="#man-analyze-aop-parse">5.1.1.4 <subr>parse()</subr></a><br>
+<li><a href="#man-analyze-aop-parse_objs">5.1.1.5 <subr>parse_objs()</subr></a><br>
+<li><a href="#man-analyze-aop-parse_objs_from_file">5.1.1.6 <subr>parse_objs_from_file()</subr></a><br>
+<li><a href="#man-analyze-aop-parse_store">5.1.1.7 <subr>parse_store()</subr></a><br>
+</ul>
+<br>
+
+<li><a href="#man-analyze-rsrcreporter">5.1.2 <class>map_resources.analyze.ResourceReporter</class> Class</a><br>
+<ul class="toc">
+<li><a href="#man-analyze-rrep-display-graph">5.1.2.1 <subr>display_graph()</subr></a><br>
+<li><a href="#man-analyze-rrep-get-agraph">5.1.2.2 <subr>get_agraph()</subr></a><br>
+<li><a href="#man-analyze-rrep-get-asninfo">5.1.2.3 <subr>get_asninfo()</subr></a><br>
+<li><a href="#man-analyze-rrep-get-clusterinfo">5.1.2.4 <subr>get_clusterinfo()</subr></a><br>
+<li><a href="#man-analyze-rrep-get-netinfo">5.1.2.5 <subr>get_netinfo()</subr></a><br>
+<li><a href="#man-analyze-rrep-get-orginfo">5.1.2.6 <subr>get_orginfo()</subr></a><br>
+<li><a href="#man-analyze-rrep-get-pocinfo">5.1.2.7 <subr>get_pocinfo()</subr></a><br>
+<li><a href="#man-analyze-rrep-plot-graph">5.1.2.8 <subr>plot_graph()</subr></a><br>
+<li><a href="#man-analyze-rrep-plot-resources">5.1.2.9 <subr>plot_resources()</subr></a><br>
+<li><a href="#man-analyze-rrep-write-report">5.1.2.10 <subr>write_report()</subr></a><br>
+</ul>
+<br>
+
+<td>
+<li><a href="#man-analyze-whoisanalyzer">5.1.3 <class>map_resources.analyze.WhoisAnalyzer</class> Class</a><br>
+<ul class="toc">
+<li><a href="#man-analyze-whois-analyze">5.1.3.1 <subr>analyze()</subr></a><br>
+<li><a href="#man-analyze-whois-append_message">5.1.3.2 <subr>append_message()</subr></a><br>
+<li><a href="#man-analyze-whois-fetch">5.1.3.3 <subr>fetch()</subr></a><br>
+<li><a href="#man-analyze-whois-generate_clusters">5.1.3.4 <subr>generate_clusters()</subr></a><br>
+<li><a href="#man-analyze-whois-generate_results">5.1.3.5 <subr>generate_results()</subr></a><br>
+<li><a href="#man-analyze-whois-get_resobj">5.1.3.6 <subr>get_resobj()</subr></a><br>
+<li><a href="#man-analyze-whois-pack">5.1.3.7 <subr>pack()</subr></a><br>
+<li><a href="#man-analyze-whois-process_new_collection">5.1.3.8 <subr>process_new_collection()</subr></a><br>
+<li><a href="#man-analyze-whois-unpack">5.1.3.9 <subr>unpack()</subr></a><br>
+</ul>
+
+</tr>
+</table>
+<br>
+
+<li><a href="#sect-mod-fetch-whois">5.2 <module>map_resources.fetch_whois</module> Module</a><br>
+<table>
+<tr>
+<td>
+<ul class="toc">
+<li><a href="#man-fwhois-asncollection">5.2.1 <class>map_resources.fetch_whois.ASNCollection</class> Class</a><br>
+<ul class="toc">
+<li><a href="#man-fwhois-asncllct-slurp">5.2.1.1 <subr>slurp()</subr></a><br>
+<li><a href="#man-fwhois-asncllct-slurp_set">5.2.1.2 <subr>slurp_set()</subr></a><br>
+</ul>
+<br>
+
+<li><a href="#man-fwhois-cidrcollection">5.2.2 <class>map_resources.fetch_whois.CIDRCollection</class> Class</a><br>
+<ul class="toc">
+<li><a href="#man-fwhois-cidrcllct-slurp">5.2.2.1 <subr>slurp()</subr></a><br>
+</ul>
+<br>
+
+<li><a href="#man-fwhois-dbstore">5.2.3 <class>map_resources.fetch_whois.DBStore</class> Class</a><br>
+<ul class="toc">
+<li><a href="#man-fwhois-dbstore-fetch">5.2.3.1 <subr>fetch()</subr></a><br>
+<li><a href="#man-fwhois-dbstore-find-collection">5.2.3.2 <subr>find_collection()</subr></a><br>
+</ul>
+<br>
+
+<li><a href="#man-fwhois-genericstore">5.2.4 <class>map_resources.fetch_whois.GenericStore</class> Class</a><br>
+<ul class="toc">
+<li><a href="#man-fwhois-genstore-fetch">5.2.4.1 <subr>fetch()</subr></a><br>
+<li><a href="#man-fwhois-genstore-fetch-associated">5.2.4.2 <subr>fetchAssociated()</subr></a><br>
+<li><a href="#man-fwhois-genstore-get-idstr">5.2.4.3 <subr>get_idstr()</subr></a><br>
+<li><a href="#man-fwhois-genstore-query">5.2.4.4 <subr>query()</subr></a><br>
+</ul>
+<br>
+
+<li><a href="#man-fwhois-hashstore">5.2.5 <class>map_resources.fetch_whois.HashStore</class> Class</a><br>
+<ul class="toc">
+<li><a href="#man-fwhois-hashstore-fetch">5.2.5.1 <subr>fetch()</subr></a><br>
+</ul>
+<br>
+
+<li><a href="#man-fwhois-ip-collection">5.2.6 <class>map_resources.fetch_whois.IPCollection</class> Class</a><br>
+<ul class="toc">
+<li><a href="#man-fwhois-ipcllct-slurp">5.2.6.1 <subr>slurp()</subr></a><br>
+</ul>
+<br>
+
+<li><a href="#man-fwhois-netcollection">5.2.7 <class>map_resources.fetch_whois.NetCollection</class> Class</a><br>
+<ul class="toc">
+<li><a href="#man-fwhois-netcllct-slurp">5.2.7.1 <subr>slurp()</subr></a><br>
+<li><a href="#man-fwhois-netcllct-slurp-set">5.2.7.2 <subr>slurp_set()</subr></a><br>
+</ul>
+<br>
+
+<li><a href="#man-fwhois-orgcollection">5.2.8 <class>map_resources.fetch_whois.OrgCollection</class> Class</a><br>
+<ul class="toc">
+<li><a href="#man-fwhois-orgcllct-slurp">5.2.8.1 <subr>slurp()</subr></a><br>
+<li><a href="#man-fwhois-orgcllct-slurp-set">5.2.8.2 <subr>slurp_set()</subr></a><br>
+</ul>
+<br>
+
+<td>
+
+<li><a href="#man-fwhois-poccollection">5.2.9 <class>map_resources.fetch_whois.POCCollection</class> Class</a><br>
+<ul class="toc">
+<li><a href="#man-fwhois-poccllct-slurp-set">5.2.9.1 <subr>slurp()</subr></a><br>
+<li><a href="#man-fwhois-poccllct-slurp-set">5.2.9.2 <subr>slurp_set()</subr></a><br>
+</ul>
+<br>
+
+<li><a href="#man-fwhois-urlcollection">5.2.10 <class>map_resources.fetch_whois.URLCollection</class> Class</a><br>
+<ul class="toc">
+<li><a href="#man-fwhois-urlcllct-slurp">5.2.10.1 <subr>slurp()</subr></a><br>
+</ul>
+<br>
+
+<li><a href="#man-fwhois-whoiscollection">5.2.11 <class>map_resources.fetch_whois.WhoisCollection</class> Class</a><br>
+<ul class="toc">
+<li><a href="#man-fwhois-whoiscllct-add-collection">5.2.11.1 <subr>add_collection()</subr></a><br>
+<li><a href="#man-fwhois-whoiscllct-add-link">5.2.11.2 <subr>add_link()</subr></a><br>
+<li><a href="#man-fwhois-whoiscllct-add-tooltip">5.2.11.3 <subr>add_tooltip()</subr></a><br>
+<li><a href="#man-fwhois-whoiscllct-do-slurp">5.2.11.4 <subr>do_slurp()</subr></a><br>
+<li><a href="#man-fwhois-whoiscllct-fetch-associated-obj">5.2.11.5 <subr>fetchAssociatedObj()</subr></a><br>
+<li><a href="#man-fwhois-whoiscllct-fetch-obj">5.2.11.6 <subr>fetchObj()</subr></a><br>
+<li><a href="#man-fwhois-whoiscllct-get-cache">5.2.11.7 <subr>get_cache()</subr></a><br>
+<li><a href="#man-fwhois-whoiscllct-get-collections">5.2.11.8 <subr>get_collections()</subr></a><br>
+<li><a href="#man-fwhois-whoiscllct-get-data">5.2.11.9 <subr>get_data()</subr></a><br>
+<li><a href="#man-fwhois-whoiscllct-get-draw-attribs">5.2.11.10 <subr>get_draw_attribs()</subr></a><br>
+<li><a href="#man-fwhois-whoiscllct-get-links">5.2.11.11 <subr>get_links()</subr></a><br>
+<li><a href="#man-fwhois-whoiscllct-get-parent">5.2.11.12 <subr>get_parent()</subr></a><br>
+<li><a href="#man-fwhois-whoiscllct-get-parent-handle">5.2.11.13 <subr>get_parent_handle()</subr></a><br>
+<li><a href="#man-fwhois-whoiscllct-get-resources">5.2.11.14 <subr>get_resources()</subr></a><br>
+<li><a href="#man-fwhois-whoiscllct-get-store">5.2.11.15 <subr>get_store()</subr></a><br>
+<li><a href="#man-fwhois-whoiscllct-get-tooltip">5.2.11.16 <subr>get_tooltip()</subr></a><br>
+<li><a href="#man-fwhois-whoiscllct-get-type">5.2.11.17 <subr>get_type()</subr></a><br>
+<li><a href="#man-fwhois-whoiscllct-set-limit-exceeded">5.2.11.18 <subr>set_limit_exceeded()</subr></a><br>
+<li><a href="#man-fwhois-whoiscllct-slurp-common">5.2.11.19 <subr>slurp_common()</subr></a><br>
+<li><a href="#man-fwhois-whoiscllct-subsume">5.2.11.20 <subr>subsume()</subr></a><br>
+</ul>
+
+</tr>
+</table>
+
+<br>
+
+<li><a href="#sect-mod-whois-rv-cmp">5.3 <module>map_resources.whois_rv_cmp</module> Module</a><br>
+<table>
+<tr>
+<td>
+<ul class="toc">
+<li><a href="#man-wrvcmp-rvcomparator">5.3.1 <class>map_resources.whois_rv_cmp.RVComparator</class> Class</a><br>
+<ul class="toc">
+<li><a href="#man-wrvcmp-rvcomp-add-asn">5.3.1.1 <subr>add_asn()</subr></a><br>
+<li><a href="#man-wrvcmp-rvcomp-add-net">5.3.1.2 <subr>add_net()</subr></a><br>
+<li><a href="#man-wrvcmp-rvcomp-compare">5.3.1.3 <subr>compare()</subr></a><br>
+<li><a href="#man-wrvcmp-rvcomp-compare-resources">5.3.1.4 <subr>compare_resources()</subr></a><br>
+<li><a href="#man-wrvcmp-rvcomp-is-pfx-known">5.3.1.5 <subr>is_pfx_known()</subr></a><br>
+</ul>
+<br>
+
+<td>
+
+<li><a href="#man-wrvcmp-rvcomparatorres">5.3.2 <class>map_resources.whois_rv_cmp.RVComparatorRes</class> Class</a><br>
+<ul class="toc">
+<li><a href="#man-wrvcmp-rvcompres-add-unknown-asn">5.3.2.1 <subr>add_unknown_asn()</subr></a><br>
+<li><a href="#man-wrvcmp-rvcompres-add-unknown-oasn">5.3.2.2 <subr>add_unknown_oasn()</subr></a><br>
+<li><a href="#man-wrvcmp-rvcompres-add-unknown-pfx">5.3.2.3 <subr>add_unknown_pfx()</subr></a><br>
+<li><a href="#man-wrvcmp-rvcompres-get-unknown-asn">5.3.2.4 <subr>get_unknown_asn()</subr></a><br>
+<li><a href="#man-wrvcmp-rvcompres-get-unknown-oasn">5.3.2.5 <subr>get_unknown_oasn()</subr></a><br>
+<li><a href="#man-wrvcmp-rvcompres-get-unknown-pfx">5.3.2.6 <subr>get_unknown_pfx()</subr></a><br>
+<li><a href="#man-wrvcmp-rvcompres-process-unknown-resources">5.3.2.7 <subr>process_unknown_resources()</subr></a><br>
+</ul>
+<br>
+
+<li><a href="#man-wrvcmp-rvfetcher">5.3.3 <class>map_resources.whois_rv_cmp.RVFetcher</class> Class</a><br>
+<ul class="toc">
+<li><a href="#man-wrvcmp-rvfetcher-find-netblocks">5.3.3.1 <subr>find_netblocks()</subr></a><br>
+</ul>
+
+</tr>
+</table>
+</ul>
+<br>
+
+<li><a href="#full-toc">6 Full Table of Contents</a><br>
+<br>
+
+</ul>
+
+<p>
+
+<!*****************************************************************************>
+
+<p>
+<hr>
+<p>
+Copyright (c) 2015, Parsons, Inc<br>
+All rights reserved
+<br><br>
+
+</div>
+</div>
+
+
+
+	</div>
+
+	
+      </div>
+    </div>
+  </body>
+
+  <script type="application/ld+json">
+   {
+     "@context": "http://schema.org",
+     "@type": "Organization",
+     "url": "https://securerouting.net",
+     "logo": "/images/secure-routing-cloud.svg"
+   }
+  </script>
+  <script type="application/ld+json">
+   {
+     "@context": "http://schema.org",
+     "@type": "Organization",
+     "url": "https://securerouting.net",
+     "name": "Secure Routing",
+     "sameAs" : [
+       "https://www.youtube.com/channel/UCVOrJW51e8uu6aO_qnkk6qA"
+     ],
+   }
+  </script>
+</html>
+

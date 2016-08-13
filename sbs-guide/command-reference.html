@@ -1,0 +1,3233 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <title>Secure Routing -- Protect Your Infrastructure</title>
+
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/ears.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+
+    <script src="/js/jquery.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script>
+     $(document).ready(function () {
+       $('.dropdown-toggle').dropdown();
+     });
+    </script>
+
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container-fluid">
+	<div class="navbar-header">
+	  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+	  </button>
+	  <a class="navbar-brand" href="/">Secure Routing</a>
+	</div>
+
+	<div class="collapse navbar-collapse" id="navbar-collapse">
+	  <ul class="nav navbar-nav earsnav">
+	    <!-- LEARN -->
+	    <li class="dropdown">
+	      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Learn <span class="caret"></span>
+	      </a>
+
+	      <ul class="dropdown-menu">
+		<li><a href="/sbs-guide">Step-by-Step Guide</a></li>
+		<li><a href="https://www.youtube.com/channel/UCVOrJW51e8uu6aO_qnkk6qA">Youtube Channel</a></li>
+		<li><a href="/specifications.html">Specifications</a></li>
+		<li><a href="https://datatracker.ietf.org/wg/sidr/">Join The SIDR Working Group</a></li>
+	      </ul>
+	    </li>
+
+	    <!-- TRY -->
+	    <li class="dropdown">
+	      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Try <span class="caret"></span>
+	      </a>
+
+	      <ul class="dropdown-menu">
+		<li><a href="/workshop.html"">The Demonstration Workshop</a></li>
+	      </ul>
+	    </li>
+
+	    <!-- DEPLOY -->
+	    <li class="dropdown">
+	      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Deploy <span class="caret"></span>
+	      </a>
+
+	      <!-- TRY MENU -->
+	      <ul class="dropdown-menu">
+		  <li><a href="/bird.html">Install BIRD</a></li>
+		  <li><a href="http://www-x.antd.nist.gov/bgpsrx/">Install Quagga</a></li>
+		  <li><a href="http://rpki.net">Install RPKI.NET</a></li>
+		  <li><a href="http://sourceforge.net/projects/rpstir">Install RPSTIR</a></li>
+	      </ul>
+	    </li>
+
+	    <!-- INCIDENTS BUTTON -->
+	    <li class="dropdown">
+	      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Routing Incidents<span class="caret"></span>
+	      </a>
+
+	      <!-- INCIDENTS MENU -->
+	      <ul class="dropdown-menu">
+		<li><a href="/incident">Database</a></li>
+		<li><a href="/timeline.html"">Timeline</a></li>
+	      </ul>
+	    </li>
+	  </ul>
+	</div>
+      </div>
+    </nav>
+
+    <div class="container ears-top">
+      <div class="row">
+	
+	<div class="col-md-12" role="main">
+	
+
+	  <div class="page-header">
+  <h1><a href="/sbs-guide">Routing Security Step-by-Step Guide</a></h1>
+</div>
+
+<div class="panel panel-primary">
+  <div class="panel-heading">Command Reference</div>
+<div class="panel-body">
+
+<link href="/css/sbs-guide.css" rel="stylesheet">
+
+<!*****************************************************************************>
+
+<!-----------------
+<p>
+<hr>
+<p>
+
+<h1>Conventions for Writers</h1>
+
+<p>
+
+These formatting conventions must be followed:
+
+<p>
+
+<table border=1>
+<tr align=center><td width=100><b>entity<b><td width=100><b>format tag</b><td width=275><b>example code</b><td width=150><b>formatted example</b></tr>
+<tr><td>argument<td align=center>arg<td>&lt;arg&gt;username&lt;/arg&gt;<td><arg>username</arg></tr>
+<tr><td>class<td align=center>class<td>&lt;class&gt;locobj&lt;/class&gt;<td><class>locobj</class></tr>
+<tr><td>command<td align=center>cmd<td>&lt;cmd&gt;apt-get&lt;/cmd&gt;<td><cmd>apt-get</cmd></tr>
+<tr><td>config field<td align=center>config<td>&lt;config&gt;rpkid_server_host&lt;/config&gt;<td><config>rpkid_server_host</config></tr>
+<tr><td>file<td align=center>file<td>&lt;file&gt;rpki.conf&lt;/file&gt;<td><file>rpki.conf</file></tr>
+<tr><td>module<td align=center>module<td>&lt;module&gt;locmodule&lt;/module&gt;<td><module>locmodule</module></tr>
+<tr><td>object<td align=center>obj<td>&lt;obj&gt;someobj&lt;/obj&gt;<td><obj>someobj</obj></tr>
+<tr><td>option<td align=center>opt<td>&lt;opt&gt;-verbose&lt;/opt&gt;<td><opt>-verbose</opt></tr>
+<tr><td>path<td align=center>path<td>&lt;path&gt;/etc/rpki.conf&lt;/path&gt;<td><path>/etc/rpki.conf</path></tr>
+<tr><td>routine<td align=center>call<td>&lt;call&gt;getpwname("root")&lt/call&gt;<td><call>getpwname("root")</call></tr>
+<tr><td>rpki.net<td align=center>rpki<td>&lt;rpki&gt;rpki.net&lt;/rpki&gt;<td><rpki>rpki.net</rpki></tr>
+<tr><td>subroutine call<td align=center>subr<td>&lt;subr&gt;foo()&lt/subr&gt;<td><subr>foo()</subr></tr>
+<tr><td>system call<td align=center>syscall<td>&lt;syscall&gt;stat("/woof")&lt/syscall&gt;<td><syscall>stat("/woof")</syscall></tr>
+</table>
+
+<p>
+
+This section must be deleted or commented out prior to release.
+
+<p>
+
+<hr>
+
+<p>
+------------------>
+
+<!*****************************************************************************>
+
+<a name="toc"></a>
+<h1>Table of Contents</h1>
+
+<p>
+
+<table align=center>
+<tr>
+<td valign=top>
+<a href="#toc">Table of Contents</a><br>
+<br>
+<a href="#intro">1 Introduction</a><br>
+<br>
+<a href="#sect-rp-tools">2 Relying-Party Tools</a><br>
+<ul class="toc">
+<li><a href="#man-rcynic">2.1 <cmd>rcynic</cmd></a><br>
+<li><a href="#man-rpki-rtr">2.2 <cmd>rpki-rtr</cmd></a><br>
+<li><a href="#man-rpki-rtr-client">2.2.1 <cmd>rpki-rtr client</cmd></a><br>
+<li><a href="#man-rpki-rtr-cronjob">2.2.2 <cmd>rpki-rtr cronjob</cmd></a><br>
+<li><a href="#man-rpki-rtr-listener">2.2.3 <cmd>rpki-rtr listener</cmd></a><br>
+<li><a href="#man-rpki-rtr-server">2.2.4 <cmd>rpki-rtr server</cmd></a><br>
+<li><a href="#man-rpki-rtr-show">2.2.5 <cmd>rpki-rtr show</cmd></a><br>
+<li><a href="#man-rcynic-cron">2.3 <cmd>rcynic-cron</cmd></a><br>
+</ul>
+<br>
+<a href="#sect-rcynic-support">3 <cmd>rcynic</cmd> Support Programs</a><br>
+<ul class="toc">
+<li><a href="#man-make-tal">3.1 <cmd>make-tal.sh</cmd></a><br>
+<li><a href="#man-rcynic-html">3.2 <cmd>rcynic_html</cmd></a><br>
+<li><a href="#man-rcynic-svn">3.3 <cmd>rcynic_svn</cmd></a><br>
+<li><a href="#man-rcynic-text">3.4 <cmd>rcynic_text</cmd></a><br>
+<li><a href="#man-rcynic-xsl">3.5 <cmd>rcynic_xsl</cmd></a><br>
+<li><a href="#man-validation_status">3.6&nbsp;<cmd>validation_status</cmd></a><br>
+</ul>
+</td>
+
+<td width=100>&nbsp;
+
+<td valign=top>
+<a href="#sect-rpki-utils">4 RPKI Utility Programs</a><br>
+<ul class="toc">
+<li><a href="#man-find_roa">4.1 <cmd>find_roa</cmd></a><br>
+<li><a href="#man-hashdir">4.2 <cmd>hashdir</cmd></a><br>
+<li><a href="#man-print_roa">4.3 <cmd>print_roa</cmd></a><br>
+<li><a href="#man-print_rpki_manifest">4.4 <cmd>print_rpki_manifest</cmd></a><br>
+<li><a href="#man-scan_roas">4.5 <cmd>scan_roas</cmd></a><br>
+<li><a href="#man-scan_routercerts">4.6 <cmd>scan_routercerts</cmd></a><br>
+<li><a href="#man-uri">4.7 <cmd>uri</cmd></a><br>
+</ul>
+<br>
+<a href="#sect-parsons-utils">5 Parsons Utility Programs</a><br>
+<ul class="toc">
+<li><a href="#man-map-whois">5.1 <cmd>map_whois</cmd></a><br>
+<li><a href="#man-rcynicchk">5.2 <cmd>rcynicchk</cmd></a><br>
+<li><a href="#man-rpkichk">5.3 <cmd>rpkichk</cmd></a><br>
+<li><a href="#man-rsyncdchk">5.4 <cmd>rsyncdchk</cmd></a><br>
+<!-------------
+<li><a href="#man-rpkiviz">5.5 visualization tool</a><br>
+-------------->
+</ul>
+<br>
+<a href="#sect-ca-daemons">6 Certification-Authority Daemons</a><br>
+<ul class="toc">
+<li><a href="#man-irdbd">6.1 <cmd>irdbd</cmd></a><br>
+<li><a href="#man-pubd">6.2 <cmd>pubd</cmd></a><br>
+<li><a href="#man-rootd">6.3 <cmd>rootd</cmd></a><br>
+<li><a href="#man-rpkid">6.4 <cmd>rpkid</cmd></a><br>
+</ul>
+</td>
+
+<td width=100>&nbsp;
+
+<td valign=top>
+<a href="#sect-ca-utils">7 Certification-Authority Utilities</a><br>
+<ul class="toc">
+<li><a href="#man-irbe_cli">7.1 <cmd>irbe_cli</cmd></a><br>
+<li><a href="#man-rpki-confgen">7.2 <cmd>rpki-confgen</cmd></a><br>
+<li><a href="#man-rpki-manage">7.3 <cmd>rpki-manage</cmd></a><br>
+<li><a href="#man-rpki-sql-backup">7.4 <cmd>rpki-sql-backup</cmd></a><br>
+<li><a href="#man-rpki-sql-setup">7.5 <cmd>rpki-sql-setup</cmd></a><br>
+<li><a href="#man-rpki-start-servers">7.6 <cmd>rpki-start-servers</cmd></a><br>
+<li><a href="#man-rpkigui-apache-conf-gen">7.7 <cmd>rpkigui-apache-conf-gen</cmd></a><br>
+<li><a href="#man-rpkigui-check-expired">7.8 <cmd>rpkigui-check-expired</cmd></a><br>
+<li><a href="#man-rpkigui-import-routes">7.9 <cmd>rpkigui-import-routes</cmd></a><br>
+<li><a href="#man-rpkigui-rcynic">7.10 <cmd>rpkigui-rcynic</cmd></a><br>
+<li><a href="#man-rpkic">7.11 <cmd>rpkic</cmd></a><br>
+<li><a href="#man-rpkigui-query-routes">7.12 <cmd>rpkigui-query-routes</cmd></a><br>
+</ul>
+<br>
+<a href="#sect-ca-tests">8 Certification-Authority Test Tools</a><br>
+<ul class="toc">
+<li><a href="#man-smoketest">8.1 <cmd>smoketest</cmd></a><br>
+<li><a href="#man-yamltest">8.2 <cmd>yamltest</cmd></a><br>
+</ul>
+</td>
+</tr>
+</table>
+
+<p>
+
+<!*****************************************************************************>
+
+<a name="intro"></a>
+<h2>1 Introduction</h2>
+
+<p>
+
+In the RPKI system, a Relying Party retrieves RPKI objects from repositories,
+validates those objects, and uses the validation results as input to provide
+BGP security.
+
+<p>
+
+The <rpki>rpki.net</rpki> software provides tools for handling these
+functions, as well as for providing support and maintenance to those tools.
+This document discusses these tools and gives usage information for them.
+The Relying-Party tools provide this functionality.  It is divided into the
+following sections:
+
+<p>
+
+<ul>
+
+<li><a href="#sect-rp-tools">Section 2 Relying-Party Tools</a> - Primary tools
+required for a Relying Party.<p>
+
+<li><a href="#sect-rcynic-support">Section 3 <cmd>rcynic</cmd> Support
+Programs</a> - Programs to post-processing to data collected by the Relying
+Party tools.<p>
+
+<li><a href="#sect-rpki-utils">Section 4 RPKI Utility Programs</a> - Tools to
+assist in monitoring and maintaining the Relying Party system.<p>
+
+<li><a href="#sect-parsons-utils">Section 5 Parsons Utility Programs</a> -
+Additional tools to assist in monitoring and maintaining the Relying Party
+system.  The tools described in this section are provided by Parsons, Inc.,
+and are not part of the <rpki>rpki.net</rpki> software distribution.<p>
+
+<li><a href="#sect-ca-daemons">Section 6 Certification-Authority
+Daemons</a> - Daemons that provide the Certification-Authority
+functionality.<p>
+
+<li><a href="#sect-ca-utils">Section 7 Certification-Authority Utilities</a> -
+Tools to assist in monitoring and maintaining the Certification-Authority
+system.<p>
+
+<li><a href="#sect-ca-tests">Section 8 Certification-Authority Test Tools</a> -
+Tools to test the Certification-Authority system.<p>
+
+</ul>
+
+<p>
+
+This document is prepared under Contract Number HSHQDC-14-C-B0035 for
+DHS S&amp;T CSD
+
+<p>
+
+<!*****************************************************************************>
+
+<a name="sect-rp-tools"></a>
+<h2>2 Relying-Party Tools</h2>
+
+<p>
+
+<cmd>rcynic</cmd> and <cmd>rpki-rtr</cmd> are the primary Relying-Party tools.
+<cmd>rcynic</cmd> validates RPKI data.
+<cmd>rpki-rtr</cmd> transfers validated RPKI data to routers.
+<cmd>rcynic-cron</cmd> acts as a wrapper for these two tools.
+These tools are discussed in this section.
+
+<p>
+
+Relying-Party tools:
+
+<ul>
+<li><a href="#man-rcynic"><cmd>rcynic</cmd></a>
+<li><a href="#man-rpki-rtr"><cmd>rpki-rtr</cmd></a>
+<li><a href="#man-rcynic-cron"><cmd>rcynic-cron</cmd></a>
+</ul>
+
+<!*********************************************************>
+
+<a name="man-rcynic"></a>
+<h3>2.1 <cmd>rcynic</cmd></h3>
+
+<p>
+
+<cmd>rcynic</cmd> is the primary RPKI tool for the <rpki>rpki.net</rpki>
+system.  It performs the actual work of RPKI validation: checking syntax,
+signatures, expiration times, and conformance to profiles for RPKI objects.
+Data are pulled from remote sites (via <cmd>rsync</cmd>) and <cmd>rcynic</cmd>
+recursively walks the RPKI tree to validate certificates and CRLs.  The other
+relying party programs take <cmd>rcynic</cmd>'s output as their input.
+
+<p>
+
+<cmd>rcynic</cmd> maintains the RPKI objects in a set of directories, the
+layout of which is described below.  It has the ability to work in a
+<syscall>chroot()</syscall> environment, but this is not the normal method of
+operation.  This used to be the default configuration, but it proved
+impractical to properly integrate this with various packaging systems (FreeBSD
+<cmd>ports</cmd>, <cmd>apt-get</cmd> on Ubuntu and Debian, etc.) If necessary,
+this behavior can still be used by installing from source and giving the
+<arg>--enable-rcynic-jail</arg> option to <cmd>./configure</cmd>.
+
+<p>
+
+The default <rpki>rpki.net</rpki> configuration (as given by <cmd>make
+install</cmd> and the various packaging systems) will run <cmd>rcynic</cmd>
+under <cmd>cron</cmd> using the <cmd>rcynic-cron</cmd> wrapper script.
+
+<p>
+
+Usage:
+<pre>
+    rcynic [options]
+
+    Where options are:
+
+        -a ARG  --authenticated ARG        root of authenticated data tree
+        -c ARG  --config ARG               override default name of config file
+        -h      --help                     print this help message
+        -j ARG  --jitter ARG               set jitter value
+        -l ARG  --log-level ARG            set log level
+        -u ARG  --unauthenticated ARG      root of unauthenticated data tree
+        -e      --use-stderr               log to syslog
+        -s      --use-syslog               log to stderr
+        -V      --version                  print program version
+        -x ARG  --xml-file ARG             set XML output file location
+</pre>
+
+<p>
+
+<!********************************>
+
+<b><file>rcynic.conf</file> Configuration File</b><p>
+
+<p>
+Most of <cmd>rcynic</cmd>'s operational parameters are set in the
+<file>rcynic.conf</file> configuration file.  The default name for the
+configuration is <file>rcynic.conf</file>; though this can be overridden with
+the <arg>-c</arg> option on the command line.  In addition, a few parameters
+can be set from the command line.
+
+<p>
+
+<file>rcynic.conf</file> uses OpenSSL's configuration file syntax, which
+allows for multiple configuration sections.  <cmd>rcynic</cmd>'s own
+configuration parameters are in the <i>"[rcynic]"</i> section.  The
+OpenSSL library configuration parameters (e.g., "engine" settings) required
+by <cmd>rcynic</cmd> can be set in this file as well.
+
+<p>
+
+Most configuration parameters are optional and reasonable defaults are used.
+If <cmd>rcynic</cmd> runs as a daemon (for example, started by the
+<cmd>rcynic-cron</cmd> script) additional parameters must be set to tell
+<cmd>rcynic</cmd> where to find its data and where to write its output.  While
+many of the parameters are optional, the <file>rcynic.conf</file> is not.  In
+order for <cmd>rcynic</cmd> to do anything useful, the configuration file must
+tell <cmd>rcynic</cmd> where to find one or more RPKI trust anchors or trust
+anchor locators (TALs).
+
+<p>
+
+The <a href="config-reference">Step-By-Step Configuration File
+Reference</a> has a complete description of the <file>rcynic.conf</file> file.
+
+<p>
+
+<!********************************>
+
+<b>Data and Files</b><p>
+
+<p>
+
+<cmd>rcynic</cmd> manages a diverse collection of certificates, CRLs, trust
+anchors, trust anchor locators, and CMS objects.  Some of these are
+authenticated and some are unauthenticated.  <cmd>rcynic</cmd> stores its
+database using filenames derived from the RPKI <cmd>rsync</cmd> URIs at which
+the data are published.
+
+<p>
+
+By default, <cmd>rcynic</cmd> stores its objects in two writable directory
+trees:
+
+<p>
+
+<ul>
+
+<li>directory of unauthenticated data<p>
+
+This directory contains raw data fetched by <cmd>rsync</cmd>.
+In order to take full advantage
+of <cmd>rsync</cmd>'s optimized transfers, this directory should be preserved
+and reused across <cmd>rcynic</cmd> runs.  This prevents <cmd>rcynic</cmd>
+from having to re-fetch data that have not changed.
+
+<p>
+
+The actual directory is named by the <arg>unauthenticated</arg> field in
+the <file>rcynic.conf</file> file.
+
+<p>
+
+<li>directory of authenticated data<p>
+
+This directory contains data which <cmd>rcynic</cmd> has validated.
+This is the real output of the validation process.
+
+<p>
+
+The name of the authenticated directory is really a symbolic link to a
+directory with a name of the form
+<file>"authenticated.&lt;timestamp&gt;"</file>, where &lt;timestamp&gt; is
+an ISO-8601 timestamp like 2001-04-01T01:23:45Z. <cmd>rcynic</cmd> creates
+a new timestamped directory every time it runs, and changes the symbolic
+link as an atomic operation when the validation process completes.  The
+intent is that the symbolic link of the authenticated directory always
+points to the most recent usable validation results, so that programs
+which use <cmd>rcynic</cmd>'s output don't need to worry about whether
+an <cmd>rcynic</cmd> run is in progress.
+
+<p>
+
+The actual directory is named by the <arg>authenticated</arg> field in
+the <file>rcynic.conf</file> file.
+
+<p>
+
+</ul>
+
+<p>
+
+<cmd>rcynic</cmd> expects all certificates, CRLs, and CMS objects to be
+in DER format.
+
+<p>
+
+In order for <cmd>rcynic</cmd> to do anything useful, the
+<file>rcynic.conf</file> must contain one or more RPKI trust
+anchors or trust anchor locators (TALs).
+
+<p>
+
+<cmd>rcynic</cmd> installs trust anchors specified via the
+<arg>trust-anchor-locator</arg> directive in the unauthenticated directory
+tree just like any other fetched object.  They are copied into the
+authenticated directory tree just like any other object once they pass
+<cmd>rcynic</cmd>'s authentication checks.  Each trust anchor has a unique
+name within the output tree.
+
+<p>
+
+<cmd>rcynic</cmd> copies trust anchors specified via the
+<arg>trust-anchor</arg> directive into the top-level directory of the
+authenticated tree with filenames of the form
+<file>&lt;xxxxxxxx&gt;.<n>.cer</file>, where &lt;xxxxxxxx&gt; and &lt;n&gt;
+are the OpenSSL object name hash and index, respectively, within the resulting
+virtual hash bucket.  These are the same values that OpenSSL's
+<arg>c_hash</arg> script would produce.  The reason for this naming scheme
+is that these trust anchors, by definition, are not fetched automatically, and
+thus do not really have publication URIs in the sense that every other object
+in these trees do.
+
+<p>
+
+Trust anchors cannot be confused with certificates.  Trust anchors are always
+placed in the top level of the tree, while data fetched via <cmd>rsync</cmd>
+are always placed in subdirectories.
+
+<p>
+
+Trust anchors and trust anchor locators taken from the directory named by
+the <arg>trust-anchor-directory</arg> directive will follow the same naming
+scheme trust anchors and trust anchor locators specified via the
+<arg>trust-anchor</arg> and <arg>trust-anchor-locator</arg> directives.
+
+<p>
+
+<!********************************>
+
+<b><cmd>rcynic</cmd> Logging Levels</b><p>
+
+<p>
+
+<cmd>rcynic</cmd> has its own system of logging levels, similar to those
+used by <subr>syslog()</subr>.  However, the levels have been customized
+for the specific tasks performed by <cmd>rcynic</cmd>.
+
+<p>
+
+<table>
+<tr>
+<td width=50>&nbsp;
+<td>
+<table>
+<tr><td width=120><b>Log Level</b><td><b>Description</b>
+<tr><td><arg>log_sys_err</arg><td>Error from operating system or library
+<tr><td><arg>log_usage_err</arg><td>Bad usage (local configuration error)
+<tr><td><arg>log_data_err</arg><td>Bad data (broken certificates or CRLs)
+<tr><td><arg>log_telemetry</arg><td>Normal chatter about <cmd>rcynic</cmd>'s progress
+<tr><td><arg>log_verbose</arg><td>Extra verbose chatter
+<tr><td><arg>log_debug</arg><td>Only useful when debugging
+</table>
+</table>
+
+<p>
+
+<!*********************************************************>
+
+<a name="man-rpki-rtr"></a>
+<h3>2.2 <cmd>rpki-rtr</cmd></h3>
+
+<p>
+
+<cmd>rpki-rtr</cmd> transfers validated RPKI prefix origin data from a
+trusted cache to routers.  This allows the routers to verifiably validate
+the origin AS's in BGP announcements.  The trusted cache is built by the
+<cmd>rcynic</cmd> command.
+
+<p>
+
+<cmd>rpki-rtr</cmd> depends on <cmd>rcynic</cmd> to collect and validate the
+RPKI data.  <cmd>rpki-rtr</cmd> serves that data in a light-weight format
+suitable for routers that want to do prefix origin authentication.
+
+<p>
+
+<cmd>rpki-rtr</cmd> is designed to do the translation from raw RPKI data into
+the <cmd>rpki-rtr</cmd> protocol only once.  It does this by pre-computing the
+answers to all the queries it will answer for a given data set, and storing
+those answers on disk.  <cmd>rpki-rtr</cmd>'s <cmd>cron</cmd> job command
+handles this computation.
+
+<p>
+
+The software referred to as <cmd>rpki-rtr</cmd> consists of
+the <cmd>rpki-rtr</cmd> server, a test client, and a utility for
+examining the content of the database <cmd>rpki-rtr</cmd> generates from the
+data supplied by <cmd>rcynic</cmd>.
+
+<p>
+
+<cmd>rcynic</cmd>'s output must be converted into the data files used
+by <cmd>rpki-rtr</cmd>.  The <cmd>rcynic-cron</cmd> script handles this
+automatically, and is part of the default installation.
+
+<p>
+
+In addition, a listener for the <cmd>rpki-rtr</cmd> server must be set up.
+The listener will receive the generated data files.  There are
+platform-specific packages for FreeBSD, Debian, and Ubuntu that automatically
+set up a plain TCP listener.  Other platforms will require additional work to
+create a listener.  If TCP is not being used as a transport protocol, then an
+alternate listener will also have to be created.
+
+<p>
+
+The transfer protocol implemented by <cmd>rpki-rtr</cmd> is defined in
+<a href="http://www.rfc-editor.org/info/rfc6810">RFC-6810</a>.
+
+<p>
+
+Usage:
+<pre>
+    rpki-rtr [-h] [--debug]
+                  [--log-level {debug,info,warning,error,critical}]
+                  [--log-to {syslog,stderr}]
+    	      &lt;command-specific options&gt;
+    	      &lt;command&gt;
+    	      &lt;command-specific arguments&gt;
+
+    optional arguments:
+      -h, --help            show this help message and exit
+      --debug               debugging mode
+      --log-level {debug,info,warning,error,critical}
+      --log-to {syslog,stderr}
+
+    Commands:
+      
+        server              RPKI-RTR protocol server
+        listener            TCP listener for RPKI-RTR protocol server
+        client              Test client for RPKI-RTR protocol
+        cronjob             Generate RPKI-RTR database from rcynic output
+        show                Display content of RPKI-RTR database
+</pre>
+
+The subcommands for <cmd>rpki-rtr</cmd> are described below.
+
+<p>
+
+<!*************************************>
+
+<a name="man-rpki-rtr-client"></a>
+<h4>2.2.1 <cmd>rpki-rtr client</cmd></h4>
+
+<p>
+
+This subcommand invokes a test client, which is primarily used for debugging.
+
+<p>
+
+Usage:
+<pre>
+    rpki-rtr client [-h] [--sql-database SQL_DATABASE]
+                           [--force-version {0,1}] [--reset-session]
+                           {loopback,tcp,ssh,tls} [host] [port]
+
+    positional arguments:
+      {loopback,tcp,ssh,tls}
+                            connection protocol
+      host                  server host
+      port                  server port
+
+    optional arguments:
+      -h, --help            show this help message and exit
+      --sql-database SQL_DATABASE
+                            filename for sqlite3 database of client state
+      --force-version {0,1}
+                            force specific protocol version
+      --reset-session       reset any existing session found in sqlite3 database
+</pre>
+
+<p>
+
+<!*************************************>
+
+<a name="man-rpki-rtr-cronjob"></a>
+<h4>2.2.2 <cmd>rpki-rtr cronjob</cmd></h4>
+
+<p>
+
+This subcommand is run after executing <cmd>rcynic</cmd> has gathered router
+certificates and ROAs.  It translates those data into the form used in the
+<cmd>rpki-rtr</cmd> protocol.  This subcommand's output is an updated database
+containing both full dumps (AXFR) and incremental dumps against a specific
+prior version (IXFR).  After updating the database, active servers are
+notified that they can inform their own clients that a new database version
+is available.
+
+<p>
+
+Usage:
+<pre>
+    rpki-rtr cronjob [-h] [--scan-roas SCAN_ROAS]
+                            [--scan-routercerts SCAN_ROUTERCERTS]
+                            [--force_zero_nonce]
+                            rcynic_dir [rpki_rtr_dir]
+
+    positional arguments:
+      rcynic_dir            directory containing validated rcynic output tree
+      rpki_rtr_dir          directory containing RPKI-RTR database
+    
+    optional arguments:
+      -h, --help            show this help message and exit
+      --scan-roas SCAN_ROAS
+                            specify an external scan_roas program
+      --scan-routercerts SCAN_ROUTERCERTS
+                            specify an external scan_routercerts program
+      --force_zero_nonce    force nonce value of zero
+</pre>
+
+<p>
+
+<!*************************************>
+
+<a name="man-rpki-rtr-listener"></a>
+<h4>2.2.3 <cmd>rpki-rtr listener</cmd></h4>
+
+<p>
+
+This subcommand provides an insecure TCP listener for the <cmd>rpki-rtr</cmd>
+protocol.
+
+<p>
+
+Usage:
+<pre>
+    rpki-rtr listener [-h] [--refresh REFRESH] [--retry RETRY]
+                             [--expire EXPIRE]
+                             port [rpki_rtr_dir]
+
+    positional arguments:
+      port               TCP port on which to listen
+      rpki_rtr_dir       directory containing RPKI-RTR database
+
+    optional arguments:
+      -h, --help         show this help message and exit
+      --refresh REFRESH  override default refresh timer
+      --retry RETRY      override default retry timer
+      --expire EXPIRE    override default expire timer
+</pre>
+
+<p>
+
+In theory, RPKI will migrate to using TCP-AO in the future.  When this
+happens, this listener functionality will either go away or become a
+TCP-AO listener.
+
+<p>
+
+<!*************************************>
+
+<a name="man-rpki-rtr-server"></a>
+<h4>2.2.4 <cmd>rpki-rtr server</cmd></h4>
+
+<p>
+
+This subcommand provides the server side of the <cmd>rpki-rtr</cmd> protocol.
+Most of the work has already been done by the database generator, so all this
+server has to do is pass results along to a client.  Other than one PF_UNIX
+socket inode, this doesn't write anything to disk.  For these two reasons,
+this subcommand can be run with minimal privileges.
+
+<p>
+
+Usage:
+<pre>
+    rpki-rtr server [-h] [--refresh REFRESH] [--retry RETRY]
+                           [--expire EXPIRE]
+                           [rpki_rtr_dir]
+
+    positional arguments:
+      rpki_rtr_dir       directory containing RPKI-RTR database
+
+    optional arguments:
+      -h, --help         show this help message and exit
+      --refresh REFRESH  override default refresh timer
+      --retry RETRY      override default retry timer
+      --expire EXPIRE    override default expire timer
+</pre>
+
+<p>
+
+<!*************************************>
+
+<a name="man-rpki-rtr-show"></a>
+<h4>2.2.5 <cmd>rpki-rtr show</cmd></h4>
+
+<p>
+
+This subcommand displays the current <cmd>rpki-rtr</cmd> server
+database in textual form.
+
+<p>
+
+Usage:
+<pre>
+    rpki-rtr show [-h] [rpki_rtr_dir]
+
+    positional arguments:
+      rpki_rtr_dir  directory containing RPKI-RTR database
+
+    optional arguments:
+      -h, --help    show this help message and exit
+</pre>
+
+<p>
+
+<!*********************************************************>
+
+<a name="man-rcynic-cron"></a>
+<h3>2.3 <cmd>rcynic-cron</cmd></h3>
+
+<p>
+
+<cmd>rcynic-cron</cmd> is a wrapper for a set of Relying Party tools and is
+intended to be run as a <cmd>cron</cmd> job.  It executes the RP commands
+consecutively, waiting for each one to finish before starting the next.
+The RP commands, in execution order, are:
+
+<p>
+
+<ul>
+<li><cmd>rcynic</cmd>
+<li><cmd>rpki-rtr cronjob</cmd>
+<li><cmd>rpkigui-rcynic</cmd>
+<li><cmd>rcynic-html</cmd>
+</ul
+
+<p>
+
+Usage:
+<pre>
+    $ rcynic-cron [--chroot]
+
+    --chroot
+        run chrooted; only usable by root
+</pre>
+
+<p>
+
+If the <opt>--chroot</opt> option is given to <cmd>rcynic-cron</cmd>, then
+it will run <cmd>rcynic</cmd> in a <syscall>chroot()</syscall>'d environment.
+This only applies to <cmd>rcynic</cmd>; the other commands are started
+regularly.  This option may only be used by the root user.
+
+<p>
+
+The <syscall>chroot()</syscall> environment has two
+<cmd>rcynic-cron</cmd>-specific requirements.  The <cmd>rcynic</cmd> command
+must be available in the environment's <path>/bin/rcynic</path>.  Also, there
+must be an <cmd>rcynic</cmd> configuration file in the environment's
+<path>/etc/rcynic.conf</path>.
+
+<p>
+
+The <subr>rpki.autoconf</subr> module defines the locations in which 
+<cmd>rcynic-cron</cmd> looks for various fields and paths to use in
+executing the child processes.  The command lines below denote these
+module-based paths by being enclosed in brackets.
+
+<p>
+
+If <cmd>rcynic-cron</cmd> was run without the <opt>--chroot</opt> option,
+then <cmd>rcynic</cmd> will not be run in a restricted environment.  The
+following command line (after field replacement) will be used:
+
+<pre>
+    {autoconf.bindir}/rcynic -c {autoconf.sysconfdir}/rcynic.conf
+</pre>
+
+<p>
+
+The <cmd>rpki-rtr cronjob</cmd> command will be run with the following
+command line (after field replacement):
+
+<pre>
+    {autoconf.bindir}/rpki-rtr cronjob   		\
+        {autoconf.RCYNIC_DIR}/data/authenticated	\
+        {autoconf.RCYNIC_DIR}/rpki-rtr
+</pre>
+
+<p>
+
+The <cmd>rpkigui-rcynic</cmd> command will be run with the following
+command line (after field replacement):
+
+<pre>
+    {autoconf.bindir}/rpkigui-rcynic
+</pre>
+
+<p>
+
+The <cmd>rcynic-html</cmd> command will be run with the following
+command line (after field replacement):
+
+<pre>
+    {autoconf.bindir}/rcynic-html			\
+        {autoconf.RCYNIC_DIR}/data/rcynic.xml		\
+        {autoconf.RCYNIC_HTML_DIR}
+</pre>
+
+<p>
+
+<syscall>flock()</syscall>-based file locking is used to ensure that only
+one instantiation of <cmd>rcynic-cron</cmd> executes at a time.
+
+<p>
+
+This command is intended to be executed by <cmd>cron</cmd>.  The
+<rpki>rpki.net</rpki> installation process sets up a <cmd>cron</cmd>
+job to run <cmd>rcynic-cron</cmd> as user "rcynic" once per hour at
+a randomly-selected minute.
+
+<p>
+
+<!*****************************************************************************>
+
+<a name="sect-rcynic-support"></a>
+<h2>3 <cmd>rcynic</cmd> Support Programs</h2>
+
+<p>
+
+<cmd>rcynic</cmd> creates several XML files that describe the actions it
+has taken and the validation status of the objects it has found.  Several
+commands are available to providing post-processing for the output generated
+by <cmd>rcynic</cmd>.
+
+<p>
+
+Utility Programs:
+
+<ul>
+<li><a href="#man-make-tal"><cmd>make-tal.sh</cmd></a>
+<li><a href="#man-rcynic-html"><cmd>rcynic-html</cmd></a>
+<li><a href="#man-rcynic-svn"><cmd>rcynic-svn</cmd></a>
+<li><a href="#man-rcynic-text"><cmd>rcynic-text</cmd></a>
+<li><a href="#man-rcynic-xsl"><cmd>rcynic-xsl</cmd></a>
+<li><a href="#man-validation_status"><cmd>validation_status</cmd></a>
+</ul>
+
+<p>
+
+<!*********************************************************>
+
+<a name="man-make-tal"></a>
+<h3>3.1 <cmd>make-tal.sh</cmd></h3>
+
+<p>
+
+The <cmd>make-tal.sh</cmd> script is used to generate a Trust Anchor Locator
+(TAL) file for a Trust Anchor (TA).  It uses the <cmd>openssl req</cmd>
+command to create the TAL.  After generating a new <file>root.cer</file> file,
+the updated <file>root.cer</file> must be copied to the publication directory.
+Regenerating the certificate does not require regenerating the TAL unless the
+key or URL have changed.
+
+<p>
+
+To create a TAL-format Trust Anchor Locator, use the <cmd>make-tal.sh</cmd>
+script from <path>$top/rp/rcynic</path>:
+
+<pre>
+    $top/rp/rcynic/make-tal.sh rsync://example.org/rpki/root/root.cer root.cer
+</pre>
+
+<p>
+
+The first argument must be an <cmd>rsync</cmd> URI.  The second argument is
+the certificate file to be used.
+
+<p>
+
+Like any certificate, the <file>root.cer</file> generated by
+<cmd>make-tal.sh</cmd> will expire eventually.  It must be regenerated
+before it expires.  This may be done manually or a <cmd>cron</cmd> job
+can be used to create the certificate automatically.
+
+<p>
+
+<!*********************************************************>
+
+<a name="man-rcynic-html"></a>
+<h3>3.2 <cmd>rcynic-html</cmd></h3>
+
+<p>
+
+<cmd>rcynic-html</cmd> summarizes the XML output files created by
+<cmd>rcynic</cmd>.  These files are reformatted into a collection of HTML
+pages and statistics are added to a set of RRD databases.  The HTML files
+show the history of <cmd>rsync</cmd> transfer times and repository object
+counts in graphical form, as well as reporting problems encountered by
+<cmd>rcynic</cmd>.
+
+<p>
+
+Generally, you will not need to run <cmd>rcynic-html</cmd> yourself
+since <cmd>rcynic-cron</cmd> runs <cmd>rcynic-html</cmd> immediately
+after starting <cmd>rcynic</cmd>.
+
+<p>
+
+If for some reason you do need to run <cmd>rcynic-html</cmd> manually,
+the command usage is:
+
+<pre>
+    $ rcynic-html rcynic.xml /web/server/directory/
+</pre>
+
+<cmd>rcynic-html</cmd> will write a collection of HTML and image files to
+the specified output directory.  <cmd>rcynic-html</cmd> will create the
+output directory, if necessary.  The RRD databases of statistics will also
+be stored in this directory.
+
+<p>
+
+<cmd>rcynic-html</cmd> requires <cmd>rrdtool</cmd>, a specialized database
+and graphing engine designed for maintaining round-robin databases.  By
+giving the <arg>--no-show-graphs</arg> option, <cmd>rcynic-html</cmd> can
+run without <cmd>rrdtool</cmd>; however, the results won't be as useful.
+
+<p>
+
+<cmd>autoconf</cmd>, run at install time, will provide <cmd>rcynic-html</cmd>
+with a path to <cmd>rrdtool</cmd>.  This initialization usually works; if for
+some reason it doesn't work in your environment, you will need to tell
+<cmd>rcynic-html</cmd> where to find <cmd>rrdtool</cmd>.  This can be done
+in two ways.  First, the path to <cmd>rrdtool</cmd> may be specified by
+passing the <arg>--rrdtool-binary</arg> option to <cmd>rcynic-html</cmd>:
+
+<pre>
+    $ rcynic-html --rrdtoolbinary /somewhere/rrdtool rcynic.xml /web/server/directory/
+</pre>
+
+<p>
+
+The second way involved changing the <path>rpki/autoconf.py</path> file.
+This file should be located somewhere in the Python distribution.  Edit
+the file and change the value of the <config>RRDTOOL</config> field to
+have the proper path to <cmd>rrdtool</cmd>.
+
+<p>
+
+<!*********************************************************>
+
+<a name="man-rcynic-svn"></a>
+<h3>3.3 <cmd>rcynic-svn</cmd></h3>
+
+<p>
+
+<cmd>rcynic-svn</cmd> archives <cmd>rcynic</cmd>'s results in a Subversion
+repository.  For relying parties who want to analyze <cmd>rcynic</cmd>'s
+output over a long period of time, <cmd>rcynic-svn</cmd> may provide a useful
+starting point.  This is not something that every relying party is going to
+want, so <cmd>rcynic-svn</cmd> is not integrated into <cmd>rcynic-cron</cmd>.
+
+<p>
+
+To use <cmd>rcynic-svn</cmd>, you first must set up a Subversion repository
+and check out a working directory:
+
+<pre>
+    $ svnadmin create /somewhere/safe/rpki-archive
+    $ svn co file:///somewhere/safe/rpki-archive /somewhere/else/rpki-archive
+</pre>
+
+These commands create the repository <path>/somewhere/safe/rpki-archive</path>,
+then checks out an empty working directory in
+<path>/somewhere/else/rpki-archive</path>.
+
+<p>
+
+Once the repository and working directory are set up, you need to arrange
+for <cmd>rcynic-svn</cmd> to be executed after each <cmd>rcynic</cmd> run
+whose results must be archived.  One way to do this would be to run
+<cmd>rcynic-svn</cmd> in the same <cmd>cron</cmd> job as
+<cmd>rcynic-cron</cmd>, immediately after <cmd>rcynic-cron</cmd>.
+The same same lock file used by <cmd>rcynic-cron</cmd> would have to
+be specified for <cmd>rcynic-svn</cmd>.
+
+<p>
+
+Usage:
+
+<pre>
+
+    $ rcynic-svn --lockfile /var/rcynic/data/lock       \
+            /var/rcynic/data/authenticated              \
+            /var/rcynic/data/unauthenticated            \
+            /var/rcynic/data/rcynic.xml                 \
+            /somewhere/else/rpki-archive
+
+</pre>
+
+This execution assumes that <cmd>rcynic</cmd>'s data is in the default
+location.
+
+<p>
+
+The last argument is the name of the Subversion working directory in which
+the results will be archived.  The other arguments are the names of those
+portions of <cmd>rcynic</cmd>'s output which are to be archived.  Generally,
+the above set (authenticated, unauthenticated, and <cmd>rcynic.xml</cmd>)
+are the ones you want.
+
+<p>
+
+<!*********************************************************>
+
+<a name="man-rcynic-text"></a>
+<h3>3.4 <cmd>rcynic-text</cmd></h3>
+
+<p>
+
+<cmd>rcynic-text</cmd> provides a quick flat-text summary of validation
+results.  This is useful primarily in test scripts (<cmd>smoketest</cmd>
+uses it.)
+
+<p>
+
+Usage:
+
+<pre>
+    $ rcynic-text rcynic.xml
+</pre>
+
+<p>
+
+<!*********************************************************>
+
+<a name="man-rcynic-xsl"></a>
+<h3>3.5 <cmd>rcynic.xsl</cmd></h3>
+
+<p>
+
+<cmd>rcynic.xsl</cmd> is an obsolete method of performing the function of
+<cmd>rcynic-html</cmd>.  The required processing involved got more complex,
+and XSLT became insufficient for properly manipulating the <cmd>rcynic</cmd>
+output.
+
+<p>
+
+If for some reason XSLT works better in your environment than Python, you
+might find this stylesheet to be a useful starting point.  Be warned that
+<cmd>rcynic-xsl</cmd> is significantly slower than it lacks many features
+of <cmd>rcynic-html</cmd>.  It is no longer under development.
+
+<p>
+
+<!*********************************************************>
+
+<a name="man-validation_status"></a>
+<h3>3.6 <cmd>validation_status</cmd></h3>
+
+<p>
+
+<cmd>validation_status</cmd> provides a flat-text translation of the detailed
+validation results.  This is useful primarily for checking the detailed status
+of some particular object or set of objects, perhaps using a program like
+<cmd>grep</cmd> or <cmd>awk</cmd> to filter <cmd>validation_status</cmd>'s
+output.
+
+<p>
+
+Usage:
+
+<pre>
+    $ validation_status rcynic.xml
+    $ validation_status rcynic.xml | fgrep rpki.misbehaving.org
+    $ validation_status rcynic.xml | fgrep object_rejected
+</pre>
+
+<p>
+
+<!*****************************************************************************>
+
+<a name="sect-rpki-utils"></a>
+<h2>4 RPKI Utility Programs</h2>
+
+<p>
+
+The <rpki>rpki.net</rpki> distribution contains several utility programs.
+Most of these are nominally Relying-Party tools, but work at a low enough
+level that they may also be useful in diagnosing CA problems.
+
+<p>
+
+Unless otherwise specified, all of these tools expect RPKI objects
+(certificates, CRLs, CMS signed objects) to be in DER format.
+
+<p>
+
+Several of these tools accept an <arg>rcynic_directory</arg> argument.  The
+directory to specify here depends on what is trying to be done, but if you're
+just trying to look at authenticated data in your RP cache, and assuming
+you've installed everything in the default locations, the directory will
+probably be <path>/var/rcynic/data/authenticated</path>.
+
+<p>
+
+Utility Programs:
+
+<ul>
+<li><a href="#man-find_roa"><cmd>find_roa</cmd></a>
+<li><a href="#man-hashdir"><cmd>hashdir</cmd></a>
+<li><a href="#man-print_roa"><cmd>print_roa</cmd></a>
+<li><a href="#man-print_rpki_manifest"><cmd>print_rpki_manifest</cmd></a>
+<li><a href="#man-scan_roas"><cmd>scan_roas</cmd></a>
+<li><a href="#man-scan_routercerts"><cmd>scan_routercerts</cmd></a>
+<li><a href="#man-uri"><cmd>uri</cmd></a>
+</ul>
+
+<p>
+
+<!*********************************************************>
+
+<a name="man-find_roa"></a>
+<h3>4.1 <cmd>find_roa</cmd></h3>
+
+<p>
+
+<cmd>find_roa</cmd> searches the authenticated-result tree from an
+<cmd>rcynic</cmd> run for ROAs matching specified prefixes.
+
+<p>
+
+Usage:
+
+<pre>
+    $ find_roa [-h | --help] [-a | --all]
+               [-m | --match-maxlength ] [-f | --show-filenames]
+               [-i | --show-inception]   [-e | --show-expiration]
+               authtree [prefix...]
+
+    Where options are:
+
+        -h --help
+            Show help
+
+        -a --all
+            Show all ROAs, do no prefix matching at all
+
+        -e --show-expiration
+            Show ROA chain expiration dates
+
+        -f --show-filenames
+            Show filenames instead of URIs
+
+        -i --show-inception
+            Show inception dates
+
+        -m -match-maxlength
+            Pay attention to maxlength values
+
+        authtree
+            rcynic-authenticated output tree
+
+        prefix
+            ROA prefix(es) on which to match
+</pre>
+
+<p>
+
+<!*********************************************************>
+
+<a name="man-hashdir"></a>
+<h3>4.2 <cmd>hashdir</cmd></h3>
+
+<p>
+
+<cmd>hashdir</cmd> copies an authenticated-result tree from an
+<cmd>rcynic</cmd> execution into the format expected by most OpenSSL-based
+programs.  This format is a collection of "PEM" format files with names in the
+form expected by OpenSSL's <arg>-CApath</arg> lookup routines.  This can be
+useful for validating RPKI objects which are not distributed as part of the
+repository system.
+
+<p>
+
+Usage:
+
+<pre>
+    $ hashdir [-h | --help] [-v | --verbose] rcynic_directory output_directory
+
+    Where options are:
+
+        -h --help
+            Show help
+
+        -v --verbose
+            Whistle while you work
+
+        rcynic_directory
+            rcynic-authenticated output tree
+
+        output_directory
+            Output directory to create
+</pre>
+
+<p>
+
+<!*********************************************************>
+
+<a name="man-print_roa"></a>
+<h3>4.3 <cmd>print_roa</cmd></h3>
+
+<p>
+
+<cmd>print_roa</cmd> pretty-prints the contents of a ROA.  It does NOT attempt
+to verify the signature.
+
+<p>
+
+Usage:
+
+<pre>
+    $ print_roa [-h | --help] [-b | --brief] [-c | --cms] [-s | --signing-time]
+    ROA [ROA...]
+
+    Where options are:
+
+        -h --help
+            Show help
+
+        -b --brief
+            Brief mode (only show ASN and prefix)
+
+        -c --cms
+            Print text representation of entire CMS blob
+
+        -s --signing-time
+            Show CMS signingTime
+
+        ROA
+            ROA object(s) to print
+</pre>
+
+<p>
+
+<!*********************************************************>
+
+<a name="man-print_rpki_manifest"></a>
+<h3>4.4 <cmd>print_rpki_manifest</cmd></h3>
+
+<p>
+
+<cmd>print_rpki_manifest</cmd> pretty-prints the contents of a manifest.  It
+does NOT attempt to verify the signature.
+
+<p>
+
+Usage:
+
+<pre>
+    $ print_rpki_manifest [-h | --help] [-c | --cms] manifest [manifest...]
+
+    Where options are:
+
+        -h --help
+            Show help
+
+        -c --cms
+            Print text representation of entire CMS blob
+
+        manifest
+            Manifest(s) to print
+</pre>
+
+<p>
+
+<!*********************************************************>
+
+<a name="man-scan_roas"></a>
+<h3>4.5 <cmd>scan_roas</cmd></h3>
+
+<p>
+
+<cmd>scan_roas</cmd> searches the authenticated-result tree from an
+<cmd>rcynic</cmd> run for ROAs, and prints the signing time, ASN, and
+prefixes for each ROA, one ROA per line.
+
+<p>
+
+Other programs, such as the <cmd>rpki-rtr</cmd> client, use
+<cmd>scan_roas</cmd> to extract the validated ROA payload after
+an <cmd>rcynic</cmd> validation run.
+
+<p>
+
+Usage:
+
+<pre>
+    $ scan_roas [-h | --help] rcynic_directory [rcynic_directory...]
+
+    Where options are:
+
+        -h --help
+            Show help
+
+        rcynic_directory
+            rcynic-authenticated output tree
+</pre>
+
+<p>
+
+<!*********************************************************>
+
+<a name="man-scan_routercerts"></a>
+<h3>4.6 <cmd>scan_routercerts</cmd></h3>
+
+<p>
+
+<cmd>scan_routercerts</cmd> searches the authenticated-result tree from an
+<cmd>rcynic</cmd> run for BGPSEC router certificates, and prints data of
+interest to the <cmd>rpki-rtr</cmd> code.
+
+<p>
+
+Other programs such as the <cmd>rpki-rtr</cmd> client use
+<cmd>scan_routercerts</cmd> to extract the validated ROA payload
+after an <cmd>rcynic</cmd> validation run.
+
+<p>
+
+Usage:
+
+<pre>
+    $ scan_routercerts [-h | --help] rcynic_directory [rcynic_directory...]
+
+    Where options are:
+
+        -h --help
+            Show help
+
+        rcynic_directory
+            rcynic-authenticated output tree
+</pre>
+
+<p>
+
+<!*********************************************************>
+
+<a name="man-uri"></a>
+<h3>4.7 <cmd>uri</cmd></h3>
+
+<p>
+
+<cmd>uri</cmd> extracts URIs from the SIA, AIA, and CRLDP extensions of one or
+more X.509v3 certificates.  The certificates must be either specified directly
+or as CMS objects containing X.509v3 certificates within the CMS wrapper.
+
+<p>
+
+Usage:
+
+<pre>
+    $ uri [-h | --help] [-s | --single-line] cert [cert...]
+
+    Where options are:
+
+        -h --help
+            Show help
+
+        -s --single-line
+            Single output line per input file
+
+        cert
+            Object(s) to examine
+</pre>
+
+<p>
+
+<!*****************************************************************************>
+
+<a name="sect-parsons-utils"></a>
+<h2>5 Parsons Utility Programs</h2>
+
+<p>
+
+Parsons, Inc., provides a number of utility programs for use with the
+<rpki>rpki.net</rpki> software.
+
+<p>
+
+Utility Programs:
+
+<ul>
+<li><a href="#man-map-whois"><cmd>map_whois</cmd></a> - enables one to discover network resources in ARIN's <i>whois</i> database that could belong to an organization.
+
+<li><a href="#man-rcynicchk"><cmd>rcynicchk</cmd></a> - validates the contents of an <file>rcynic.conf</file> file
+
+<li><a href="#man-rpkichk"><cmd>rpkichk</cmd></a> - validates the contents of an <file>rpki.conf</file> file
+
+<li><a href="#man-rsyncdchk"><cmd>rsyncdchk</cmd></a> - validates the contents of an <file>rsyncd.conf</file> file
+
+<!-------------
+<li><a href="#man-rpkiviz"><cmd>rpkiviz</cmd></a>
+-------------->
+</ul>
+
+<p>
+
+<!*********************************************************>
+
+<a name="man-map-whois"></a>
+<h3>5.1 <cmd>map_whois</cmd></h3>
+
+<p>
+
+The <cmd>map_whois</cmd> enables one to discover network resources in ARIN's
+<i>whois</i> database that could belong to an organization.  A starting point
+in the form of a known POC handle, organization handle, net handle, or ASN
+number is assumed.  The tool thereafter queries ARIN's RESTful API in order
+to detect other resources that the organization may hold.
+
+<p>
+
+See the <a href="map-resources">MapResources User's Guide</a>
+for more information and examples of use.
+
+<p>
+
+Usage:
+
+<pre>
+    map_whois [-h] [-v] [-a ASN] [-p POC] [-o ORG] [-n NET] [-c CIDR]
+        [-i IP] [-u URL] [-t THRESHOLD] [-l] [-s] [-f {png,svg}] [-R RVDB]
+        [-L RESOURCELIST] [-j JSONFILE] [-g GRAPHFILE] [-r REPORTFILE]
+        [-X | -H | -D DBSTORE]
+
+    optional arguments:
+
+        -h, --help
+            show this help message and exit
+
+        -v, --verbose
+            increase output verbosity
+
+        -a ASN, --asn ASN
+            Start from the given ASN handle
+
+        -p POC, --poc POC
+            Start from the given POC handle
+
+        -o ORG, --org ORG
+            Start from the given Org handle
+
+        -n NET, --net NET
+            Start from the given Net handle
+
+        -c CIDR, --cidr CIDR
+            Start from the given CIDR block
+
+        -i IP, --ip IP
+            Start from the given IP address
+
+        -u URL, --url URL
+            Start from the given domain
+
+        -t THRESHOLD, --threshold THRESHOLD
+            Maximum number of dependencies to follow
+
+        -l, --longform
+            Dsplay detailed information
+
+        -s, --showgraph
+            Dsplay the graph
+
+        -f {png,svg}, --format {png,svg}
+            Graphviz file format to use
+
+        -R RVDB, --rvdb RVDB
+            Check against given Route Views Database file
+
+        -L RESOURCELIST, --resourcelist RESOURCELIST
+            Extract resource handles from the given file. Each line
+            of the file should be formatted as <type>:<value>, where
+            the different supported types are 'asn', 'poc', 'org',
+            'net', 'cidr', 'ip' and 'url'.
+
+        -j JSONFILE, --jsonfile JSONFILE
+            Output resource information in json format
+
+        -g GRAPHFILE, --graphfile GRAPHFILE
+            Output graph image
+
+        -r REPORTFILE, --reportfile REPORTFILE
+            Output report
+
+        -X, --nostore
+            Do not use any data store
+
+        -H, --hashstore
+            Use an indexed hash store
+
+        -D DBSTORE, --dbstore DBSTORE
+            Use a DB store and issue queries if needed
+</pre>
+
+<p>
+
+<!*********************************************************>
+
+<a name="man-rcynicchk"></a>
+<h3>5.2 <cmd>rcynicchk</cmd></h3>
+
+<p>
+
+<cmd>rcynicchk</cmd> validates the contents of an <file>rcynic.conf</file>
+file.  The configuration file is validated to ensure that reasonable values
+are specified for the various fields.
+
+<p>
+
+Some fields are not able to be fully validated.  For example, the
+<arg>"rsync-program"</arg> field can be checked to ensure that it is
+a valid file, but it cannot be checked to ensure that the file is an
+<cmd>rsync</cmd> program.
+
+<p>
+
+The default configuration file is <file>/etc/rcynic.conf</file>.
+The <arg>-config</arg> option allows the user to specify an alternate
+file to be validated.
+
+<p>
+
+<cmd>rcynicchk</cmd> performs two types of checks -- basic checks and
+recommended-value checks.  Both types of checks are performed by default.
+The <arg>-basic</arg> and <arg>-recval</arg> options allow only one type
+of check to be performed.
+
+<p>
+
+Basic checks are rudimentary checks of the configuration values in an
+<file>rcynic.conf</file> file.  For example, it checks that the trust anchor
+directory is actually a directory, but not that it is only filled with trust
+anchors.
+
+<p>
+
+Recommended-value checks ensure that certain fields in an
+<file>rcynic.conf</file> file have the values recommended by
+the developers of the <rpki>rpki.net</rpki> software.
+
+<p>
+
+<cmd>rcynicchk</cmd> provides three types of output:  a problem report, a
+table of results, and a summary.  All three are given by default.  However,
+any combination of the three may be selected by using the
+<arg>-problems</arg>, <arg>-table</arg>, and <arg>-summary</arg> options.
+
+<p>
+
+In addition to validating the contents of an <file>rcynic.conf</file> file,
+<cmd>rcynicchk</cmd> can display the contents.  The <arg>-list</arg> option
+will display fields and values in the <file>rcynic.conf</file> file, but no
+validation will be performed.
+
+<p>
+
+Usage:
+
+<pre>
+    $ rcynicchk [options]
+
+    Where [options] are:
+
+        -config conffile         specify configuration file to validate
+        -list                    only list configuration-section information
+
+        -basic                   only run basic checks
+        -recval                  only run recommended-value checks
+
+	-problems		 only show problems found
+        -summary                 give summary of checks only
+	-table			 provide results in tabular form
+
+        -verbose                 give verbose output
+        -Version                 show version and exit
+        -help                    show usage message and exit
+        -manpage                 show the manual page and exit
+</pre>
+
+<p>
+
+See <a href="rcynic-validation">Validation Checks for rcynic.conf Files</a>
+for more details on the various validation checks performed by
+<cmd>rcynicchk</cmd>.
+
+<p>
+
+<!*********************************************************>
+
+<a name="man-rpkichk"></a>
+<h3>5.3 <cmd>rpkichk</cmd></h3>
+
+<p>
+
+<cmd>rpkichk</cmd> validates the contents of an <file>rpki.conf</file> file.
+The configuration file is validated to ensure that reasonable values are
+specified for the various fields.  Some fields are not able to be fully
+validated.  For example, the <i>server-host</i> field can be checked to
+ensure that it contains only characters valid for a hostname, but it cannot
+be checked to ensure that the specified hostname is truly the name of the
+required server host.
+
+<p>
+
+The default configuration file is <path>/etc/rpki.conf</path>.  The
+<arg>-config</arg> option allows the user to specify an alternate file to be
+validated.  The entire file is checked by default.  However, there are options
+that restrict certain configuration sections from being checked.  For example,
+the <arg>-nopubd</arg> option prevents validation of the fields in the
+<i>pubd</i> section.
+
+<p>
+
+<cmd>rpkichk</cmd> performs three types of checks -- basic checks,
+cross-checks, and recommended-value checks.  All types of checks are
+performed by default.  The <arg>-basic</arg> and <arg>-cross</arg>
+options allow only one type of check to be performed.  (One additional
+type of checks -- cross-file checks -- is planned, but are not yet
+implemented.)
+
+<p>
+
+Basic checks are rudimentary checks of the configuration values in an
+<file>rpki.conf</file> file.  For example, it checks that a database name
+isn't null, not that the database exists; or that a key file exists and is
+only readable by the file's owner, not that the key contents are a valid key.
+
+<p>
+
+Cross-checks ensure that an <file>rpki.conf</file> file is internally
+consistent.  There are a number of fields in the configuration file that
+are related and are expected to have the same values.  For example, the
+<i>rootd</i> section has the <i>server-port</i> and the <i>myrpki</i>
+section has the <i>rootd_server_port</i> field.  The cross-checks ensure
+that these fields are the same.
+
+<p>
+
+Recommended-value checks ensure that certain fields in an
+<file>rpki.conf</file> file have the values recommended by
+the developers of the <rpki>rpki.net</rpki> software.
+
+<p>
+
+<cmd>rpkichk</cmd> provides three types of output:  a problem report, a table
+of results, and a summary.  All three are given by default.  However, any
+combination of the three may be selected by using the <arg>-problems</arg>,
+<arg>-table</arg>, and <arg>-summary</arg> options.
+
+<p>
+
+In addition to validating the contents of an <file>rpki.conf</file> file,
+<cmd>rpkichk</cmd> can display the contents.  The <arg>-list</arg> option will
+display fields and values in the <file>rpki.conf</file> file, but no
+validation will be performed.  With no other options, all fields in all
+sections of the file will be listed.  The <arg>-names</arg> option lists just
+the sections of the <file>rpki.conf</file> file.  The <arg>-section</arg>
+option lists only the fields in the named section.  Normally, field listings
+give the value as used by the RPKI software.  However, the
+<arg>-untranslate</arg> option will give the value exactly as it is given in
+the <file>rpki.conf</file> file.
+
+<p>
+
+Usage:
+
+<pre>
+    $ rpkichk [options] <rpki.conf file>
+
+    Where [options] are:
+
+        -config conffile
+	    specify configuration file to validate
+
+        -list
+	    list configuration-section information
+
+        -names
+	    list configuration-section names;
+            must be used in conjunction with -list
+
+        -untranslate
+	    display untranslated values from the configuration file
+            must be used in conjunction with -list
+
+        -section section-name
+	    specify section to examine;
+            must be used in conjunction with -list
+
+        -basic
+	    only run basic checks
+
+        -cross
+	    only run cross-checks
+
+        -recval
+	    only run recommended-value checks
+
+        -problems
+	    only show problems found
+
+        -summary
+	    give summary of checks only
+
+        -table
+	    provide results in tabular form
+
+        -noautoconf
+	    don't check the autoconf section
+
+        -noirdbd
+	    don't check the irdbd section
+
+        -nomyrpki
+	    don't check the myrpki section
+
+        -nopubd
+	    don't check the pubd section
+
+        -norootd
+	    don't check the rootd section
+
+        -norpkid
+	    don't check the rpkid section
+
+        -noweb_portal
+	    don't check the web_portal section
+
+        -verbose
+	    give verbose output
+
+        -Version
+	    show version and exit
+
+        -help
+	    show usage message and exit
+
+        -manpage
+	    show the manual page and exit
+</pre>
+
+<p>
+
+See <a href="rpki-validation">Validation Checks for rpki.conf Files</a>
+for more details on the various validation checks performed by
+<cmd>rpkichk</cmd>.
+
+<p>
+
+<!*********************************************************>
+
+<a name="man-rsyncdchk"></a>
+<h3>5.4 <cmd>rsyncdchk</cmd></h3>
+
+<p>
+
+<cmd>rsyncdchk</cmd> validates the contents of an <file>rsyncd.conf</file>
+file.  The configuration file is validated to ensure that reasonable values
+are specified for the various fields.
+
+<p>
+
+The default configuration file is <path>/etc/rsyncd.conf</path>.  The
+<opt>-config</opt> option allows the user to specify an alternate file to be
+validated.
+
+<p>
+
+<cmd>rsyncdchk</cmd> performs one type of checks.  Basic checks are
+rudimentary checks of the configuration values in an <file>rsyncd.conf</file>
+file.  For example, it checks that the <arg>path</arg> field is actually a
+directory, but not that it is used as is expected.
+
+<p>
+
+<cmd>rsyncdchk</cmd> provides three types of output:  a problem report, a
+table of results, and a summary.  All three are given by default.  However,
+any combination of the three may be selected by using the
+<opt>-problems</opt>, <opt>-table</opt>, and <opt>-summary</opt> options.
+
+<p>
+
+In addition to validating the contents of an <file>rsyncd.conf</file> file,
+<cmd>rsyncdchk</cmd> can display the contents.  The <opt>-list</opt> option
+will display fields and values in the <file>rsyncd.conf</file> file, but no
+validation will be performed.
+
+<p>
+
+Usage:
+<pre>
+    rsyncdchk [options]
+
+    Where options may be:
+        -config conffile         specify configuration file to validate
+        -list                    list configuration-section information
+        -names                   list configuration-section names;
+                                 must be used in conjunction with -list
+        -section section-name    specify section to examine;
+                                 must be used in conjunction with -list
+
+        -basic                   only run basic checks
+
+	-problems		 only show problems found
+        -summary                 give summary of checks only
+	-table			 provide results in tabular form
+
+        -norpki                  don't check the rpki section
+        -noroot                  don't check the root section
+
+        -verbose                 give verbose output
+        -Version                 show version and exit
+        -help                    show usage message and exit
+        -manpage                 show the manual page and exit
+</pre>
+
+<p>
+
+See <a href="rsyncd-validation">Validation Checks for rsyncd.conf Files</a>
+for more details on the various validation checks performed by
+<cmd>rsyncdchk</cmd>.
+
+<p>
+
+<!*********************************************************>
+
+<!-----------------
+<a name="man-rpkiviz"></a>
+<h3>5.5 visualization tool</h3>
+
+<p>
+
+<i>Not Yet Implemented.</i>
+
+<p>
+------------------>
+
+<!*****************************************************************************>
+
+<a name="sect-ca-daemons"></a>
+<h2>6 Certification-Authority Daemons</h2>
+
+<p>
+
+The <rpki>rpki.net</rpki> Certification-Authority daemons implement the
+production-side tools for an RPKI environment.  This includes generating the
+RPKI objects, such as certificates, CRLs, ROAs, and other RPKI objects.  The
+four CA daemons are described below in their own sections.
+
+<p>
+
+Certification-Authority Daemons:
+
+<ul>
+<li><a href="#man-irdbd">6.1 <cmd>irdbd</cmd></a>
+<li><a href="#man-pubd">6.2 <cmd>pubd</cmd></a>
+<li><a href="#man-rootd">6.3 <cmd>rootd</cmd></a>
+<li><a href="#man-rpkid">6.4 <cmd>rpkid</cmd></a>
+</ul>
+
+<p>
+
+<!*********************************************************>
+
+<a name="man-irdbd"></a>
+<h3>6.1 <cmd>irdbd</cmd></h3>
+
+<p>
+
+<cmd>irdbd</cmd> is a sample implementation of the server side of the IRDB
+(Internet Registry DataBase.)  <cmd>irdbd</cmd> is part of the IRBE (Internet
+Registry Back-End) system, and shares its SQL database with the
+<cmd>rpkic</cmd> utility and the <rpki>rpki.net</rpki> web interface.
+
+<p>
+
+In production, this service acts as a a function of the IRBE stub.
+<cmd>irdbd</cmd> may be suitable for production use in simple cases, but
+an Internet Registry with a complex IRDB may need to extend or rewrite
+<cmd>irdbd</cmd>.
+
+<p>
+
+<cmd>irdbd</cmd>'s default configuration file is the system
+<file>rpki.conf</file> file.  All of <cmd>irdbd</cmd>'s options are in
+the <arg>"[irdbd]"</arg> section.  A different configuration file may be
+used if <cmd>irdbd</cmd> is given with <arg>"-c filename"</arg> when
+the command is started.
+
+<p>
+
+By default, <cmd>irdbd</cmd> uses the <cmd>syslog</cmd> interface for 
+logging.  Options allow this to be changed to STDOUT, STDERR, or a named
+file.
+
+<p>
+
+The <a href="config-reference">Step-By-Step Configuration File
+Reference</a> has a complete description of the <file>rpki.conf</file> file.
+
+<p>
+
+Since <cmd>irdbd</cmd> is part of the back-end system, it has direct access
+to the back-end's SQL database.  This allows it to to retrieve its own BPKI
+configuration directly from the database, which means that <cmd>irdbd</cmd>
+needs a little less configuration than the other Certification-Authority
+tools.
+
+<p>
+
+Usage:
+<pre>
+    irdbd [-h] [-c CONFIG] [-f] [--pidfile PIDFILE] [--profile PROFILE]
+               [--log-level {debug,info,warning,error,critical}]
+               [--log-syslog [{auth,authpriv,cron,daemon,ftp,kern,
+		               local0,local1,local2,local3,local4,
+			       local5,local6,local7,
+			       lpr,mail,news,security,syslog,user,uucp}]   |
+                --log-stderr | --log-stdout | --log-file LOG_FILE          |
+                --log-rotating-file FILENAME KBYTES COUNT                  |
+                --log-timed-rotating-file FILENAME HOURS COUNT]
+
+    Where the options are:
+        -h, --help            show this help message and exit
+        -c CONFIG, --config CONFIG
+                              override default location of configuration file
+        -f, --foreground      do not daemonize
+        --pidfile PIDFILE     override default location of pid file
+        --profile PROFILE     enable profiling, saving data to PROFILE
+        --log-level {debug,info,warning,error,critical}
+                              how verbosely to log
+        --log-syslog [{auth,authpriv,cron,daemon,ftp,kern,
+		       local0,local1,local2,local3,local4,
+		       local5,local6,local7,
+		       lpr,mail,news,security,syslog,user,uucp}]
+                              send logging to syslog
+        --log-stderr          send logging to standard error
+        --log-stdout          send logging to standard output
+        --log-file LOG_FILE   send logging to a file, reopening if rotated away
+        --log-rotating-file FILENAME KBYTES COUNT
+                              send logging to rotating file
+        --log-timed-rotating-file FILENAME HOURS COUNT
+                              send logging to timed rotating file
+</pre>
+
+<p>
+
+The <rpki>rpki.net</rpki> package includes a second implementation of
+<cmd>irdbd</cmd> that is used only for testing.
+<path>ca/tests/old_irdbd</path> is a minimal implementation, used only by the
+<cmd>smoketest</cmd> testing tool.  <cmd>smoketest</cmd> itself constitutes a
+fairly complete IRBE implementation.  Ordinarily you won't need
+<cmd>old_irdbd</cmd>.  However, for some reason you must write your own
+<cmd>irdbd</cmd> implementation, the work might be easier if started from this
+minimal version.
+
+<p>
+
+<!*********************************************************>
+
+<a name="man-pubd"></a>
+<h3>6.2 <cmd>pubd</cmd></h3>
+
+<p>
+
+<cmd>pubd</cmd> implements the server side of the publication protocol.  It
+publishes the certificates and other objects that <cmd>rpkid</cmd> generates.
+<cmd>pubd</cmd> stores dynamic data in an SQL database, which must have been
+created for it.  <cmd>pubd</cmd> also stores the published objects themselves
+as disk files.  The storage location is configurable by setting the
+appropriate field in the <file>rsyncd.conf</file>.
+
+<p>
+
+<cmd>pubd</cmd>'s default configuration file is the system
+<file>rpki.conf</file> file.  All of <cmd>pubd</cmd>'s options are in
+the <arg>"[pubd]"</arg> section.  A different configuration file may
+be used if <cmd>pubd</cmd> is given with <arg>"-c filename"</arg>
+when the command is started.
+
+<p>
+
+By default, <cmd>pubd</cmd> uses the <cmd>syslog</cmd> interface for 
+logging.  Options allow this to be changed to STDOUT, STDERR, or a named
+file.
+
+<p>
+
+The <a href="config-reference">Step-By-Step Configuration File
+Reference</a> has a complete description of the <file>rpki.conf</file> file.
+
+<p>
+
+Usage:
+<pre>
+    pubd [-h] [-c CONFIG] [-f] [--pidfile PIDFILE] [--profile PROFILE]
+                [--log-level {debug,info,warning,error,critical}]
+                [--log-syslog [{auth,authpriv,cron,daemon,ftp,kern,
+                                local0,local1,local2,local3,local4,
+                                local5,local6,local7,
+                                lpr,mail,news,security,syslog,user,uucp}]   |
+                 --log-stderr                                               |
+                 --log-stdout                                               |
+                 --log-file LOG_FILE                                        |
+                 --log-rotating-file FILENAME KBYTES COUNT                  |
+                 --log-timed-rotating-file FILENAME HOURS COUNT]
+
+    optional arguments:
+        -h, --help            show this help message and exit
+        -c CONFIG, --config CONFIG
+                              override default location of configuration file
+        -f, --foreground      do not daemonize
+        --pidfile PIDFILE     override default location of pid file
+        --profile PROFILE     enable profiling, saving data to PROFILE
+        --log-level {debug,info,warning,error,critical}
+                              how verbosely to log
+        --log-syslog [{auth,authpriv,cron,daemon,ftp,kern,
+                       local0,local1,local2,local3,local4,local5,local6,local7,
+                       lpr,mail,news,security,syslog,user,uucp}]
+                              send logging to syslog
+        --log-stderr          send logging to standard error
+        --log-stdout          send logging to standard output
+        --log-file LOG_FILE   send logging to a file, reopening if rotated away
+        --log-rotating-file FILENAME KBYTES COUNT
+                              send logging to rotating file
+        --log-timed-rotating-file FILENAME HOURS COUNT
+                              send logging to timed rotating file
+</pre>
+
+<p>
+
+The publication functionality could be combined with the main RPKI engine.
+This would result in <cmd>pubd</cmd> being part of the <cmd>rpkid</cmd> daemon.
+This was not done for two reasons:
+
+<p>
+
+<ol>
+
+<li> The hosting model allows installations which choose to run their own
+copies of <cmd>rpkid</cmd> to publish their output under a common publication
+point.  In general, encouraging shared publication services where practical
+is beneficial for Relying Parties, as it will speed up <cmd>rcynic</cmd>
+synchronization time.
+
+<p>
+
+<li> The publication server has to run on (or close to) the publication point
+itself.  This means it must be on a publicly reachable server to be useful.
+<cmd>rpkid</cmd>, on the other hand, need only be reachable by the IRBE and
+its children in the RPKI tree.  <cmd>rpkid</cmd> is a much more complex
+publication server, so in some situations it might be preferable to wrap
+tighter firewall constraints around <cmd>rpkid</cmd> than would be practical
+for a combined <cmd>rpkid</cmd>/<cmd>pubd</cmd> daemon.
+
+<p>
+
+</ol>
+
+<p>
+
+<!*********************************************************>
+
+<a name="man-rootd"></a>
+<h3>6.3 <cmd>rootd</cmd></h3>
+
+<p>
+
+<cmd>rootd</cmd> is a stripped-down implementation of the server side of
+the up-down protocol.  <cmd>rootd</cmd> is a simple implementation intended
+for test use, it's not suitable for use in a production system.
+
+<p>
+
+The root certificate of an RPKI certificate tree requires special handling
+and may also require a special handling policy.
+
+<p>
+
+<cmd>rootd</cmd>'s default configuration file is the system
+<file>rpki.conf</file> file.  All of <cmd>rootd</cmd>'s options are in
+the <arg>"[rootd]"</arg> section.  A different configuration file may be
+used if <cmd>rootd</cmd> is given with <arg>"-c filename"</arg> when
+the command is started.
+
+<p>
+
+By default, <cmd>rootd</cmd> uses the <cmd>syslog</cmd> interface for 
+logging.  Options allow this to be changed to STDOUT, STDERR, or a named
+file.
+
+<p>
+
+The <a href="config-reference">Step-By-Step Configuration File
+Reference</a> has a complete description of the <file>rpki.conf</file> file.
+
+<p>
+
+Usage:
+<pre>
+    rootd [-h] [-c CONFIG] [-f] [--pidfile PIDFILE]
+               [--log-level {debug,info,warning,error,critical}]
+               [--log-syslog [{auth,authpriv,cron,daemon,ftp,kern,
+                               local0,local1,local2,local3,local4,
+                               local5,local6,local7,
+                               lpr,mail,news,security,syslog,user,uucp}]   |
+                --log-stderr                                               |
+                --log-stdout                                               |
+                --log-file LOG_FILE                                        |
+                --log-rotating-file FILENAME KBYTES COUNT                  |
+                --log-timed-rotating-file FILENAME HOURS COUNT]
+
+    optional arguments:
+        -h, --help            show this help message and exit
+        -c CONFIG, --config CONFIG
+                              override default location of configuration file
+        -f, --foreground      do not daemonize
+        --pidfile PIDFILE     override default location of pid file
+        --log-level {debug,info,warning,error,critical}
+                              how verbosely to log
+        --log-syslog [{auth,authpriv,cron,daemon,ftp,kern,
+                       local0,local1,local2,local3,local4,local5,local6,local7,
+                       lpr,mail,news,security,syslog,user,uucp}]
+                              send logging to syslog
+        --log-stderr          send logging to standard error
+        --log-stdout          send logging to standard output
+        --log-file LOG_FILE   send logging to a file, reopening if rotated away
+        --log-rotating-file FILENAME KBYTES COUNT
+                              send logging to rotating file
+        --log-timed-rotating-file FILENAME HOURS COUNT
+                              send logging to timed rotating file
+</pre>
+
+<p>
+
+<!*********************************************************>
+
+<a name="man-rpkid"></a>
+<h3>6.4 <cmd>rpkid</cmd></h3>
+
+<p>
+
+<cmd>rpkid</cmd> is the main RPKI engine, querying the IRDB for information.
+The queries request information about resources assigned to a particular
+child.
+
+<p>
+
+Configuration of <cmd>rpkid</cmd> is a two-step process.  First, the
+<file>rpki.conf</file> configuration file is read to bootstrap the daemon to
+the point where it can speak using the left-right protocol.  Second, it uses
+the left-right protocol to perform dynamic configuration.  The second stage
+is handled by the <cmd>rpkic</cmd> command line tool or the web interface.
+
+<p>
+
+<cmd>rpkid</cmd> stores dynamic data in an SQL database, which must have been
+created for it, as explained in in the MySQL setup instructions.
+
+<p>
+
+<cmd>rpkid</cmd>'s default configuration file is the system
+<file>rpki.conf</file> file.  All of <cmd>rpkid</cmd>'s options are in the
+<arg>"[rpkid]"</arg> section.  A different configuration file may be used if
+<cmd>rpkid</cmd> is given with <arg>"-c filename"</arg> when the command
+is started.
+
+<p>
+
+By default, <cmd>rpkid</cmd> uses the <cmd>syslog</cmd> interface for 
+logging.  Options allow this to be changed to STDOUT, STDERR, or a named
+file.
+
+<p>
+
+The <a href="config-reference">Step-By-Step Configuration File
+Reference</a> has a complete description of the <file>rpki.conf</file> file.
+
+<p>
+
+Usage:
+<pre>
+    rpkid [-h] [-c CONFIG] [-f] [--pidfile PIDFILE] [--profile PROFILE]
+               [--log-level {debug,info,warning,error,critical}]
+               [--log-syslog [{auth,authpriv,cron,daemon,ftp,kern,
+			       local0,local1,local2,local3,local4,
+			       local5,local6,local7,
+			       lpr,mail,news,security,syslog,user,uucp}]   |
+                --log-stderr | --log-stdout | --log-file LOG_FILE          |
+                --log-rotating-file FILENAME KBYTES COUNT                  |
+                --log-timed-rotating-file FILENAME HOURS COUNT]
+
+    optional arguments:
+        -h, --help            show this help message and exit
+        -c CONFIG, --config CONFIG
+                              override default location of configuration file
+        -f, --foreground      do not daemonize
+        --pidfile PIDFILE     override default location of pid file
+        --profile PROFILE     enable profiling, saving data to PROFILE
+        --log-level {debug,info,warning,error,critical}
+                              how verbosely to log
+        --log-syslog [{auth,authpriv,cron,daemon,ftp,kern,
+  		     local0,local1,local2,local3,local4, local5,local6,local7,
+  		     lpr,mail,news,security,syslog,user,uucp}]
+                              send logging to syslog
+        --log-stderr          send logging to standard error
+        --log-stdout          send logging to standard output
+        --log-file LOG_FILE   send logging to a file, reopening if rotated away
+        --log-rotating-file FILENAME KBYTES COUNT
+                              send logging to rotating file
+        --log-timed-rotating-file FILENAME HOURS COUNT
+                              send logging to timed rotating file
+</pre>
+
+<p>
+
+<!*****************************************************************************>
+
+<a name="sect-ca-utils"></a>
+<h2>7 Certification-Authority Utilities</h2>
+
+<p>
+
+The <rpki>rpki.net</rpki> Certification-Authority utilities provide
+supporting functionality and control for the CA RPKI environment.
+This includes such functions as configuring the required SQL databases,
+starting servers, and controlling the RPKI daemons.
+
+<p>
+
+Certification-Authority Utilities:
+
+<ul>
+<li><a href="#man-irbe_cli">7.1 <cmd>irbe_cli</cmd></a>
+<li><a href="#man-rpki-confgen">7.2 <cmd>rpki-confgen</cmd></a>
+<li><a href="#man-rpki-manage">7.3 <cmd>rpki-manage</cmd></a>
+<li><a href="#man-rpki-sql-backup">7.4 <cmd>rpki-sql-backup</cmd></a>
+<li><a href="#man-rpki-sql-setup">7.5 <cmd>rpki-sql-setup</cmd></a>
+<li><a href="#man-rpki-start-servers">7.6 <cmd>rpki-start-servers</cmd></a>
+<li><a href="#man-rpkigui-apache-conf-gen">7.7 <cmd>rpkigui-apache-conf-gen</cmd></a>
+<li><a href="#man-rpkigui-check-expired">7.8 <cmd>rpkigui-check-expired</cmd></a>
+<li><a href="#man-rpkigui-import-routes">7.9 <cmd>rpkigui-import-routes</cmd></a>
+<li><a href="#man-rpkigui-rcynic">7.10 <cmd>rpkigui-rcynic</cmd></a>
+<li><a href="#man-rpkic">7.11 <cmd>rpkic</cmd></a>
+<li><a href="#man-rpkigui-query-routes">7.12 <cmd>rpkigui-query-routes</cmd></a>
+</ul>
+
+<p>
+
+<!*********************************************************>
+
+<a name="man-irbe_cli"></a>
+<h3>7.1 <cmd>irbe_cli</cmd></h3>
+
+<p>
+
+<cmd>irbe_cli</cmd> is a IR back-end control program that provides command-line
+access to the <cmd>rpkid</cmd> and <cmd>pubd</cmd> CA daemons.  There are
+commands specific to <cmd>rpkid</cmd> and <cmd>pubd</cmd>, and each of those
+commands takes its own set of options.
+
+<p>
+
+Usage:
+<pre>
+    irbe_cli [top-level options] <rpkid-command | pubd command> [command-options]
+
+        # Top-level options:
+        --config= --help --pem_out= --quiet --verbose
+        
+    rpkid commands:   
+        parent --action= --tag= --self_handle= --parent_handle= --bsc_handle=
+            --repository_handle= --peer_contact_uri= --sia_base=
+            --sender_name= --recipient_name= --bpki_cms_cert= --bpki_cms_glue=
+            --rekey --reissue --revoke --revoke_forgotten
+            --clear_replay_protection
+        repository --action= --tag= --self_handle= --repository_handle=
+            --bsc_handle= --peer_contact_uri= --bpki_cert= --bpki_glue=
+            --clear_replay_protection
+        self --action= --tag= --self_handle= --crl_interval= --regen_margin=
+            --bpki_cert= --bpki_glue= --rekey --reissue --revoke --run_now
+            --publish_world_now --revoke_forgotten --clear_replay_protection
+        list_received_resources --self_handle= --tag=
+        child --action= --tag= --self_handle= --child_handle= --bsc_handle=
+            --bpki_cert= --bpki_glue= --reissue --clear_replay_protection
+        list_published_objects --self_handle= --tag= --child_handle=
+        bsc --action= --tag= --self_handle= --bsc_handle= --key_type=
+            --hash_alg= --key_length= --signing_cert= --signing_cert_crl=
+            --generate_keypair
+        
+    pubd commands:
+        ghostbuster --action= --tag= --client_handle= --uri=
+        certificate --action= --tag= --client_handle= --uri=
+        roa --action= --tag= --client_handle= --uri=
+        manifest --action= --tag= --client_handle= --uri=
+        client --action= --tag= --client_handle= --base_uri= --bpki_cert=
+            --bpki_glue= --clear_replay_protection
+        config --action= --tag= --bpki_crl=
+        crl --action= --tag= --client_handle= --uri=
+</pre>
+
+<p>
+
+<!*********************************************************>
+
+<a name="man-rpki-confgen"></a>
+<h3>7.2 <cmd>rpki-confgen</cmd></h3>
+
+<p>
+
+The <cmd>rpki-confgen</cmd> command creates a new <file>rpki.conf</file>
+configuration file.
+
+<p>
+
+The <arg>--read-xml</arg> argument is required, and it specifies an XML
+file from which the new configuration file will be populated.  The XML
+file defines the sections and options to be used in the new file.
+
+<p>
+
+The <a href="config-reference">Step-By-Step Configuration File
+Reference</a> has a complete description of the <file>rpki.conf</file> file.
+
+<p>
+
+Usage:
+
+<pre>
+    rpki-confgen [-h] --read-xml FILE
+                 [--write-xml FILE] [--write-wiki FILE] [--write-conf FILE]
+                 [--set VARVAL] [--pwgen VAR] [--toc TRACNAV] [--autoconf]
+
+    optional arguments:
+        -h, --help         show this help message and exit
+        --read-xml FILE    XML input file defining sections and options
+        --write-xml FILE   XML file to write
+        --write-wiki FILE  TracWiki file to write
+        --write-conf FILE  rpki.conf configuration file to write
+        --set VARVAL       variable setting in form "VAR=VAL"
+        --pwgen VAR        set variable to generated password
+        --toc TRACNAV      set TOC value to use with TracNav plugin
+        --autoconf         configure [autoconf] section
+</pre>
+
+<!*********************************************************>
+
+<a name="man-rpki-manage"></a>
+<h3>7.3 <cmd>rpki-manage</cmd></h3>
+
+<p>
+
+<cmd>rpki-manage</cmd> provides a command-line interface for initializing and
+controlling various aspects of the <rpki>rpki.net</rpki> system.
+
+<p>
+
+A large number of commands are available through <cmd>rpki-manage</cmd>.  These
+commands are run individually by including one on the <cmd>rpki-manage</cmd>
+command line.
+
+<p>
+
+<cmd>rpki-manage</cmd> has an internal help system to provide information
+about its commands.  It provides two levels of information:
+
+<ul>
+<li>Running <i>"rpki-manage"</i> <i>"rpki-manage help</i> provides a list
+of available commands.  The command list is divided into five sections.
+
+<li>Running <i>"rpki-manage help &lt;command&gt;</i>" (e.g., <i>"rpki-manage
+help diffsettings"</i>) will provide a description of the command and its
+arguments.  </ul>
+
+<p>
+
+Usage:
+
+<pre>
+    rpki-manage command [options] [args]
+
+    Options:
+      -v VERBOSITY, --verbosity=VERBOSITY
+                            Verbosity level; 0=minimal output, 1=normal output,
+                            2=verbose output, 3=very verbose output
+      --settings=SETTINGS   The Python path to a settings module, e.g.
+                            "myproject.settings.main". If this isn't provided,
+                            the DJANGO_SETTINGS_MODULE environment variable
+                            will be used.
+      --pythonpath=PYTHONPATH
+                            A directory to add to the Python path, e.g.
+                            "/home/djangoprojects/myproject".
+      --traceback           Raise on exception
+      --version             show program's version number and exit
+      -h, --help            show this help message and exit
+
+    commands:
+
+        [auth]
+            changepassword          change a user's password for django.contrib.auth
+            createsuperuser         used to create a superuser
+
+        [django]
+            check                   checks configuration's compatibility with this version of Django
+            cleanup                 clean out expired sessions (only with the database back-end at the moment)
+            compilemessages         compiles .po files to .mo files for use with built-in gettext support
+            createcachetable        creates the table needed to use the SQL cache backend
+            dbshell                 runs the command-line client for a database
+            diffsettings            displays differences between the current settings.py and Django's default settings
+            dumpdata                output contents of the database as a fixture of the given format
+            flush                   returns database to the state it was in immediately after syncdb was executed
+            inspectdb               introspects database tables in the given database and outputs a Django model module
+            loaddata                installs the named fixture(s) in the database
+            makemessages            runs over a source tree of the current directory to find strings for translation
+            runfcgi                 run project as a fastcgi application
+            shell                   runs a Python interactive interpreter.
+            sql                     prints the CREATE TABLE SQL statements for the given app name(s)
+            sqlall                  prints the CREATE TABLE, custom SQL, and CREATE INDEX SQL statements for the given model module name(s)
+            sqlclear                prints the DROP TABLE SQL statements for the given app name(s)
+            sqlcustom               prints the custom table modifying SQL statements for the given app name(s)
+            sqldropindexes          prints the DROP INDEX SQL statements for the given model module name(s)
+            sqlflush                returns a list of the SQL statements required to return all tables in the database to the state they were in just after they were installed
+            sqlindexes              prints the CREATE INDEX SQL statements for the given model module name(s)
+            sqlinitialdata          renamed: see 'sqlcustom'
+            sqlsequencereset        prints the SQL statements for resetting sequences for the given app name(s)
+            startapp                creates a Django app directory structure for the given app name
+            startproject            creates a Django project directory structure for the given project name
+            validate                validates all installed models
+
+        [sessions]
+            clearsessions           clean out expired sessions (only with the database back-end at the moment)
+
+        [south]
+            convert_to_south        converts named application to use South
+            datamigration           creates a new template data migration for the given app
+            graphmigrations         outputs a GraphViz dot file of all migration dependencies
+            migrate                 runs migrations for all apps
+            migrationcheck          runs migrations for each app in turn, detecting missing depends_on values
+            schemamigration         creates a new template schema migration for the given app
+            startmigration          deprecated command
+            syncdb                  create database tables for all apps in INSTALLED_APPS whose tables haven't already been created
+            test                    discover and run tests in the specified modules or the current directory
+            testserver              runs a development server with data from the given fixture(s)
+
+        [staticfiles]
+            collectstatic           collect static files in a single location
+            findstatic              finds the absolute paths for the given static file(s)
+            runserver               starts a light-weight Web server for development and also serves static files
+
+</pre>
+
+<!*********************************************************>
+
+<a name="man-rpki-sql-backup"></a>
+<h3>7.4 <cmd>rpki-sql-backup</cmd></h3>
+
+<p>
+
+<cmd>rpki-sql-backup</cmd> backs up the <rpki>rpki.net</rpki> SQL databases.
+It uses the <file>rpki.conf</file> configuration file to determine which
+databases must be backed up and the credentials to use for each.
+
+<p>
+
+<cmd>rpki-sql-backup</cmd>'s default configuration file is the system
+<file>rpki.conf</file> file.  A different configuration file may be used
+if <cmd>rpki-sql-backup</cmd> is given with <arg>"-c filename"</arg>.
+
+<p>
+
+The <a href="config-reference">Step-By-Step Configuration File
+Reference</a> has a complete description of the <file>rpki.conf</file> file.
+
+<p>
+
+Usage:
+<pre>
+    rpki-sql-backup [-h] [-c CONFIG] [-o OUTPUT]
+    
+    optional arguments:
+        -h, --help            show this help message and exit
+        -c CONFIG, --config CONFIG
+                              override default location of configuration file
+        -o OUTPUT, --output OUTPUT
+                              destination for SQL dump (default: stdout)
+</pre>
+
+<p>
+
+<!*********************************************************>
+
+<a name="man-rpki-sql-setup"></a>
+<h3>7.5 <cmd>rpki-sql-setup</cmd></h3>
+
+<p>
+
+<cmd>rpki-sql-setup</cmd> automates the creation of the SQL databases used by
+the <rpki>rpki.net</rpki> CA tools.  The databases are initialized according
+to the settings in the <file>rpki.conf</file> configuration file.  The user
+will be prompted for the MySQL password as needed.
+
+<p>
+
+<cmd>rpki-sql-setup</cmd>'s default configuration file is the system
+<file>rpki.conf</file> file.  A different configuration file may
+be used if <cmd>rpki-sql-setup</cmd> is given with <arg>"-c filename"</arg>.
+
+<p>
+
+The <a href="config-reference">Step-By-Step Configuration File
+Reference</a> has a complete description of the <file>rpki.conf</file> file.
+
+<p>
+
+Usage:
+
+<pre>
+    rpki-sql-setup [-h] [-c CONFIG] [-v] [--mysql-defaults MYSQL_DEFAULTS]
+                          [--upgrade-scripts UPGRADE_SCRIPTS]
+                          [--create | --drop   | --script-drop  |
+                           --drop-and-create   | --fix-grants   |
+                           --create-if-missing | --apply-upgrades]
+    
+    optional arguments:
+        -h, --help            show this help message and exit
+        -c CONFIG, --config CONFIG
+                              specify alternate location for rpki.conf
+        -v, --verbose         whistle while you work
+        --mysql-defaults MYSQL_DEFAULTS
+                              specify MySQL root access credentials via a
+                              configuration file
+        --upgrade-scripts UPGRADE_SCRIPTS
+                              override default location of upgrade scripts
+        --create              create databases and load schemas
+        --drop                drop databases
+        --script-drop         send SQL commands to drop databases to standard
+                              output
+        --drop-and-create     drop databases then recreate them and load
+                              schemas
+        --fix-grants          whack database access to match current
+                              configuration file
+        --create-if-missing   create databases and load schemas if they don't
+                              exist already
+        --apply-upgrades      apply upgrade scripts to existing databases
+</pre>
+
+<p>
+
+<!*********************************************************>
+
+<a name="man-rpki-start-servers"></a>
+<h3>7.6 <cmd>rpki-start-servers</cmd></h3>
+
+<p>
+
+This command starts the required CA daemons.  It uses the
+<file>rpki.conf</file> file to determine which servers must
+be started.
+
+<p>
+
+<cmd>rpki-start-servers</cmd>'s default configuration file is the system
+<file>rpki.conf</file> file.  A different configuration file may be used if
+<cmd>rpki-start-servers</cmd> is given with <arg>"-c filename"</arg>.
+
+<p>
+
+By default, <cmd>rpki-start-servers</cmd> uses the <cmd>syslog</cmd> interface
+for logging.  Options allow this to be changed to STDOUT, STDERR, or a named
+file.
+
+<p>
+
+The <a href="config-reference">Step-By-Step Configuration File
+Reference</a> has a complete description of the <file>rpki.conf</file> file.
+
+<p>
+
+Usage:
+
+<pre>
+    usage: rpki-start-servers [-h] [-c CONFIG] [--log-directory LOG_DIRECTORY]
+                      [--log-backup-count LOG_BACKUP_COUNT]
+                      [--log-level {debug,info,warning,error,critical}]
+                      [--log-file |
+                       --log-rotating-file-kbytes LOG_ROTATING_FILE_KBYTES |
+                       --log-rotating-file-hours LOG_ROTATING_FILE_HOURS |
+                       --log-syslog [{auth,authpriv,cron,daemon,ftp,kern,
+                                      local0,local1,local2,local3,local4,local5,local6,local7,
+				      lpr,mail,news,security,syslog,user,uucp}]]
+    
+    optional arguments:
+      -h, --help            show this help message and exit
+      -c CONFIG, --config CONFIG
+                            override default location of configuration file
+      --log-directory LOG_DIRECTORY
+                            where to write write log files when not using syslog
+      --log-backup-count LOG_BACKUP_COUNT
+                            keep this many old log files when rotating
+      --log-level {debug,info,warning,error,critical}
+                            how verbosely to log
+      --log-file            log to files, reopening if rotated away
+      --log-rotating-file-kbytes LOG_ROTATING_FILE_KBYTES
+                            log to files, rotating after this many kbytes
+      --log-rotating-file-hours LOG_ROTATING_FILE_HOURS
+                            log to files, rotating after this many hours
+      --log-syslog [{auth,authpriv,cron,daemon,ftp,kern,
+		     local0,local1,local2,local3,local4,local5,local6,local7,
+		     lpr,mail,news,security,syslog,user,uucp}]
+                            log syslog
+</pre>
+
+<p>
+
+<!*********************************************************>
+
+<a name="man-rpkic"></a>
+<h3>7.7 <cmd>rpkic</cmd></h3>
+
+<p>
+
+<cmd>rpkic</cmd> is the command-line interface for the <rpki>rpki.net</rpki>
+CA daemons.  It allows the CA daemons to be configured and controlled away
+from the web interface.
+
+<p>
+
+A large number of commands are available through <cmd>rpkic</cmd>.  These
+commands may be run individually by including one on the <cmd>rpkic</cmd>
+command line.  <cmd>rpkic</cmd> may be run as its own environment if it
+isn't given a command.  In this case, the commands can be entered at the
+<cmd>rpkic</cmd> prompt.
+
+<p>
+
+<cmd>rpkic</cmd> has an internal help system to provide information about
+its commands.  It provides three levels of information:
+
+<ul>
+<li>Running <i>"rpkic --help"</i> provides a list of commands and a very
+brief explanation of each command.
+
+<li>Running <i>"help</i>" within the <cmd>rpkic</cmd> environment gives a
+list of the available commands.
+
+<li>Adding a command name at the end (e.g., <i>"help load_asns"</i>) will
+provide a description of the command and its arguments.
+</ul>
+
+<p>
+
+Usage:
+
+<pre>
+    rpkic [-h] [-c CONFIG] [-i IDENTITY] [--profile PROFILE]  [command [arguments]]
+    
+    optional arguments:
+        -h, --help          show this help message and exit
+        -c CONFIG, --config CONFIG
+                            override default location of configuration file
+        -i IDENTITY, --identity IDENTITY, --handle IDENTITY
+                            set initial entity handle
+        --profile PROFILE   enable profiling, saving data to PROFILE
+
+    commands:
+
+        select_identity     select an identity handle for use with later commands
+        initialize          initialize an RPKI installation. DEPRECATED
+        create_identity     create a new resource-holding entity
+        initialize_server_bpki
+                            initialize server BPKI portion of an RPKI
+                            installation
+        update_bpki         update BPKI certificates. Assumes an existing RPKI
+                            installation
+        configure_child     configure a new child of this RPKI entity
+        delete_child        delete a child of this RPKI entity
+        configure_parent    configure a new parent of this RPKI entity
+        delete_parent       delete a parent of this RPKI entity
+        configure_root      configure the current resource holding identity as a
+                            root
+        delete_root         delete local RPKI root as parent of the current
+                            entity
+        configure_publication_client
+                            configure publication server to know about a new
+                            client
+        delete_publication_client
+                            delete a publication client of this RPKI entity
+        configure_repository
+                            configure a publication repository for this RPKI
+                            entity
+        delete_repository   delete a repository of this RPKI entity
+        delete_identity     delete the current RPKI identity (rpkid <self/>
+                            object)
+        renew_child         update validity period for one child entity
+        renew_all_children  update validity period for all child entities
+        load_prefixes       load prefixes into IRDB from CSV file
+        show_child_resources
+                            show resources assigned to children
+        show_roa_requests   show ROA requests
+        show_ghostbuster_requests
+                            show Ghostbuster requests
+        show_received_resources
+                            show resources received by this entity from its
+                            parent(s)
+        show_published_objects
+                            show published objects
+        show_bpki           show this entity's BPKI objects
+        load_asns           load ASNs into IRDB from CSV file
+        load_roa_requests   load ROA requests into IRDB from CSV file
+        load_ghostbuster_requests
+                            load Ghostbuster requests into IRDB from file
+        add_router_certificate_request
+                            load router certificate request(s) into IRDB from
+                            XML file
+        delete_router_certificate_request
+                            delete a router certificate request from the IRDB
+        show_router_certificate_requests
+                            show this entity's router certificate requests
+        synchronize         whack daemons to match IRDB
+        force_publication   whack rpkid to force (re)publication of everything
+        force_reissue       whack rpkid to force reissuance of everything
+        up_down_rekey       initiate a "rekey" operation
+        up_down_revoke      initiate a "revoke" operation
+        revoke_forgotten    initiate a "revoke_forgotten" operation
+        clear_all_sql_cms_replay_protection
+                            tell rpkid and pubd to clear replay protection
+        version             show current software version number
+        list_self_handles   list all <self/> handles in this rpkid instance
+</pre>
+
+<p>
+
+<!*********************************************************>
+
+<a name="man-rpkigui-apache-conf-gen"></a>
+<h3>7.8 <cmd>rpkigui-apache-conf-gen</cmd></h3>
+
+<p>
+
+<cmd>rpkigui-apache-conf-gen</cmd> creates and installs a configuration file
+for using Apache <cmd>httpd</cmd> to drive the RPKI web interface under WSGI.
+This command may also be used to uninstall the <cmd>httpd</cmd> configuration
+file.
+
+<p>
+
+Usage:
+
+<pre>
+    rpkigui-apache-conf-gen [-h] [-v] [--apache-version APACHE_VERSION]
+                            [--freebsd | --debian | --ubuntu | --redhat | --macosx | --guess]
+                            [-i | -r | -P]
+
+    optional arguments:
+        -h, --help            show this help message and exit
+        -v, --verbose         whistle while you work
+        --apache-version APACHE_VERSION
+                              Apache version (default 22)
+        --freebsd             configure for FreeBSD
+        --debian              configure for Debian
+        --ubuntu              configure for Ubuntu
+        --redhat, --fedora, --centos
+                              configure for Redhat/Fedora/CentOS
+        --macosx, --darwin    configure for Mac OS X (Darwin)
+        --guess               guess which platform configuration to use
+        -i, --install         install configuration
+        -r, --remove, --deinstall, --uninstall
+                              remove configuration
+        -P, --purge           remove configuration with extreme prejudice
+
+</pre>
+
+<p>
+
+<!*********************************************************>
+
+<a name="man-rpkigui-check-expired"></a>
+<h3>7.9 <cmd>rpkigui-check-expire</cmd></h3>
+
+<p>
+
+<cmd>rpkigui-check-expired</cmd> generates a report detailing all RPKI and
+BPKI certificates which are due for impending expiration.  If no resource
+handles are specified, a report about all resource handles hosted by the
+local <cmd>rpkid</cmd> will be generated.
+
+<p>
+
+Usage:
+
+<pre>
+    rpkigui-check-expired [ -nV ] [ handle1 handle2... ]
+
+    options:
+        -h, --help            show this help message and exit
+        -V, --version         display script version
+        -f ADDRESS, --from=ADDRESS
+                              specify the return email address for notifications
+        -t DAYS, --expire-time=DAYS
+                              specify the number of days in the future to check
+        -l LOG_LEVEL, --level=LOG_LEVEL
+                              set logging level
+                              [default: WARNING]
+</pre>
+
+<p>
+
+<!*********************************************************>
+
+<a name="man-rpkigui-import-routes"></a>
+<h3>7.10 <cmd>rpkigui-import-routes</cmd></h3>
+
+<p>
+
+<cmd>rpkigui-import-routes</cmd> imports the IPv4/6 BGP table dumps from
+<i>routeviews.org</i> into the <rpki>rpki.net</rpki> Web Portal database.
+If the input file is a <cmd>bzip2</cmd>-compressed file, it will be
+decompressed automatically.
+
+<p>
+
+Usage:
+
+<pre>
+    rpkigui-import-routes [options] [PATH]
+
+    options:
+        -h, --help            show this help message and exit
+        -t TYPE, --type=TYPE  specify the input file type (auto, text, mrt)
+                              [default: auto]
+        -l LOG_LEVEL, --level=LOG_LEVEL
+                              set logging level
+                              [default: ERROR]
+        -u PROG, --bunzip2=PROG
+                              specify bunzip2 program to use
+        -b PROG, --bgpdump=PROG
+                              specify path to bgpdump binary
+        -j JITTER, --jitter=JITTER
+                              specify upper bound of startup delay, in seconds
+                              [default: 0]
+        --lockfile=LOCKFILE   set name of lock file; empty string disables locking
+                              [default: /tmp/rpkigui-import-routes.lock]
+        --timeout=TIMEOUT     specify timeout for download and import, in seconds
+                              [default: 5400]
+</pre>
+
+<p>
+
+<!*********************************************************>
+
+<a name="man-rpkigui-query-routes"></a>
+<h3>7.11 <cmd>rpkigui-query-routes</cmd></h3>
+
+<p>
+
+<cmd>rpkigui-query-routes</cmd> queries the <rpki>rpki.net</rpki> web portal
+database for routes covering a specified prefix.  The prefix to check is
+passed as an argument to <rpki>rpki.net</rpki>.  The validity and covering
+ROAs for each route are displayed.
+
+<p>
+
+Usage:
+
+<pre>
+    rpkigui-query-routes [options] PREFIX
+
+    options:
+        --version   show program's version number and exit
+        -h, --help  show this help message and exit
+</pre>
+
+<!*********************************************************>
+
+<a name="man-rpkigui-rcynic"></a>
+<h3>7.12 <cmd>rpkigui-rcynic</cmd></h3>
+
+<p>
+
+The <cmd>rpkigui-rcynic</cmd> command loads the contents of the
+<file>rcynic.xml</file> file into the <arg>rpki.gui.cacheview</arg>
+database.  By default, <cmd>rpkigui-rcynic</cmd> will load the
+<path>/var/rcynic/data/rcynic.xml</path> file.  This may be modified
+with the <arg>--file</arg> option.
+
+<p>
+
+The <arg>--root</arg> option specifies the <syscall>chroot()</syscall>
+directory used for the <cmd>rcynic</cmd> jail environment.  If this
+option is not given, then <cmd>rpkigui-rcynic</cmd> will use the
+<path>/var/rcynic/data</path> directory.
+
+<p>
+
+Usage:
+
+<pre>
+    rpkigui-rcynic [options]
+    
+    options:
+        -h, --help            show this help message and exit
+        -l LOG_LEVEL, --level=LOG_LEVEL
+                              specify the logging level [default: ERROR]
+        -f LOGFILE, --file=LOGFILE
+                              specify the rcynic XML file to parse
+        -r DIR, --root=DIR    specify the chroot directory for the rcynic jail
+                              [default: /var/rcynic/data]
+</pre>
+
+<p>
+
+<!*****************************************************************************>
+
+<a name="sect-ca-tests"></a>
+<h2>8 Certification-Authority Test Tools</h2>
+
+<p>
+
+The <rpki>rpki.net</rpki> software includes two separate test programs for
+Certification-Authority tools.  <cmd>smoketest</cmd> runs a test scenario
+and stops.  <cmd>yamltest</cmd> provides a test environment (under scripted
+control) and runs indefinitely.
+
+<p>
+
+The test tools are only present in the source tree.  Neither is installed
+during the <rpki>rpki.net</rpki> installation process.
+
+<p>
+
+Unlike the configuration files used by the other programs, these test programs
+read test descriptions written in the YAML serialization language.
+Each test script describes a hierarchy of RPKI entities, including
+hosting relationships and resource assignments, in a relatively compact form.
+The CA test programs use these descriptions to generate a set of configuration
+files, populate the back-end database, and drive the test.
+
+<p>
+
+See <a href="http://www.yaml.org/">http://www.yaml.org/</a> for more
+information on YAML.  See the test configuration language for details
+on the content of these YAML files.
+
+<p>
+
+Certification-Authority Test Tools:
+
+<ul>
+<li><a href="#man-smoketest">8.1 <cmd>smoketest</cmd></a>
+<li><a href="#man-yamltest">8.2 <cmd>yamltest</cmd></a>
+</ul>
+
+<p>
+
+<!*********************************************************>
+
+<a name="man-smoketest"></a>
+<h3>8.1 <cmd>smoketest</cmd></h3>
+
+<p>
+
+<cmd>smoketest</cmd> is a test harness to set up and run a collection of
+<cmd>rpkid</cmd> and <cmd>irdbd</cmd> instances under scripted control.
+<cmd>smoketest</cmd> runs a particular test scenario through a series of
+changes and shuts down.
+
+<p>
+
+The YAML test description defines the test configuration for
+<cmd>smoketest</cmd> to run, including initial resource assignments.
+Subsequent YAML "documents" in the same description file define an ordered
+series of changes to be made to the configuration.  <cmd>smoketest</cmd> runs
+the <cmd>rcynic</cmd> RPKI validator between each update cycle to check the
+output of the CA programs.
+
+<p>
+
+<cmd>smoketest</cmd> and <cmd>yamltest</cmd> use the same YAML test
+description language.
+
+<p>
+
+<cmd>smoketest</cmd> is designed to support running a fairly wide set of
+test configurations as canned scripts.  It is not expected to need new
+control code to be written.  The intent is to make it possible to write
+meaningful regression tests.
+
+<p>
+
+Usage:
+<pre>
+    smoketest [-h] [-c CONFIG] [--profile] [-y] yaml_file
+
+    positional arguments:
+        yaml_file             YAML description of test network
+
+    optional arguments:
+        -h, --help            show this help message and exit
+        -c CONFIG, --config CONFIG
+                              configuration file for various
+			      implementation-specific items
+        --profile             enable profiling
+        -y                    ignored; present only for backwards
+                              compatability
+</pre>
+
+<p>
+
+<!*********************************************************>
+
+<a name="man-yamltest"></a>
+<h3>8.2 <cmd>yamltest</cmd></h3>
+
+<p>
+
+<cmd>yamltest</cmd> is a test harness to set up and run a collection of
+<cmd>rpkid</cmd> and <cmd>irdbd</cmd> instances under scripted control.
+<cmd>yamltest</cmd> sets up a test network using the same tools that a
+real user would use (principally the <cmd>rpkic</cmd> tool), and leaves
+the test running indefinitely.  After reading the YAML configuration file,
+<cmd>yamltest</cmd> generates <file>.csv</file> and <file>.conf</file>
+files, runs daemons, and waits for one of them to exit.
+
+<p>
+
+<cmd>smoketest</cmd> and <cmd>yamltest</cmd> use the same YAML test
+description language.
+
+<p>
+
+At present, <cmd>yamltest</cmd> ignores all but the first "document" in
+a test description file.  This may change in the future.
+
+<p>
+
+Running <cmd>yamltest</cmd> will generate a fairly complete set of
+configuration files, which may be useful as examples.
+
+<p>
+
+Usage:
+<pre>
+    yamltest [-h] [-c CONFIG] [-f] [-k] [-p PIDFILE] [--skip_config]
+                  [--stop_after_config] [--synchronize] [--profile]
+                  [--store-router-private-keys]
+                  yaml_file
+
+    positional arguments:
+        yaml_file             YAML description of test network
+
+    optional arguments:
+        -h, --help            show this help message and exit
+        -c CONFIG, --config CONFIG
+                              configuration file
+        -f, --flat_publication
+                              disable hierarchical publication
+        -k, --keep_going      keep going until all subprocesses exit
+        -p PIDFILE, --pidfile PIDFILE
+                              save pid to this file
+        --skip_config         skip over configuration phase
+        --stop_after_config   stop after configuration phase
+        --synchronize         synchronize IRDB with daemons
+        --profile             enable profiling
+        --store-router-private-keys
+                              write generate router private keys to disk
+</pre>
+
+<p>
+
+<!*****************************************************************************>
+
+<p>
+<hr>
+<p>
+
+Sections of this document are derived or taken verbatim from Dragon
+Research Lab's <a href="http://rpki.net/wiki/doc/RPKI">RPKI Tools Manual</a>.
+
+<p>
+
+Copyright (c) 2015, Parsons, Inc<br>
+All rights reserved
+
+<br><br>
+
+</div>
+</div>
+
+
+
+	</div>
+
+	
+      </div>
+    </div>
+  </body>
+
+  <script type="application/ld+json">
+   {
+     "@context": "http://schema.org",
+     "@type": "Organization",
+     "url": "https://securerouting.net",
+     "logo": "/images/secure-routing-cloud.svg"
+   }
+  </script>
+  <script type="application/ld+json">
+   {
+     "@context": "http://schema.org",
+     "@type": "Organization",
+     "url": "https://securerouting.net",
+     "name": "Secure Routing",
+     "sameAs" : [
+       "https://www.youtube.com/channel/UCVOrJW51e8uu6aO_qnkk6qA"
+     ],
+   }
+  </script>
+</html>
+

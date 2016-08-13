@@ -1,0 +1,2753 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <title>Secure Routing -- Protect Your Infrastructure</title>
+
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/ears.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+
+    <script src="/js/jquery.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script>
+     $(document).ready(function () {
+       $('.dropdown-toggle').dropdown();
+     });
+    </script>
+
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container-fluid">
+	<div class="navbar-header">
+	  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+	  </button>
+	  <a class="navbar-brand" href="/">Secure Routing</a>
+	</div>
+
+	<div class="collapse navbar-collapse" id="navbar-collapse">
+	  <ul class="nav navbar-nav earsnav">
+	    <!-- LEARN -->
+	    <li class="dropdown">
+	      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Learn <span class="caret"></span>
+	      </a>
+
+	      <ul class="dropdown-menu">
+		<li><a href="/sbs-guide">Step-by-Step Guide</a></li>
+		<li><a href="https://www.youtube.com/channel/UCVOrJW51e8uu6aO_qnkk6qA">Youtube Channel</a></li>
+		<li><a href="/specifications.html">Specifications</a></li>
+		<li><a href="https://datatracker.ietf.org/wg/sidr/">Join The SIDR Working Group</a></li>
+	      </ul>
+	    </li>
+
+	    <!-- TRY -->
+	    <li class="dropdown">
+	      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Try <span class="caret"></span>
+	      </a>
+
+	      <ul class="dropdown-menu">
+		<li><a href="/workshop.html"">The Demonstration Workshop</a></li>
+	      </ul>
+	    </li>
+
+	    <!-- DEPLOY -->
+	    <li class="dropdown">
+	      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Deploy <span class="caret"></span>
+	      </a>
+
+	      <!-- TRY MENU -->
+	      <ul class="dropdown-menu">
+		  <li><a href="/bird.html">Install BIRD</a></li>
+		  <li><a href="http://www-x.antd.nist.gov/bgpsrx/">Install Quagga</a></li>
+		  <li><a href="http://rpki.net">Install RPKI.NET</a></li>
+		  <li><a href="http://sourceforge.net/projects/rpstir">Install RPSTIR</a></li>
+	      </ul>
+	    </li>
+
+	    <!-- INCIDENTS BUTTON -->
+	    <li class="dropdown">
+	      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Routing Incidents<span class="caret"></span>
+	      </a>
+
+	      <!-- INCIDENTS MENU -->
+	      <ul class="dropdown-menu">
+		<li><a href="/incident">Database</a></li>
+		<li><a href="/timeline.html"">Timeline</a></li>
+	      </ul>
+	    </li>
+	  </ul>
+	</div>
+      </div>
+    </nav>
+
+    <div class="container ears-top">
+      <div class="row">
+	
+	<div class="col-md-12" role="main">
+	
+
+	  <div class="page-header">
+  <h1><a href="/sbs-guide">Routing Security Step-by-Step Guide</a></h1>
+</div>
+
+<div class="panel panel-primary">
+  <div class="panel-heading">Configuration File Reference</div>
+<div class="panel-body">
+
+<link href="/css/sbs-guide.css" rel="stylesheet">
+
+<!*****************************************************************************>
+
+<h1>Table of Contents</h1>
+<p>
+
+<ul class="toc">
+
+<li><a href="#intro">1 Introduction</a><br>
+<li><a href="#rpki.conf">2 rpki.conf -- RPKI Engine Common Configuration Options</a><br>
+<li><a href="#autoconf">2.1 [autoconf] section</a><br>
+<li><a href="#irdbd">2.2 [irdbd] section</a><br>
+<li><a href="#myrpki">2.3 [myrpki] section</a><br>
+<li><a href="#pubd">2.4 [pubd] section</a><br>
+<li><a href="#rootd">2.5 [rootd] section</a><br>
+<li><a href="#rpkid">2.6 [rpkid] section</a><br>
+<li><a href="#web_portal">2.7 [web_portal] section</a><br>
+<li><a href="#debug">2.8 Debugging Options</a><br>
+<li><a href="#cms-msg">2.9 CMS Message Options</a><br>
+<li><a href="#rcynic.conf">3 rcynic.conf Configuration Options</a><br>
+<li><a href="#rsyncd.conf">4 rsyncd.conf Configuration Options</a><br>
+<li><a href="#full-toc">5 Full Table of Contents</a><br>
+
+</ul>
+
+<!*****************************************************************************>
+
+<a name="intro"></a>
+<h2>1 Introduction</h2>
+
+<p>
+
+This document is a reference for the configuration files used by the
+<rpki>rpki.net</rpki> software.  Program-specific files and general
+configuration files are described here.
+
+<p>
+
+This document is prepared under Contract Number HSHQDC-14-C-B0035 for
+DHS S&amp;T CSD
+
+<p>
+
+<!*****************************************************************************>
+
+<a name="rpki.conf"></a>
+<h2>2 rpki.conf -- RPKI Engine Common Configuration Options</h2>
+
+<p>
+
+The <file>rpki.conf</file> file is a centralized configuration file,
+containing the configuration options used by most
+of the <rpki>rpki.net</rpki> software.
+
+<p>
+
+This file is divided into several named sections and each section has a
+number of key/value entries.
+
+<p>
+
+The name of each configuration section is enclosed in square brackets.
+Each entry is comprised of the entry name, an equals sign, and the entry
+value.
+
+<p>
+
+For example, the <sect>[myrpki]</sect> section has entries that define the
+hostname and port that will be used by the <cmd>irdbd</cmd> server daemon.
+These entries look like this:
+
+<pre>
+    [myrpki]
+        irdbd_server_host = localhost
+        irdbd_server_port = 4403
+</pre>
+
+<p>
+
+This section of the configuration-file reference is divided by the sections
+defined for the file itself.  The sections are ordered alphabetically, not
+by importance of the section.  Each section's entries are also ordered
+alphabetically by the entry's field name, again not based on the entry's
+importance.
+
+<p>
+
+In this document each configuration entry has a brief description and the
+default value, where there is a default.  Some of the default values refer
+to an entry in another section.  These are given in this manner:
+
+<pre>
+    start_rpkid = ${myrpki::run_rpkid}
+</pre>
+
+<p>
+
+The following table lists the defined sections:
+
+<table border=0>
+<tr><td width=100>&nbsp;<td width=100><i>[autoconf]</i><td><i>[rootd]</i>
+<tr><td>&nbsp;<td><i>[irdbd]</i>			<td><i>[rpkid]</i>
+<tr><td>&nbsp;<td><i>[myrpki]</i>			<td><i>[web_portal]</i>
+<tr><td>&nbsp;<td><i>[pubd]</i>
+</table>
+
+<p>
+
+In addition, there are options specific for debugging and CMS messages.
+
+<p>
+
+The <sect>[myrpki]</sect> section contains all the parameters that most
+installations are likely to need to configure.  The name <sect>[myrpki]</sect>
+is historical and may change in the future.
+
+<p>
+
+<!*********************************************************>
+
+<a name="autoconf"></a>
+<h3>2.1 [autoconf] section</h3>
+
+<p>
+
+The <cmd>rpki-confgen --autoconf</cmd> command records the current
+<cmd>autoconf</cmd> settings in this section so that other options can
+refer to them.  The section name "autoconf" is special; do not change it.
+
+<!*************************************>
+
+<a name="autoconf:bindir"></a>
+<h4>2.1.1 bindir</h4>
+
+<p>
+
+Usually <path>/usr/bin</path> or <path>/usr/local/bin</path>.
+
+<p>
+
+No default value.
+
+<!*************************************>
+
+<a name="autoconf:datarootdir"></a>
+<h4>2.1.2 datarootdir</h4>
+<p>
+Usually <path>/usr/share</path> or <path>/usr/local/share</path>.
+
+<p>
+
+No default value.
+
+<!*************************************>
+
+<a name="autoconf:sbindir"></a>
+<h4>2.1.3 sbindir</h4>
+<p>
+Usually <path>/usr/sbin</path> or <path>/usr/local/sbin</path>.
+
+<p>
+
+No default value.
+
+<!*************************************>
+
+<a name="autoconf:sysconfdir"></a>
+<h4>2.1.4 sysconfdir</h4>
+<p>
+Usually <path>/etc</path> or <path>/usr/local/etc</path>.
+
+<p>
+
+No default value.
+
+<!*********************************************************>
+
+<a name="irdbd"></a>
+<h3>2.2 [irdbd] section</h3>
+
+<p>
+
+The <cmd>irdbd</cmd> command's default configuration file is the system's
+<file>rpki.conf</file> file.  Since <cmd>irdbd</cmd> is part of the back-end
+system, it has direct access to the back-end's SQL database and is able to
+pull its own BPKI configuration directly from the database.  This results in
+a little less configuration than is required for the other daemons.
+
+<p>
+
+All <cmd>irdbd</cmd> options are in the "[irdbd]" section.
+
+<!*************************************>
+
+<a name="irdbd:server-host"></a>
+<h4>2.2.1 server-host</h4>
+<p>
+Host on which <cmd>irdbd</cmd> should listen for HTTP service requests.
+<p>
+<pre>
+    server-host = ${myrpki::irdbd_server_host}
+</pre>
+
+<!*************************************>
+
+<a name="irdbd:server-port"></a>
+<h4>2.2.2 server-port</h4>
+<p>
+Port on which <cmd>irdbd</cmd> should listen for HTTP service requests.
+<p>
+<pre>
+    server-port = ${myrpki::irdbd_server_port}
+</pre>
+
+<!*************************************>
+
+<a name="irdbd:sql-database"></a>
+<h4>2.2.3 sql-database</h4>
+<p>
+SQL database name for <cmd>irdbd</cmd>.
+<p>
+<pre>
+    sql-database = ${myrpki::irdbd_sql_database}
+</pre>
+
+<!*************************************>
+
+<a name="irdbd:sql-password"></a>
+<h4>2.2.4 sql-password</h4>
+<p>
+SQL database password for <cmd>irdbd</cmd>'s database.  The default is to use
+the shared SQL database password, but this option allows a separate password
+to be used.
+<p>
+<pre>
+    sql-password = ${myrpki::irdbd_sql_password}
+</pre>
+
+<!*************************************>
+
+<a name="irdbd:sql-username"></a>
+<h4>2.2.5 sql-username</h4>
+<p>
+SQL database username for <cmd>irdbd</cmd>'s database.  The default is to use
+the shared SQL database username, but this option allows a separate username
+to be used.
+<p>
+<pre>
+    sql-username = ${myrpki::irdbd_sql_username}
+</pre>
+
+<!*************************************>
+
+<a name="irdbd_startup-message"></a>
+<h4>2.2.6 startup-message</h4>
+<p>
+String to log on startup, useful when debugging a collection of
+<cmd>irdbd</cmd> instances at once.
+<p>
+No default value.
+
+<!*********************************************************>
+
+<a name="myrpki"></a>
+<h3>2.3 [myrpki] section</h3>
+
+<p>
+
+The "[myrpki]" section contains parameters used by most of the
+<rpki>rpki.net</rpki> software.
+
+<p>
+
+The name "myrpki" is historical and may change in the future.
+
+<!*************************************>
+
+<a name="myrpki_bpki_servers_directory"></a>
+<h4>2.3.1 bpki_servers_directory</h4>
+<p>
+Directory for BPKI files generated by <cmd>rpkic</cmd> and used by
+<cmd>rpkid</cmd> and <cmd>pubd</cmd>. You will not normally need to change
+this.
+
+<p>
+
+<pre>
+    bpki_servers_directory = ${autoconf::datarootdir}/rpki
+</pre>
+
+<!*************************************>
+
+<a name="myrpki_handle"></a>
+<h4>2.3.2 handle</h4>
+<p>
+Every resource-holding or server-operating entity needs a <opt>"handle"</opt>,
+which is just an identifier by which the entity calls itself.  Handles do not
+need to be globally unique, but they should be chosen with the thought of
+debugging operational problems.  It is best to use a handle parents and
+children will recognize.
+
+<p>
+
+The <opt>handle</opt> option in the <i>[myrpki]</i> section specifies the
+default handle for this installation.  Previous versions of the CA tools
+required each hosted entity to have a separate configuration file, each with
+its own handle setting.  The current code allows the handle to be selected at
+runtime in both the GUI and command line user interface tools, so the handle
+setting here is just a default when a handle isn't set explicitly.  In the
+long run, this option may go away entirely, but for now this must be set.
+
+<p>
+
+A handle is an identifier.  Valid characters are ASCII letters, digits,
+hyphens, and underscores.  No whitespace, non-ASCII characters, or other
+punctuation are allowed.
+
+<p>
+
+No default value.
+
+<!*************************************>
+
+<a name="myrpki_irdbd_server_host"></a>
+<h4>2.3.3 irdbd_server_host</h4>
+<p>
+DNS hostname for <cmd>irdbd</cmd>, or "localhost".  This should be "localhost"
+unless you really know what you are doing.
+
+<p>
+
+<pre>
+    irdbd_server_host = localhost
+</pre>
+
+<!*************************************>
+
+<a name="myrpki_irdbd_server_port"></a>
+<h4>2.3.4 irdbd_server_port</h4>
+<p>
+Server port number for <cmd>irdbd</cmd>.  This can be any legal TCP port
+number not being used for something else.
+
+<p>
+
+<pre>
+    irdbd_server_port = 4403
+</pre>
+
+<!*************************************>
+
+<a name="myrpki_irdbd_sql_database"></a>
+<h4>2.3.5 irdbd_sql_database</h4>
+<p>
+SQL database for <cmd>irdbd</cmd>'s database.
+
+<p>
+
+<pre>
+    irdbd_sql_database = irdbd
+</pre>
+
+<!*************************************>
+
+<a name="myrpki_irdbd_sql_password"></a>
+<h4>2.3.6 irdbd_sql_password</h4>
+<p>
+SQL database password for <cmd>irdbd</cmd>'s database.  The default is to use
+the shared SQL database password, but this option allows a separate password to be used.
+
+<p>
+
+<pre>
+    irdbd_sql_password = ${myrpki::shared_sql_password}
+</pre>
+
+<!*************************************>
+
+<a name="myrpki_irdbd_sql_username"></a>
+<h4>2.3.7 irdbd_sql_username</h4>
+<p>
+SQL database username for <cmd>irdbd</cmd>'s database.  The default is to use
+the shared SQL database username, but this option allows a separate username to be used.
+
+<p>
+
+<pre>
+    irdbd_sql_username = ${myrpki::shared_sql_username}
+</pre>
+
+<!*************************************>
+
+<a name="myrpki_pubd_contact_info"></a>
+<h4>2.3.8 pubd_contact_info</h4>
+<p>
+Contact information to include in offers of repository service.  This only
+matters when running <cmd>pubd</cmd>.  This should be a human-readable string,
+perhaps containing an email address or URL.
+
+<p>
+
+No default value.
+
+<!*************************************>
+
+<a name="myrpki_pubd_server_host"></a>
+<h4>2.3.9 pubd_server_host</h4>
+<p>
+DNS hostname for <cmd>pubd</cmd>, if it is being run.  This must resolve to a
+publicly reachable address.
+
+<p>
+
+No default value.
+
+<!*************************************>
+
+<a name="myrpki_pubd_server_port"></a>
+<h4>2.3.10 pubd_server_port</h4>
+<p>
+Server port number for <cmd>pubd</cmd>. This can be any legal TCP port number
+that not being using for something else.
+
+<p>
+
+<pre>
+    pubd_server_port = 4402
+</pre>
+
+<!*************************************>
+
+<a name="myrpki_pubd_sql_database"></a>
+<h4>2.3.11 pubd_sql_database</h4>
+<p>
+SQL database name for <cmd>pubd</cmd>'s database.
+
+<p>
+
+<pre>
+    pubd_sql_database = pubd
+</pre>
+
+<!*************************************>
+
+<a name="myrpki_pubd_sql_password"></a>
+<h4>2.3.12 pubd_sql_password</h4>
+<p>
+SQL database password for <cmd>pubd</cmd>'s database.  The default is to use
+the shared SQL database password, but this option allows a separate password to be used.
+
+<p>
+
+<pre>
+    pubd_sql_password = ${myrpki::shared_sql_password}
+</pre>
+
+<!*************************************>
+
+<a name="myrpki_pubd_sql_username"></a>
+<h4>2.3.13 pubd_sql_username</h4>
+<p>
+SQL database username for <cmd>pubd</cmd>'s database.  The default is to use
+the shared SQL database username, but this option allows a separate username to be used.
+
+<p>
+
+<pre>
+    pubd_sql_username = ${myrpki::shared_sql_username}
+</pre>
+
+<!*************************************>
+
+<a name="myrpki_publication_base_directory"></a>
+<h4>2.3.14 publication_base_directory</h4>
+<p>
+Root of local directory tree where <cmd>pubd</cmd> should write published
+data.  This must be configured, and the configuration should match the
+directory where you point <cmd>rsyncd</cmd>.
+
+<p>
+
+Neither <cmd>pubd</cmd> nor <cmd>rsyncd</cmd> cares where this directory
+is.  The important thing is that the <cmd>rsync</cmd> URIs in generated
+certificates match the published objects so that relying parties can
+find and verify <cmd>rpkid</cmd>'s published outputs.
+
+<p>
+
+<pre>
+    publication_base_directory = ${autoconf::datarootdir}/rpki/publication
+</pre>
+
+<!*************************************>
+
+<a name="myrpki_publication_root_cert_directory"></a>
+<h4>2.3.15 publication_root_cert_directory</h4>
+<p>
+Root of local directory tree where <cmd>rootd</cmd> should write published
+data.  This is just like <opt>publication_base_directory</opt>, but
+<cmd>rootd</cmd> needs its own directory in which to write one certificate,
+one CRL, and one manifest.
+
+<p>
+
+Neither <cmd>rootd</cmd> nor <cmd>rsyncd</cmd> cares where this directory
+is.  The important thing is that the <cmd>rsync</cmd> URIs in generated
+certificates match the published objects so that relying parties can
+find and verify <cmd>rootd</cmd>'s published outputs.
+
+<p>
+
+<pre>
+    publication_root_cert_directory = ${myrpki::publication_base_directory}.root
+</pre>
+
+<!*************************************>
+
+<a name="myrpki_publication_root_module"></a>
+<h4>2.3.16 publication_root_module</h4>
+<p>
+<cmd>rsyncd</cmd> module name corresponding to
+<opt>publication_root_cert_directory</opt>.  This has to match the module
+configured in <file>rsyncd.conf</file>.  This should not be changed unless
+there is a specific need to change it.
+
+<p>
+
+<pre>
+    publication_root_module = root
+</pre>
+
+<!*************************************>
+
+<a name="myrpki_publication_rsync_module"></a>
+<h4>2.3.17 publication_rsync_module</h4>
+<p>
+<cmd>rsyncd</cmd> module name corresponding to
+<opt>publication_base_directory</opt>.  This has to match the module
+configured in <file>rsyncd.conf</file>.  This should not be changed unless
+there is a specific need to change it.
+
+<p>
+
+<pre>
+    publication_rsync_module = rpki
+</pre>
+
+<!*************************************>
+
+<a name="myrpki_publication_rsync_server"></a>
+<h4>2.3.18 publication_rsync_server</h4>
+<p>
+Hostname and optional port number for <cmd>rsync</cmd> URIs. In most cases
+this should just be the same value as <cmd>pubd_server_host</cmd>.
+
+<p>
+
+<pre>
+    publication_rsync_server = ${myrpki::pubd_server_host}
+</pre>
+
+<!*************************************>
+
+<a name="myrpki_rootd_server_host"></a>
+<h4>2.3.19 rootd_server_host</h4>
+<p>
+DNS hostname for <cmd>rootd</cmd>.  This should be localhost unless
+you really know what you are doing.
+
+<p>
+
+<pre>
+    rootd_server_host = localhost
+</pre>
+
+<!*************************************>
+
+<a name="myrpki_rootd_server_port"></a>
+<h4>2.3.20 rootd_server_port</h4>
+<p>
+Server port number for <cmd>rootd</cmd>.  This can be any legal TCP
+port number that not being using for something else.
+
+<p>
+
+<pre>
+    rootd_server_port = 4401
+</pre>
+
+<!*************************************>
+
+<a name="myrpki_rpkid_server_host"></a>
+<h4>2.3.21 rpkid_server_host</h4>
+<p>
+DNS hostname for <cmd>rpkid</cmd>.  In most cases, this must resolve to a
+publicly reachable address, as your RPKI children will need to contact your
+<cmd>rpkid</cmd> at this address.
+
+<p>
+
+No default value.
+
+<!*************************************>
+
+<a name="myrpki_rpkid_server_port"></a>
+<h4>2.3.22 rpkid_server_port</h4>
+<p>
+Server port number for <cmd>rpkid</cmd>. This can be any legal TCP port number
+that not being using for something else.
+
+<p>
+
+<pre>
+    rpkid_server_port = 4404
+</pre>
+
+<!*************************************>
+
+<a name="myrpki_rpkid_sql_database"></a>
+<h4>2.3.23 rpkid_sql_database</h4>
+<p>
+SQL database name for <cmd>rpkid</cmd>'s database.
+
+<p>
+
+<pre>
+    rpkid_sql_database = rpkid
+</pre>
+
+<!*************************************>
+
+<a name="myrpki_rpkid_sql_password"></a>
+<h4>2.3.24 rpkid_sql_password</h4>
+<p>
+SQL database password for <cmd>rpkid</cmd>'s database.  The default is to use
+the shared SQL database password, but this option allows a separate password to be used.
+
+<p>
+
+<pre>
+    rpkid_sql_password = ${myrpki::shared_sql_password}
+</pre>
+
+<!*************************************>
+
+<a name="myrpki_rpkid_sql_username"></a>
+<h4>2.3.25 rpkid_sql_username</h4>
+<p>
+SQL database username for <cmd>rpkid</cmd>'s database.  The default is to use
+the shared SQL database username, but this option allows a separate username to be used.
+
+<p>
+
+<pre>
+    rpkid_sql_username = ${myrpki::shared_sql_username}
+</pre>
+
+<!*************************************>
+
+<a name="myrpki_run_pubd"></a>
+<h4>2.3.26 run_pubd</h4>
+<p>
+Indicates whether a local instance of <cmd>pubd</cmd> should be run.
+
+<p>
+
+If your parent offer publication service, it is strongly recommended that you
+use their service.  This recommendation may be overridden for reliability
+reasons or if you're certifying private address space or private Autonomous
+System Numbers.
+
+<p>
+
+The out-of-band setup protocol will attempt to negotiate publication service
+for you with whatever publication service your parent is using, if it can and
+if you let it.
+
+<p>
+
+<pre>
+    run_pubd = yes
+</pre>
+
+<!*************************************>
+
+<a name="myrpki_run_rootd"></a>
+<h4>2.3.27 run_rootd</h4>
+<p>
+Indicates whether a local instance of <cmd>rootd</cmd> should be run.
+
+<p>
+
+It is strongly recommended that you no enable this unless you really know what
+you're doing.
+
+<p>
+
+<pre>
+    run_rootd = no
+</pre>
+
+<!*************************************>
+
+<a name="myrpki_run_rpkid"></a>
+<h4>2.3.28 run_rpkid</h4>
+<p>
+Indicates whether a local instance of <cmd>rpkid</cmd> (and <cmd>irdbd</cmd>)
+should be run.
+
+<p>
+
+It is strongly recommended that you no enable this unless you really know
+what you're doing.  This recommendation may be overridden if you are doing
+something unusual like running a <cmd>pubd</cmd>-only installation.
+
+<p>
+
+<pre>
+    run_rpkid = yes
+</pre>
+
+<!*************************************>
+
+<a name="myrpki_shared_sql_password"></a>
+<h4>2.3.29 shared_sql_password</h4>
+<p>
+Shared SQL database password.  This will be used for all the components
+that are not given a unique database password, such as in the 
+<opt>irdbd_sql_password</opt> field.
+
+<p>
+
+The installation process generates a random value for this option,
+so ordinarily you should have no need to change this option.
+
+<p>
+
+No default value.
+
+<!*************************************>
+
+<a name="myrpki_shared_sql_username"></a>
+<h4>2.3.30 shared_sql_username</h4>
+<p>
+Shared SQL database username.  This will be used for all the components
+that are not given a unique database username, such as in the 
+<opt>irdbd_sql_username</opt> field.
+
+<p>
+
+<pre>
+    shared_sql_username = rpki
+</pre>
+
+<!*************************************>
+
+<a name="myrpki_start_irdbd"></a>
+<h4>2.3.31 start_irdbd</h4>
+<p>
+<cmd>irdbd</cmd> startup control.  This should usually have the same value as
+<opt>run_rpkid</opt>.
+
+<p>
+
+The only case where you would want to change this is when you are running the
+back-end code on a different machine from one or more of the daemons, in which
+case you need finer control over which daemons to start on which machines.
+In such cases, <opt>run_rpkid</opt> controls whether the back-end code is
+managing <cmd>rpkid</cmd>, while <opt>start_irdbd</opt> controls whether
+<cmd>rpki-start-servers</cmd> attempts to start <cmd>irdbd</cmd> on this
+machine.
+
+<p>
+
+<pre>
+    start_irdbd = ${myrpki::run_rpkid}
+</pre>
+
+<!*************************************>
+
+<a name="myrpki_start_pubd"></a>
+<h4>2.3.32 start_pubd</h4>
+<p>
+<cmd>pubd</cmd> startup control.  This should usually have the same value as
+<opt>run_pubd</opt>.
+
+<p>
+
+The only case where you would want to change this is when you are running the
+back-end code on a different machine from one or more of the daemons, in which
+case you need finer control over which daemons to start on which machines.
+In such cases, <opt>run_pubd</opt> controls whether the back-end code is doing
+things to manage <cmd>pubd</cmd>, while <opt>start_pubd</opt> controls whether
+<cmd>rpki-start-servers</cmd> attempts to start <cmd>pubd</cmd> on this
+machine.
+
+<p>
+
+<pre>
+    start_pubd = ${myrpki::run_pubd}
+</pre>
+
+<!*************************************>
+
+<a name="myrpki_start_rootd"></a>
+<h4>2.3.33 start_rootd</h4>
+<p>
+<cmd>rootd</cmd> startup control.  This should usually have the same value as
+<opt>run_rootd</opt>.
+
+<p>
+
+The only case where you would want to change this is when you are running the
+back-end code on a different machine from one or more of the daemons, in which
+case you need finer control over which daemons to start on which machines.
+In such cases, <opt>run_rootd</opt> controls whether the back-end code is
+managing <cmd>rootd</cmd>, while <opt>start_rootd</opt> controls whether
+<cmd>rpki-start-servers</cmd> attempts to start <cmd>rootd</cmd> on this
+machine.
+
+<p>
+
+<pre>
+    start_rootd = ${myrpki::run_rootd}
+</pre>
+
+<!*************************************>
+
+<a name="myrpki_start_rpkid"></a>
+<h4>2.3.34 start_rpkid</h4>
+<p>
+<cmd>rpkid</cmd> startup control.  This should usually have the same value as
+<opt>run_rpkid</opt>.
+
+<p>
+
+The only case where you would want to change this is when you are running the
+back-end code on a different machine from one or more of the daemons, in which
+case you need finer control over which daemons to start on which machines.  In
+such cases, <opt>run_rpkid</opt> controls whether the back-end code is
+managing <cmd>rpkid</cmd>, while <opt>start_rpkid</opt> controls whether
+<cmd>rpki-start-servers</cmd> attempts to start <cmd>rpkid</cmd> on this
+machine.
+
+<p>
+
+<pre>
+    start_rpkid = ${myrpki::run_rpkid}
+</pre>
+
+<!*********************************************************>
+
+<a name="pubd"></a>
+<h3>2.4 [pubd] section</h3>
+
+<p>
+
+The <cmd>pubd</cmd> command's default configuration file is the system's
+<file>rpki.conf</file> file.
+
+<p>
+
+All <cmd>pubd</cmd> options are in the "[pubd]" section.
+
+<!*************************************>
+
+<a name="pubd:bpki-ta"></a>
+<h4>2.4.1 bpki-ta</h4>
+<p>
+The BPKI trust anchor.  BPKI certificates and keys may be either DER or PEM
+format.  All BPKI certificate verification within <cmd>pubd</cmd> traces back
+to this trust anchor.  Don't change this unless you really know what you are
+doing.
+
+<p>
+
+<pre>
+    bpki-ta = ${myrpki::bpki_servers_directory}/ca.cer
+</pre>
+
+<!*************************************>
+
+<a name="pubd:irbe-cert"></a>
+<h4>2.4.2 irbe-cert</h4>
+<p>
+The back-end control client's BPKI EE certificate.  BPKI certificates and keys
+may be either DER or PEM format.
+Don't change this unless you really know what you are doing.
+
+<p>
+
+<pre>
+    irbe-cert = ${myrpki::bpki_servers_directory}/irbe.cer
+</pre>
+
+<!*************************************>
+
+<a name="pubd:pubd-cert"></a>
+<h4>2.4.3 pubd-cert</h4>
+<p>
+<cmd>pubd</cmd>'s own BPKI EE certificate.
+This BPKI certificate may be either DER or PEM format.
+Don't change this unless you really know what you are doing.
+
+<p>
+
+<pre>
+    pubd-cert = ${myrpki::bpki_servers_directory}/pubd.cer
+</pre>
+
+<!*************************************>
+
+<a name="pubd:pubd-key"></a>
+<h4>2.4.4 pubd-key</h4>
+<p>
+The private key corresponding to <cmd>pubd</cmd>'s own BPKI EE certificate.
+This BPKI certificate may be either DER or PEM format.
+Don't change this unless you really know what you are doing.
+
+<p>
+
+<pre>
+    pubd-key = ${myrpki::bpki_servers_directory}/pubd.key
+</pre>
+
+<!*************************************>
+
+<a name="pubd:publication-base"></a>
+<h4>2.4.5 publication-base</h4>
+<p>
+Root of the directory tree where <cmd>pubd</cmd> should write published
+data.  This must be configured, and the configuration should match the
+directory where you point <cmd>rsyncd</cmd>.
+
+<p>
+
+Neither <cmd>pubd</cmd> nor <cmd>rsyncd</cmd> cares where this directory
+is.  The important thing is that the <cmd>rsync</cmd> URIs in generated
+certificates match the published objects so that relying parties can
+find and verify <cmd>rpkid</cmd>'s published outputs.
+
+<p>
+
+<pre>
+    publication-base = ${myrpki::publication_base_directory}
+</pre>
+
+<!*************************************>
+
+<a name="pubd:server-host"></a>
+<h4>2.4.6 server-host</h4>
+<p>
+Host on which <cmd>pubd</cmd> should listen for HTTP service requests.
+
+<p>
+
+<pre>
+    server-host = ${myrpki::pubd_server_host}
+</pre>
+
+<!*************************************>
+
+<a name="pubd:server-port"></a>
+<h4>2.4.7 server-port</h4>
+<p>
+Port on which <cmd>pubd</cmd> should listen for HTTP service requests.
+
+<p>
+
+<pre>
+    server-port = ${myrpki::pubd_server_port}
+</pre>
+
+<!*************************************>
+
+<a name="pubd:sql-database"></a>
+<h4>2.4.8 sql-database</h4>
+<p>
+SQL database for <cmd>pubd</cmd>'s database.
+
+<p>
+
+<pre>
+    sql-database = ${myrpki::pubd_sql_database}
+</pre>
+
+<!*************************************>
+
+<a name="pubd:sql-password"></a>
+<h4>2.4.9 sql-password</h4>
+<p>
+SQL database password for <cmd>pubd</cmd>'s database.  The default is to use
+the shared SQL database password, but this option allows a separate password to be used.
+
+<p>
+
+<pre>
+    sql-password = ${myrpki::pubd_sql_password}
+</pre>
+
+<!*************************************>
+
+<a name="pubd:sql-username"></a>
+<h4>2.4.10 sql-username</h4>
+<p>
+SQL database username for <cmd>pubd</cmd>'s database.  The default is to use
+the shared SQL database username, but this option allows a separate username to be used.
+
+<p>
+
+<pre>
+    sql-username = ${myrpki::pubd_sql_username}
+</pre>
+
+<!*********************************************************>
+
+<a name="rootd"></a>
+<h3>2.5 [rootd] section</h3>
+
+<p>
+
+The <cmd>rootd</cmd> command's default configuration file is the system's
+<file>rpki.conf</file> file.
+
+<p>
+
+All <cmd>rootd</cmd> options are in the "[rootd]" section.
+
+<p>
+
+As has been detailed elsewhere, it is highly unlikely that you will need to
+run <cmd>rootd</cmd>.  The situations in which you should run <cmd>rootd</cmd>
+are that you are IANA, you are certifying private address space, or you are an
+RIR which refuses to accept IANA as the root of the public address hierarchy.
+Do not enable it unless you are certain that you need to do so.
+
+<!*************************************>
+
+<a name="rootd:bpki-ta"></a>
+<h4>2.5.1 bpki-ta</h4>
+<p>
+The BPKI trust anchor for the <cmd>rootd</cmd>.  All BPKI certificate
+verification within <cmd>rootd</cmd> traces back to this trust anchor.
+Don't change this unless you really know what you are doing.
+
+<p>
+
+<pre>
+    bpki-ta = ${myrpki::bpki_servers_directory}/ca.cer
+</pre>
+
+<!*************************************>
+
+<a name="rootd:child-bpki-cert"></a>
+<h4>2.5.2 child-bpki-cert</h4>
+<p>
+BPKI certificate for <cmd>rootd</cmd>'s single <i>up-down</i>-protocol child.
+This certificate may be in either DER or PEM format.
+Don't change this unless you really know what you are doing.
+
+<p>
+
+<pre>
+    child-bpki-cert = ${myrpki::bpki_servers_directory}/child.cer
+</pre>
+
+<!*************************************>
+
+<a name="rootd:rootd-bpki-cert"></a>
+<h4>2.5.3 rootd-bpki-cert</h4>
+<p>
+BPKI EE certificate for <cmd>rootd</cmd>.
+This certificate may be in either DER or PEM format.
+Don't change this unless you really know what you are doing.
+
+<p>
+
+<pre>
+    rootd-bpki-cert = ${myrpki::bpki_servers_directory}/rootd.cer
+</pre>
+
+<!*************************************>
+
+<a name="rootd:rootd-bpki-crl"></a>
+<h4>2.5.4 rootd-bpki-crl</h4>
+<p>
+BPKI CRL for <cmd>rootd</cmd>.
+Don't change this unless you really know what you are doing.
+
+<p>
+
+<pre>
+    rootd-bpki-crl = ${myrpki::bpki_servers_directory}/ca.crl
+</pre>
+
+<!*************************************>
+
+<a name="rootd:rootd-bpki-key"></a>
+<h4>2.5.5 rootd-bpki-key</h4>
+<p>
+Private key corresponding to <cmd>rootd</cmd>'s own BPKI EE certificate.
+This key may be in either DER or PEM format.
+Don't change this unless you really know what you are doing.
+
+<p>
+
+<pre>
+    rootd-bpki-key = ${myrpki::bpki_servers_directory}/rootd.key
+</pre>
+
+<!*************************************>
+
+<a name="rootd:rpki-base-uri"></a>
+<h4>2.5.6 rpki-base-uri</h4>
+<p>
+<cmd>rsync</cmd> URI corresponding to the directory containing
+<cmd>rootd</cmd>'s outputs.
+
+<p>
+
+<pre>
+    rpki-base-uri = rsync://${myrpki::publication_rsync_server}/${myrpki::publication_rsync_module}/
+</pre>
+
+<!*************************************>
+
+<a name="rootd:rpki-class-name"></a>
+<h4>2.5.7 rpki-class-name</h4>
+<p>
+The <i>up-down</i> protocol class name for the RPKI certificate
+<cmd>rootd</cmd> issues to its single child.
+
+<p>
+
+<pre>
+    rpki-class-name = ${myrpki::handle}
+</pre>
+
+<!*************************************>
+
+<a name="rootd:rpki-root-cert"></a>
+<h4>2.5.8 rpki-root-cert</h4>
+<p>
+Filename (as opposed to <cmd>rsync</cmd> URI) of <cmd>rootd</cmd>'s root
+RPKI certificate.
+This certificate may be in either DER or PEM format.
+
+<p>
+
+<pre>
+    rpki-root-cert = ${myrpki::publication_root_cert_directory}/root.cer
+</pre>
+
+<!*************************************>
+
+<a name="rootd:rpki-root-cert-uri"></a>
+<h4>2.5.9 rpki-root-cert-uri</h4>
+<p>
+<cmd>rsync</cmd> URI for <cmd>rootd</cmd>'s self-signed root RPKI certificate.
+This certificate may be in either DER or PEM format.
+
+<p>
+
+<pre>
+    rpki-root-cert-uri = rsync://${myrpki::publication_rsync_server}/${myrpki::publication_root_module}/root.cer
+</pre>
+
+<!*************************************>
+
+<a name="rootd:rpki-root-crl"></a>
+<h4>2.5.10 rpki-root-crl</h4>
+<p>
+Filename (relative to <opt>rootd-base-uri</opt> and <opt>rpki-root-dir</opt>)
+of the CRL for <cmd>rootd</cmd>'s root RPKI certificate.
+
+<p>
+
+<pre>
+    rpki-root-crl = root.crl
+</pre>
+
+<!*************************************>
+
+<a name="rootd:rpki-root-dir"></a>
+<h4>2.5.11 rpki-root-dir</h4>
+<p>
+Output directory for <cmd>rootd</cmd>.
+This needs to match the <cmd>pubd</cmd> command's configuration.
+
+<p>
+
+<pre>
+    rpki-root-dir = ${myrpki::publication_base_directory}
+</pre>
+
+<!*************************************>
+
+<a name="rootd:rpki-root-key"></a>
+<h4>2.5.12 rpki-root-key</h4>
+<p>
+Private key corresponding to <cmd>rootd</cmd>'s root RPKI certificate.
+This key may be in either DER or PEM format.
+
+<p>
+
+<pre>
+    rpki-root-key = ${myrpki::bpki_servers_directory}/root.key
+</pre>
+
+<!*************************************>
+
+<a name="rootd:rpki-root-manifest"></a>
+<h4>2.5.13 rpki-root-manifest</h4>
+<p>
+Filename (relative to <opt>rootd-base-uri</opt> and <opt>rpki-root-dir</opt>)
+of the manifest for <cmd>rootd</cmd>'s root RPKI certificate.
+
+<p>
+
+<pre>
+    rpki-root-manifest = root.mft
+</pre>
+
+<!*************************************>
+
+<a name="rootd:rpki-subject-cert"></a>
+<h4>2.5.14 rpki-subject-cert</h4>
+<p>
+Filename (relative to <opt>rootd-base-uri</opt> and <opt>rpki-root-dir</opt>)
+of the single RPKI certificate issued by <cmd>rootd</cmd>.
+This certificate may be in either DER or PEM format.
+
+<p>
+
+<pre>
+    rpki-subject-cert = ${myrpki::handle}.cer
+</pre>
+
+<!*************************************>
+
+<a name="rootd:rpki-subject-lifetime"></a>
+<h4>2.5.15 rpki-subject-lifetime</h4>
+<p>
+Lifetime of the single RPKI certificate issued by <cmd>rootd</cmd>.
+
+<p>
+
+<pre>
+    rpki-subject-lifetime = 30d
+</pre>
+
+<!*************************************>
+
+<a name="rootd:rpki-subject-pkcs10"></a>
+<h4>2.5.16 rpki-subject-pkcs10</h4>
+<p>
+Location of a copy of the PKCS #10 request that <cmd>rootd</cmd> get
+from its single child.
+
+<p>
+
+<pre>
+    rpki-subject-pkcs10 = ${myrpki::bpki_servers_directory}/rootd.subject.pkcs10
+</pre>
+
+<!*************************************>
+
+<a name="rootd:server-host"></a>
+<h4>2.5.17 server-host</h4>
+<p>
+Server host on which <cmd>rootd</cmd> should listen.
+
+<p>
+
+<pre>
+    server-host = ${myrpki::rootd_server_host}
+</pre>
+
+<!*************************************>
+
+<a name="rootd:server-port"></a>
+<h4>2.5.18 server-port</h4>
+<p>
+Server port on which <cmd>rootd</cmd> should listen.
+
+<p>
+
+<pre>
+    server-port = ${myrpki::rootd_server_port}
+</pre>
+
+<!*********************************************************>
+
+<a name="rpkid"></a>
+<h3>2.6 [rpkid] section</h3>
+
+<p>
+
+The <cmd>rpkid</cmd> command's default configuration file is the system's
+<file>rpki.conf</file> file.
+
+<p>
+
+All <cmd>rpkid</cmd> options are in the "[rpkid]" section.
+
+<p>
+
+<!*************************************>
+
+<a name="rpkid:bpki-ta"></a>
+<h4>2.6.1 bpki-ta</h4>
+<p>
+The BPKI trust anchor for the <cmd>rpkid</cmd>.  All BPKI certificate
+verification within <cmd>rpkid</cmd> traces back to this trust anchor.
+Don't change this unless you really know what you are doing.
+
+<p>
+
+<pre>
+    bpki-ta = ${myrpki::bpki_servers_directory}/ca.cer
+</pre>
+
+<!*************************************>
+
+<a name="rpkid:irbe-cert"></a>
+<h4>2.6.2 irbe-cert</h4>
+<p>
+The back-end control client's BPKI EE certificate.
+This certificate may be in either DER or PEM format.
+Don't change this unless you really know what you are doing.
+
+<p>
+
+<pre>
+    irbe-cert = ${myrpki::bpki_servers_directory}/irbe.cer
+</pre>
+
+<!*************************************>
+
+<a name="rpkid:irdb-cert"></a>
+<h4>2.6.3 irdb-cert</h4>
+<p>
+The <cmd>irdbd</cmd> client's BPKI EE certificate.
+This certificate may be in either DER or PEM format.
+Don't change this unless you really know what you are doing.
+
+<p>
+
+<pre>
+    irdb-cert = ${myrpki::bpki_servers_directory}/irdbd.cer
+</pre>
+
+<!*************************************>
+
+<a name="rpkid:irdb-url"></a>
+<h4>2.6.4 irdb-url</h4>
+<p>
+HTTP service URL for contacting <cmd>irdbd</cmd>.
+If <cmd>irdbd</cmd> is running on the same machine as <cmd>rpkid</cmd>, this
+should be a loopback URL, since nobody but <cmd>rpkid</cmd> needs to talk to
+<cmd>irdbd</cmd>.
+
+<p>
+
+<pre>
+    irdb-url = http://${myrpki::irdbd_server_host}:${myrpki::irdbd_server_port}/
+</pre>
+
+<!*************************************>
+
+<a name="rpkid:rpkid-cert"></a>
+<h4>2.6.5 rpkid-cert</h4>
+<p>
+<cmd>rpkid</cmd>'s own BPKI EE certificate.
+This BPKI certificate may be either DER or PEM format.
+Don't change this unless you really know what you are doing.
+
+<p>
+
+<pre>
+    rpkid-cert = ${myrpki::bpki_servers_directory}/rpkid.cer
+</pre>
+
+<!*************************************>
+
+<a name="rpkid:rpkid-key"></a>
+<h4>2.6.6 rpkid-key</h4>
+<p>
+The private key corresponding to <cmd>rpkid</cmd>'s own BPKI EE certificate.
+This BPKI certificate may be either DER or PEM format.
+Don't change this unless you really know what you are doing.
+
+This certificate may be in either DER or PEM format.
+This key may be in either DER or PEM format.
+<p>
+
+<pre>
+    rpkid-key = ${myrpki::bpki_servers_directory}/rpkid.key
+</pre>
+
+<!*************************************>
+
+<a name="rpkid:server-host"></a>
+<h4>2.6.7 server-host</h4>
+<p>
+Host on which <cmd>rpkid</cmd> should listen for HTTP service requests.
+
+<p>
+
+<pre>
+    server-host = ${myrpki::rpkid_server_host}
+</pre>
+
+<!*************************************>
+
+<a name="rpkid:server-port"></a>
+<h4>2.6.8 server-port</h4>
+<p>
+Port on which <cmd>rpkid</cmd> should listen for HTTP service requests.
+
+<p>
+
+<pre>
+    server-port = ${myrpki::rpkid_server_port}
+</pre>
+
+<!*************************************>
+
+<a name="rpkid:sql-database"></a>
+<h4>2.6.9 sql-database</h4>
+<p>
+SQL database name for <cmd>rpkid</cmd>.
+
+<p>
+
+<pre>
+    sql-database = ${myrpki::rpkid_sql_database}
+</pre>
+
+<!*************************************>
+
+<a name="rpkid:sql-password"></a>
+<h4>2.6.10 sql-password</h4>
+<p>
+SQL database password for <cmd>rpkid</cmd>'s database.  The default is to use
+the shared SQL database password, but this option allows a separate password
+to be used.
+
+<p>
+
+<pre>
+    sql-password = ${myrpki::rpkid_sql_password}
+</pre>
+
+<!*************************************>
+
+<a name="rpkid:sql-username"></a>
+<h4>2.6.11 sql-username</h4>
+<p>
+SQL database username for <cmd>rpkid</cmd>'s database.  The default is to use
+the shared SQL database username, but this option allows a separate username
+to be used.
+
+<p>
+
+<pre>
+    sql-username = ${myrpki::rpkid_sql_username}
+</pre>
+
+<!*********************************************************>
+
+<a name="web_portal"></a>
+<h3>2.7 [web_portal] section</h3>
+
+<p>
+
+Django provides a GUI for the <rpki>rpki.net</rpki> software.  Site-specific
+Django options are kept in this section of the system's <file>rpki.conf</file>
+so that there's no need to directly edit the <file>settings.py</file> file.
+
+<p>
+
+All Django-specific options are in the "[web_portal]" section.
+
+<p>
+
+<!*************************************>
+
+<a name="web_portal:allowed-hosts"></a>
+<h4>2.7.1 allowed-hosts</h4>
+<p>
+Name of the virtual host that runs the Django GUI, if this is not the same as
+the system hostname.  Django's security code wants to know the name of the
+virtual host on which Django is running.  Django will fail when it thinks it's
+running on a disallowed host.
+
+<p>
+
+This option must be set if you get an error like "Invalid HTTP_HOST header
+(you may need to set ALLOWED_HOSTS)".
+
+<p>
+
+No default value.
+
+<!*************************************>
+
+<a name="web_portal:secret-key"></a>
+<h4>2.7.2 secret-key</h4>
+<p>
+Site-specific secret key for Django.
+
+<p>
+
+No default value.
+
+<!*************************************>
+
+<a name="web_portal:sql-database"></a>
+<h4>2.7.3 sql-database</h4>
+<p>
+SQL database name for the web portal.
+
+<p>
+
+<pre>
+    sql-database = ${myrpki::irdbd_sql_database}
+</pre>
+
+<!*************************************>
+
+<a name="web_portal:sql-password"></a>
+<h4>2.7.4 sql-password</h4>
+<p>
+SQL database password for the web portal's database.  The default is to use
+the shared SQL database password, but this option allows a separate password
+to be used.
+
+<p>
+
+<pre>
+    sql-password = ${myrpki::irdbd_sql_password}
+</pre>
+
+<!*************************************>
+
+<a name="web_portal:sql-username"></a>
+<h4>2.7.5 sql-username</h4>
+<p>
+SQL database username for the web portal's database.  The default is to use
+the shared SQL database username, but this option allows a separate username
+to be used.
+
+<p>
+
+<pre>
+    sql-username = ${myrpki::irdbd_sql_username}
+</pre>
+
+<!*********************************************************>
+
+<a name="debug"></a>
+<h3>2.8 Debugging Options</h3>
+
+<p>
+
+There is a set of flags that control debugging code.  Most of these are
+boolean flags, which can be set to "true" or "false".  If not specified,
+default values will be chosen (generally false).  These are probably of
+interest only to the developers, but they are described below.
+
+<!*************************************>
+
+<a name="debug:debug_cms_certs"></a>
+<h4>2.8.1 debug_cms_certs</h4>
+<p>
+Enable verbose logging about CMS certificates.
+
+<!*************************************>
+
+<a name="debug:debug_http"></a>
+<h4>2.8.2 debug_http</h4>
+<p>
+Enable verbose HTTP debug logging.
+
+<!*************************************>
+
+<a name="debug:enable_ipv6_clients"></a>
+<h4>2.8.3 enable_ipv6_clients</h4>
+<p>
+Enable IPv6 HTTP client code.
+
+<!*************************************>
+
+<a name="debug:enable_ipv6_servers"></a>
+<h4>2.8.4 enable_ipv6_servers</h4>
+<p>
+Enable IPv6 HTTP server code.  This option is set on by default, since
+listening for IPv6 connections is usually harmless.
+
+<!*************************************>
+
+<a name="debug:enable_tracebacks"></a>
+<h4>2.8.5 enable_tracebacks</h4>
+<p>
+Enable Python tracebacks in logs.
+
+<!*************************************>
+
+<a name="debug:gc_debug"></a>
+<h4>2.8.6 gc_debug</h4>
+<p>
+Enable detailed garbage collector debugging.
+
+<!*************************************>
+
+<a name="debug:sql_debug"></a>
+<h4>2.8.7 sql_debug</h4>
+<p>
+Enable verbose logging about SQL operations.
+
+<!*************************************>
+
+<a name="debug:timer_debug"></a>
+<h4>2.8.8 timer_debug</h4>
+<p>
+Enable verbose logging of timer system.
+
+<!*************************************>
+
+<a name="debug:use_adns"></a>
+<h4>2.8.9 use_adns</h4>
+<p>
+Use asynchronous DNS code.  Enabling this will raise an exception if the
+<cmd>dnspython</cmd> toolkit is not installed.
+
+<p>
+
+Asynchronous DNS is an experimental feature intended to allow higher
+throughput on busy servers; if you don't know why you need it, you
+probably don't.
+
+<!*************************************>
+
+<a name="debug:want_persistent_client"></a>
+<h4>2.8.10 want_persistent_client</h4>
+<p>
+Enable HTTP 1.1 persistence on the client side.
+
+<!*************************************>
+
+<a name="debug:want_persistent_server"></a>
+<h4>2.8.11 want_persistent_server</h4>
+<p>
+Enable HTTP 1.1 persistence on the server side. 
+
+<!*********************************************************>
+
+<a name="cms-msg"></a>
+<h3>2.9 CMS Message Options</h3>
+
+<p>
+
+There are also a few options which allow you to save CMS messages for
+audit or debugging.  The save format is a simple MIME encoding in a
+<a href="http://en.wikipedia.org/wiki/Maildir"</a>Maildir</a>-format
+mailbox.  The current options are very crude; at some point finer-grain
+controls may be provided.
+
+<!*************************************>
+
+<a name="cms-msg:dump_inbound_cms"></a>
+<h4>2.9.1 dump_inbound_cms</h4>
+<p>
+Dump verbatim copies of received CMS messages to the specified mailbox.
+
+<!*************************************>
+
+<a name="cms-msg:dump_outbound_cms"></a>
+<h4>2.9.2 dump_outbound_cms</h4>
+<p>
+Dump verbatim copies of sent CMS messages to the specified mailbox.
+
+<!*****************************************************************************>
+
+<a name="rcynic.conf"></a>
+<h2>3 rcynic.conf Configuration Options</h2>
+<p>
+
+The <file>rcynic.conf</file> file controls the operation of the
+<cmd>rcynic</cmd> command.  <cmd>rcynic</cmd> must have a configuration file
+in order to do anything useful, as the configuration file is the only way to
+list trust anchors.
+
+<p>
+
+All <cmd>rcynic</cmd> options are in the <sect>[rcynic]</sect> section in the
+<file>rcynic.conf</file> file.  The section has a number of key/value entries.
+Each entry is comprised of the entry name, an equals sign, and the entry
+value.
+
+<p>
+
+For example, the <sect>[rcynic]</sect> section has entries that define the
+location of authenticated objects and the "jitter" time  that will be used
+<cmd>rcynic</cmd>.  These entries look like this:
+
+<pre>
+    [rcynic]
+        authenticated = /var/rcynic/data/auth-objs
+        jitter = 900
+</pre>
+
+<p>
+
+This section of the configuration-file reference is describes the entries for
+the <file>rcynic.conf</file> file.  The entries are ordered alphabetically by
+the entry's field name, not based on the entry's importance.
+
+<p>
+
+In this document each configuration entry has a brief description, the
+acceptable types of value for the field and the default value.  Where
+a field has a default value, that will also be given.
+
+<p>
+
+<cmd>rcynic</cmd> uses the OpenSSL <lib>libcrypto</lib> configuration file
+mechanism.  In addition to the configuration options listed in this section,
+all <lib>libcrypto</lib> configuration options are available.  These are
+documented elsewhere.
+
+<p>
+
+<!*********************************************************>
+
+<a name="rcynic:allow-crl-digest-mismatch"></a>
+<h3>3.1 allow-crl-digest-mismatch</h3>
+<p>
+
+Flag that allows processing to continue on a publication point whose manifest
+lists a different digest value for the CRL than the digest of the CRL
+currently held.  Don't change this unless you really know what you are doing. 
+
+<p>
+
+This value may be <i>true</i> or <i>false</i>.  The default value is
+<i>true</i>.
+
+<p>
+
+<!*********************************************************>
+
+<a name="rcynic:allow-digest-mismatch"></a>
+<h3>3.2 allow-digest-mismatch</h3>
+<p>
+
+Flag that allows the use of otherwise valid objects which are listed in the
+manifest with a different digest value.  Don't change this unless you really
+know what you are doing.
+
+<p>
+
+This value may be <i>true</i> or <i>false</i>.  The default value is
+<i>true</i>.
+
+<p>
+
+<!*********************************************************>
+
+<a name="rcynic:allow-non-self-signed-trust-anchor"></a>
+<h3>3.3 allow-non-self-signed-trust-anchor</h3>
+<p>
+
+Flag that allows <cmd>rcynic</cmd> to attempt to work around OpenSSL's strong
+preference for self-signed trust anchors.
+
+<p>
+
+This option is experimental.  Do not consider enabling this option unless you
+are intimately familiar with both X.509 and the internals of OpenSSL's
+<subr>X509_verify_cert()</subr> function and really know what you are doing.
+
+<p>
+
+This value may be <i>true</i> or <i>false</i>.  The default value is
+<i>false</i>.
+
+<p>
+
+<!*********************************************************>
+
+<a name="rcynic:allow-object-not-in-manifest"></a>
+<h3>3.4 allow-object-not-in-manifest</h3>
+<p>
+
+Flag that allows the use of otherwise valid objects which are not listed in
+the manifest.  This is not supposed to happen, but is probably harmless.
+
+<p>
+
+Enabling this option increases the chance that <cmd>rcynic</cmd> will attempt
+to validate data which a CA removed from the manifest but did not completely
+remove and revoke from the repository.  One result of enabling the
+<opt>allow-object-not-in-manifest</opt> option will be that the logs are
+likely to be much noisier.
+
+<p>
+
+This value may be <i>true</i> or <i>false</i>.  The default value is
+<i>false</i>.
+
+<p>
+
+<!*********************************************************>
+
+<a name="rcynic:allow-stale-crl"></a>
+<h3>3.5 allow-stale-crl</h3>
+<p>
+
+Flag that allows the use of CRLs which are past their <opt>nextUpdate</opt>
+timestamp.  This is usually harmless, but since there are attack scenarios in
+which this is the first warning of trouble, this behavior is configurable.
+
+<p>
+
+This value may be <i>true</i> or <i>false</i>.  The default value is
+<i>true</i>.
+
+<p>
+
+<!*********************************************************>
+
+<a name="rcynic:allow-stale-manifest"></a>
+<h3>3.6 allow-stale-manifest</h3>
+<p>
+
+Flag that allows the use of manifests which are past their
+<opt>nextUpdate</opt> timestamp.  This is probably harmless, but since
+it may be an early warning of problems, this behavior is configurable.
+
+<p>
+
+This value may be <i>true</i> or <i>false</i>.  The default value is
+<i>true</i>.
+
+<p>
+
+<!*********************************************************>
+
+<a name="rcynic:authenticated"></a>
+<h3>3.7 authenticated</h3>
+<p>
+
+Path to the output directory where <cmd>rcynic</cmd> should place objects
+it has validated.
+
+<p>
+
+The default value is <path>/var/rcynic/data/authenticated</path>.
+
+<p>
+
+<!*********************************************************>
+
+<a name="rcynic:jitter"></a>
+<h3>3.8 jitter</h3>
+<p>
+
+Startup jitter interval, specified in number of seconds.  <cmd>rcynic</cmd>
+will pick a random number within the range from zero to this value, and will
+delay for that many seconds on startup.  This spreads the load from large
+numbers of <cmd>rcynic</cmd> clients all running under <cmd>cron</cmd> with
+synchronized clocks, in particular to avoid overstressing the global RPKI
+<cmd>rsync</cmd> servers at midnight UTC.
+
+<p>
+
+This configuration option may be specified as the <opt>-j</opt> command-line
+option.
+
+<p>
+
+The default value is 600.
+
+<!*********************************************************>
+
+<a name="rcynic:lockfile"></a>
+<h3>3.9 lockfile</h3>
+<p>
+
+Name of lock file.  If this option is empty then no lock will be used.  If
+<cmd>rcynic</cmd> is run under <cmd>cron</cmd>, this parameter should be used
+to set a lockfile so that successive instances of <cmd>rcynic</cmd> don't
+stomp on each other.  If <cmd>rcynic</cmd> is run via <cmd>rcynic-cron</cmd>,
+this option need not be set as <cmd>rcynic-cron</cmd> maintains its own lock.
+
+<p>
+
+The default value is to use an empty value.
+
+<p>
+
+<!*********************************************************>
+
+<a name="rcynic:log-level"></a>
+<h3>3.10 log-level</h3>
+<p>
+
+Level of log messages to use.
+
+<p>
+
+This configuration option may be specified with the <opt>-l</opt> command-line
+option.  Command line setting overrides config file setting.
+
+<p>
+
+The logging levels are given using <cmd>rcynic</cmd>-specific names.
+These are mapped to <subr>syslog</subr> logging levels, though not
+one-to-one.  The table below shows the <cmd>rcynic</cmd>-specific log
+levels mapped to <subr>syslog</subr> levels.
+
+<table align=center>
+<tr>
+<td width=150><b><cmd>rcynic</cmd> Log Level</arg></b>
+<td width=150><b><subr>syslog</subr> Log Level</b>
+<td><b>Description</b>
+</tr>
+<tr><td><arg>log_sys_err</arg><td>LOG_ERR<td>error from OS or library</tr>
+<tr><td><arg>log_usage_err</arg><td>LOG_ERR<td>bad usage (local error)</tr>
+<tr><td><arg>log_data_err</arg><td>LOG_NOTICE<td>bad data</tr>
+<tr><td><arg>log_telemetry</arg><td>LOG_INFO<td>normal progress messages</tr>
+<tr><td><arg>log_verbose</arg><td>LOG_INFO<td>additional information</tr>
+<tr><td><arg>log_debug</arg><td>LOG_DEBUG<td>only useful when debugging</tr>
+</table>
+
+<p>
+
+The default log level is <i>log_usage_err</i>.
+
+<p>
+
+<!*********************************************************>
+
+<a name="rcynic:max-parallel-fetches"></a>
+<h3>3.11 max-parallel-fetches</h3>
+<p>
+
+Upper limit on the number of instances of <cmd>rsync</cmd> that
+<cmd>rcynic</cmd> is allowed to run at once.  Used properly, this can speed
+up synchronization considerably when fetching from repositories built with
+sub-optimal tree layouts or when dealing with unreachable repositories.
+Used improperly, this option can generate excessive load on repositories,
+cause synchronization to be interrupted by firewalls, and cause other
+timing issues.  Adjust this value with caution.
+
+<p>
+
+As of this writing, values in the range 2-4 are reasonably safe.  Values
+above 10 have been known to cause problems.
+
+<p>
+
+<cmd>rcynic</cmd> can't detect all of the possible problems created by
+excessive values of this parameter.  If <cmd>rcynic</cmd>'s report shows both
+successful retrievals and skipped retrievals from the same repository host,
+it's a good hint that something is wrong.  An excessive value for this option
+is a good first guess as to the cause.
+
+<p>
+
+The default value is 1.
+
+<p>
+
+<!*********************************************************>
+
+<a name="rcynic:prune"></a>
+<h3>3.12 prune</h3>
+<p>
+
+Flag allowing clean-up of old files corresponding to URIs that
+<cmd>rcynic</cmd> did not see during this run.  <cmd>rcynic</cmd> invokes
+<cmd>rsync</cmd> with the <opt>--delete</opt> option to clean up old objects
+from collections that <cmd>rcynic</cmd> revisits.  However, if a URI changes
+so that <cmd>rcynic</cmd> never visits the old collection again, old files
+will remain in the local mirror indefinitely unless this option is enabled.
+
+<p>
+
+Pruning only occurs when <opt>run-rsync</opt> is true.  When the
+<opt>run-rsync</opt> option is false, pruning is not performed
+regardless of the setting of the <opt>prune</opt> option option.
+
+<p>
+
+This value may be <i>true</i> or <i>false</i>.  The default value is
+<i>true</i>.
+
+<p>
+
+<!*********************************************************>
+
+<a name="rcynic:require-crl-in-manifest"></a>
+<h3>3.13 require-crl-in-manifest</h3>
+<p>
+
+Flag for rejecting publication point if the manifest does not list the CRL
+that covers the manifest EE certificate.
+
+<p>
+
+This value may be <i>true</i> or <i>false</i>.  The default value is
+<i>false</i>.
+
+<p>
+
+<!*********************************************************>
+
+<a name="rcynic:rsync-early"></a>
+<h3>3.14 rsync-early</h3>
+<p>
+
+Flag for forcing <cmd>rsync</cmd> to run even when it has a valid manifest
+for a particular publication point and its <opt>nextUpdate</opt> time has
+not yet passed.
+
+<p>
+
+This is an experimental feature, and currently defaults to true, which is the
+old behavior.  (running <cmd>rsync</cmd> regardless of whether we have a valid
+cached manifest).  This default may change once we have more experience with
+<cmd>rcynic</cmd>'s behavior when run with this option set to false.
+
+<p>
+
+Skipping the <cmd>rsync</cmd> fetch when we already have a valid cached
+manifest can significantly reduce the total number of <cmd>rsync</cmd>
+connections needed, and this will significantly reduce the load that each
+validator places on the authoritative publication servers.  As with any
+caching scheme, however, there are some potential problems involved with
+not fetching the latest data, and we don't yet have enough experience with
+this option to know how this will work in practice.  This is why this
+option is still considered experimental.
+
+<p>
+
+This value may be <i>true</i> or <i>false</i>.  The default value is
+<i>true</i>.
+
+<p>
+
+<!*********************************************************>
+
+<a name="rcynic:rsync-program"></a>
+<h3>3.15 rsync-program</h3>
+<p>
+
+Path to the <cmd>rsync</cmd> program.  This is likely to be available
+through the PATH environment variable, but it would be best to set this
+option explicitly to ensure that it is set properly.
+
+<p>
+
+The default value is <path>/usr/bin/rsync</path>.
+
+<!*********************************************************>
+
+<a name="rcynic:rsync-timeout"></a>
+<h3>3.16 rsync-timeout</h3>
+<p>
+
+The length of time (in seconds) that <cmd>rsync</cmd> may run before it is
+assumed to be hung, and therefore should be terminated.  <cmd>rsync</cmd> will
+not be timed out if this option is set to zero.  This timeout should be fairly
+long in order to avoid terminating <cmd>rsync</cmd> connections prematurely.
+This option is present to help defend against denial of service attacks from
+too-long running connections.
+
+<p>
+
+The default value is 300 (five minutes.)
+
+<!*********************************************************>
+
+<a name="rcynic:run-rsync"></a>
+<h3>3.17 run-rsync</h3>
+<p>
+
+Flag indicating whether <cmd>rsync</cmd> should be executed.
+
+<p>
+
+Generally, this option should not be changed except when building complex
+topologies where <cmd>rcynic</cmd> running on one set of machines acts as an
+aggregator for another set of validators.  A large ISP might want to build
+such a topology so that it can have a local validation cache in each POP
+while minimizing load on the global repository system and maintaining some
+degree of internal consistency between POPs.  In such cases, one might want
+the <cmd>rcynic</cmd> instances in the POPs to validate data fetched from
+the aggregators via an external process, without the POP <cmd>rcynic</cmd>
+instances attempting to fetch anything themselves.
+
+<p>
+
+This value may be <i>true</i> or <i>false</i>.  The default value is
+<i>true</i>.
+
+<p>
+
+<!*********************************************************>
+
+<a name="rcynic:syslog-facility"></a>
+<h3>3.18 syslog-facility</h3>
+<p>
+
+<cmd>syslog</cmd> facility to use.
+
+<p>
+
+The default value is <i>local0</i>.
+
+<p>
+
+<!*********************************************************>
+
+<a name="rcynic:syslog-priority-xyz"></a>
+<h3>3.19 syslog-priority-<i>xyz</i></h3>
+<p>
+
+Provides a mapping between <cmd>rcynic</cmd>'s priority classes and the
+associated <cmd>syslog</cmd> priority names.
+
+<p>
+
+The <opt>xyz</opt> portion of the option name will vary as needed for the 
+<cmd>rcynic</cmd> priority classes.
+
+<p>
+
+Default priority mappings:
+
+<table>
+<tr>
+<td width=50>&nbsp;
+<td width=250><cmd>rcynic</cmd> Priority Class
+<td><cmd>syslog</cmd> Priority Name
+
+<tr><td>&nbsp;<td><i>syslog-priority-log_sys_err</i>	<td align=center><i>err</i></tr>
+<tr><td>&nbsp;<td><i>syslog-priority-log_usage_err</i>	<td align=center><i>err</i></tr>
+<tr><td>&nbsp;<td><i>syslog-priority-log_data_err</i>	<td align=center><i>notice</i></tr>
+<tr><td>&nbsp;<td><i>syslog-priority-log_telemetry</i>	<td align=center><i>info</i></tr>
+<tr><td>&nbsp;<td><i>syslog-priority-log_verbose</i>	<td align=center><i>info</i></tr>
+<tr><td>&nbsp;<td><i>syslog-priority-log_debug</i>	<td align=center><i>debug</i></tr>
+</table>
+
+<p>
+
+<!*********************************************************>
+
+<a name="rcynic:trust-anchor"></a>
+<h3>3.20 trust-anchor</h3>
+<p>
+
+Specify one RPKI trust anchor, represented as a local file containing an
+X.509 certificate in DER format.  The value of this option is the pathname
+of the file.
+
+<p>
+
+This option has no default value.
+
+<p>
+
+<!*********************************************************>
+
+<a name="rcynic:trust-anchor-directory"></a>
+<h3>3.21 trust-anchor-directory</h3>
+<p>
+
+Specify a directory containing a set of trust anchors and trust anchor
+locators.  Trust anchors in this directory must have filenames ending in
+"<file>.cer</file>".  Trust anchor locators in this directory must have
+names ending in "<file>.tal</file>".  Any other files will be ignored.
+
+<p>
+
+This option is an alternative to using the <opt>trust-anchor</opt> and
+<opt>trust-anchor-locator</opt> options.
+
+<p>
+
+This option has no default value.
+
+<p>
+
+<!*********************************************************>
+
+<a name="rcynic:trust-anchor-locator"></a>
+<h3>3.22 trust-anchor-locator</h3>
+<p>
+
+Specify one RPKI trust anchor locator, represented as a local file in the
+format specified in RFC-6490.  The value of this option is the pathname of
+the file.
+
+<p>
+
+This is a simple text format containing an <cmd>rsync</cmd> URI and the RSA
+public key of the X.509 object specified by the URI.  The first line of the
+file is the URI and the remainder is the public key in Base64-encoded DER
+format.
+
+<p>
+
+This option has no default value.
+
+<p>
+
+<!*********************************************************>
+
+<a name="rcynic:unauthenticated"></a>
+<h3>3.23 unauthenticated</h3>
+<p>
+
+Path to a directory where <cmd>rcynic</cmd> should store unauthenticated data
+retrieved via <cmd>rsync</cmd>.
+
+<p>
+
+<cmd>rcynic</cmd> should to preserve and reuse this directory across runs to
+minimize the network traffic necessary to bring the repository mirror up to
+date.
+
+<p>
+
+The default value is <path>/var/rcynic/data/unauthenticated</path>.
+
+<p>
+
+<!*********************************************************>
+
+<a name="rcynic:use-links"></a>
+<h3>3.24 use-links</h3>
+<p>
+
+Flag indicating how <cmd>rcynic</cmd> should transfer objects from the 
+unauthenticated directory to the authenticated directory.  If the option
+value is <i>true</i>, then hard links will be used; otherwise, objects
+will be copied.
+
+<p>
+
+Using links is slightly more fragile, since anything that modifies on the
+unauthenticated file also modifies on the authenticated file.  However, links
+are a bit faster and reduce the number of inodes consumed by a large data
+collection.  Currently, copying is the default behavior, but this may change
+in the future.
+
+<p>
+
+This value may be <i>true</i> or <i>false</i>.  The default value is
+<i>false</i>.
+
+<p>
+
+<!*********************************************************>
+
+<a name="rcynic:use-stderr"></a>
+<h3>3.25 use-stderr</h3>
+<p>
+
+Flag indicating if log entries should be sent to <i>stderr</i>.
+
+<p>
+
+This option is the same as the <opt>-e</opt> command-line option.  The
+command-line option overrides the configuration file setting.
+
+<p>
+
+This value may be <i>true</i> or <i>false</i>.  The default value
+is <i>false</i>.  However, if neither <opt>use-syslog</opt> nor
+<opt>use-stderr</opt> are set, then log output will be sent to <i>stderr</i>.
+
+<p>
+
+<!*********************************************************>
+
+<a name="rcynic:use-syslog"></a>
+<h3>3.26 use-syslog</h3>
+<p>
+
+Flag indicating if log entries should be sent to <cmd>syslog</cmd>.
+
+<p>
+
+This option is the same as the <opt>-s</opt> command-line option.  The
+command-line option overrides the configuration file setting.
+
+<p>
+
+This value may be <i>true</i> or <i>false</i>.  The default value
+is <i>false</i>.
+
+<p>
+
+<!*********************************************************>
+
+<a name="rcynic:xml-summary"></a>
+<h3>3.27 xml-summary</h3>
+<p>
+
+Enable output of a per-host summary at the end of an <cmd>rcynic</cmd> run.
+The output will be written to the specified file in XML format.
+
+<p>
+
+This value is the filename to which the XML summary should be written.
+If the given value is "-", then <cmd>rcynic</cmd> will send the XML
+summary to standard output.  If no value is given, then the XML summary
+will not be written.
+
+<p>
+
+This value is a filename.  The default value is empty, thus no XML summary
+will be written.
+
+<p>
+
+<!*****************************************************************************>
+
+<a name="rsyncd.conf"></a>
+<h2>4 rsyncd.conf Configuration Options</h2>
+<p>
+
+If the <cmd>pubd</cmd> daemon is to be run then the <cmd>rsyncd</cmd> daemon
+must also be run.  The <file>rsyncd.conf</file> file must be configured to
+allow for use with <rpki>rpki.net</rpki>.  The <cmd>rsyncd</cmd> configuration
+must match the <cmd>pubd</cmd> configuration in <file>rpki.conf</file> so that
+relying parties can find the RPKI objects managed by <cmd>pubd</cmd>.
+
+<p>
+
+The <file>rsyncd.conf</file> file may contain two sections specific to
+<rpki>rpki.net</rpki>: <sect>[rpki]</sect> and <sect>[root]</sect>.  The
+<sect>[root]</sect> section is only relevant if the <cmd>rootd</cmd> daemon
+is being run.  The entries in these sections are the same entries defined
+for regular <file>rsyncd.conf</file> files.  These entries are described in
+depth in the <file>rsyncd.conf</file> and <cmd>rsync</cmd> manual pages; the
+information is not duplicated here.
+
+<p>
+
+The expected entries for the <sect>[rpki]</sect> and <sect>[root]</sect>
+sections are:
+
+<p>
+
+<pre>
+        comment             = RPKI publication
+        path                = /some/where/publication
+        read only           = yes
+        transfer logging    = yes
+        use chroot          = no
+</pre>
+
+<p>
+
+If <cmd>rsyncd</cmd> is already being used for other purposes, then a somewhat
+more complex configuration may be required.  These fields are not described in
+this section, other than some requirements for the <opt>path</opt> field that
+are given below.
+
+<p>
+
+<!*********************************************************>
+
+<a name="rsyncd:path"></a>
+<h3>4.1 path Requirements</h3>
+<p>
+
+This field must match the <opt>publication_base_directory</opt> field in
+the <file>rpki.conf</file> file.
+
+<p>
+
+Neither <cmd>pubd</cmd> nor <cmd>rsyncd</cmd> cares where this directory
+is.  The important thing is that the <cmd>rsync</cmd> URIs in generated
+certificates match the published objects so that relying parties can
+find and verify <cmd>rpkid</cmd>'s published outputs.
+
+<p>
+
+<!*****************************************************************************>
+
+<a name="full-toc"></a>
+<h2>5 Full Table of Contents</h2>
+
+<p>
+
+<table>
+
+<tr><td width=300>&nbsp; <td width=300>&nbsp; <td width=300>&nbsp; </tr>
+
+<tr>
+<td align=center colspan=3><a href="#intro">1 Introduction</a><br>
+
+<tr><td width=300>&nbsp; <td width=300>&nbsp; <td width=300>&nbsp; </tr>
+
+<tr>
+<td align=center colspan=3><a href="#rpki.conf">2 rpki.conf -- RPKI Engine Common Configuration Options</a>
+<br>
+
+<tr>
+<td valign=top>
+<a href="#autoconf">2.1 [autoconf] section</a><br>
+<a href="#autoconf:bindir">2.1.1 bindir</a><br>
+<a href="#autoconf:datarootdir">2.1.2 datarootdir</a><br>
+<a href="#autoconf:sbindir">2.1.3 sbindir</a><br>
+<a href="#autoconf:sysconfdir">2.1.4 sysconfdir</a><br><br>
+<a href="#irdbd">2.2 [irdbd] section</a><br>
+<a href="#irdbd:server-host">2.2.1 server-host</a><br>
+<a href="#irdbd:server-port">2.2.2 server-port</a><br>
+<a href="#irdbd:sql-database">2.2.3 sql-database</a><br>
+<a href="#irdbd:sql-password">2.2.4 sql-password</a><br>
+<a href="#irdbd:sql-username">2.2.5 sql-username</a><br>
+<a href="#irdbd_startup-message">2.2.6 startup-message</a><br><br>
+<a href="#myrpki">2.3 [myrpki] section</a><br>
+<a href="#myrpki_bpki_servers_directory">2.3.1 bpki_servers_directory</a><br>
+<a href="#myrpki_handle">2.3.2 handle</a><br>
+<a href="#myrpki_irdbd_server_host">2.3.3 irdbd_server_host</a><br>
+<a href="#myrpki_irdbd_server_port">2.3.4 irdbd_server_port</a><br>
+<a href="#myrpki_irdbd_sql_database">2.3.5 irdbd_sql_database</a><br>
+<a href="#myrpki_irdbd_sql_password">2.3.6 irdbd_sql_password</a><br>
+<a href="#myrpki_irdbd_sql_username">2.3.7 irdbd_sql_username</a><br>
+<a href="#myrpki_pubd_contact_info">2.3.8 pubd_contact_info</a><br>
+<a href="#myrpki_pubd_server_host">2.3.9 pubd_server_host</a><br>
+<a href="#myrpki_pubd_server_port">2.3.10 pubd_server_port</a><br>
+<a href="#myrpki_pubd_sql_database">2.3.11 pubd_sql_database</a><br>
+<a href="#myrpki_pubd_sql_password">2.3.12 pubd_sql_password</a><br>
+<a href="#myrpki_pubd_sql_username">2.3.13 pubd_sql_username</a><br>
+<a href="#myrpki_publication_base_directory">2.3.14 publication_base_directory</a><br>
+<a href="#myrpki_publication_root_cert_directory">2.3.15 publication_root_cert_directory</a><br>
+<a href="#myrpki_publication_root_module">2.3.16 publication_root_module</a><br>
+<a href="#myrpki_publication_rsync_module">2.3.17 publication_rsync_module</a><br>
+<a href="#myrpki_publication_rsync_server">2.3.18 publication_rsync_server</a><br>
+<a href="#myrpki_rootd_server_host">2.3.19 rootd_server_host</a><br>
+<a href="#myrpki_rootd_server_port">2.3.20 rootd_server_port</a><br>
+<a href="#myrpki_rpkid_server_host">2.3.21 rpkid_server_host</a><br>
+<a href="#myrpki_rpkid_server_port">2.3.22 rpkid_server_port</a><br>
+<a href="#myrpki_rpkid_sql_database">2.3.23 rpkid_sql_database</a><br>
+<a href="#myrpki_rpkid_sql_password">2.3.24 rpkid_sql_password</a><br>
+<a href="#myrpki_rpkid_sql_username">2.3.25 rpkid_sql_username</a><br>
+<a href="#myrpki_run_pubd">2.3.26 run_pubd</a><br>
+<a href="#myrpki_run_rootd">2.3.27 run_rootd</a><br>
+<a href="#myrpki_run_rpkid">2.3.28 run_rpkid</a><br>
+<a href="#myrpki_shared_sql_password">2.3.29 shared_sql_password</a><br>
+<a href="#myrpki_shared_sql_username">2.3.30 shared_sql_username</a><br>
+<a href="#myrpki_start_irdbd">2.3.31 start_irdbd</a><br>
+<a href="#myrpki_start_pubd">2.3.32 start_pubd</a><br>
+<a href="#myrpki_start_rootd">2.3.33 start_rootd</a><br>
+<a href="#myrpki_start_rpkid">2.3.34 start_rpkid</a><br>
+
+<td valign=top>
+<a href="#pubd">2.4 [pubd] section</a><br>
+<a href="#pubd:bpki-ta">2.4.1 bpki-ta</a><br>
+<a href="#pubd:irbe-cert">2.4.2 irbe-cert</a><br>
+<a href="#pubd:pubd-cert">2.4.3 pubd-cert</a><br>
+<a href="#pubd:pubd-key">2.4.4 pubd-key</a><br>
+<a href="#pubd:publication-base">2.4.5 publication-base</a><br>
+<a href="#pubd:server-host">2.4.6 server-host</a><br>
+<a href="#pubd:server-port">2.4.7 server-port</a><br>
+<a href="#pubd:sql-database">2.4.8 sql-database</a><br>
+<a href="#pubd:sql-password">2.4.9 sql-password</a><br>
+<a href="#pubd:sql-username">2.4.10 sql-username</a><br><br>
+<a href="#rootd">2.5 [rootd] section</a><br>
+<a href="#rootd:bpki-ta">2.5.1 bpki-ta</a><br>
+<a href="#rootd:child-bpki-cert">2.5.2 child-bpki-cert</a><br>
+<a href="#rootd:rootd-bpki-cert">2.5.3 rootd-bpki-cert</a><br>
+<a href="#rootd:rootd-bpki-crl">2.5.4 rootd-bpki-crl</a><br>
+<a href="#rootd:rootd-bpki-key">2.5.5 rootd-bpki-key</a><br>
+<a href="#rootd:rpki-base-uri">2.5.6 rpki-base-uri</a><br>
+<a href="#rootd:rpki-class-name">2.5.7 rpki-class-name</a><br>
+<a href="#rootd:rpki-root-cert">2.5.8 rpki-root-cert</a><br>
+<a href="#rootd:rpki-root-cert-uri">2.5.9 rpki-root-cert-uri</a><br>
+<a href="#rootd:rpki-root-crl">2.5.10 rpki-root-crl</a><br>
+<a href="#rootd:rpki-root-dir">2.5.11 rpki-root-dir</a><br>
+<a href="#rootd:rpki-root-key">2.5.12 rpki-root-key</a><br>
+<a href="#rootd:rpki-root-manifest">2.5.13 rpki-root-manifest</a><br>
+<a href="#rootd:rpki-subject-cert">2.5.14 rpki-subject-cert</a><br>
+<a href="#rootd:rpki-subject-lifetime">2.5.15 rpki-subject-lifetime</a><br>
+<a href="#rootd:rpki-subject-pkcs10">2.5.16 rpki-subject-pkcs10</a><br>
+<a href="#rootd:server-host">2.5.17 server-host</a><br>
+<a href="#rootd:server-port">2.5.18 server-port</a><br>
+
+<td valign=top>
+<a href="#rpkid">2.6 [rpkid] section</a><br>
+<a href="#rpkid:bpki-ta">2.6.1 bpki-ta</a><br>
+<a href="#rpkid:irbe-cert">2.6.2 irbe-cert</a><br>
+<a href="#rpkid:irdb-cert">2.6.3 irdb-cert</a><br>
+<a href="#rpkid:irdb-url">2.6.4 irdb-url</a><br>
+<a href="#rpkid:rpkid-cert">2.6.5 rpkid-cert</a><br>
+<a href="#rpkid:rpkid-key">2.6.6 rpkid-key</a><br>
+<a href="#rpkid:server-host">2.6.7 server-host</a><br>
+<a href="#rpkid:server-port">2.6.8 server-port</a><br>
+<a href="#rpkid:sql-database">2.6.9 sql-database</a><br>
+<a href="#rpkid:sql-password">2.6.10 sql-password</a><br>
+<a href="#rpkid:sql-username">2.6.11 sql-username</a><br><br>
+<a href="#web_portal">2.7 [web_portal] section</a><br>
+<a href="#web_portal:allowed-hosts">2.7.1 allowed-hosts</a><br>
+<a href="#web_portal:secret-key">2.7.2 secret-key</a><br>
+<a href="#web_portal:sql-database">2.7.3 sql-database</a><br>
+<a href="#web_portal:sql-password">2.7.4 sql-password</a><br>
+<a href="#web_portal:sql-username">2.7.5 sql-username</a><br><br>
+<a href="#debug">2.8 Debugging Options</a><br>
+<a href="#debug:debug_cms_certs">2.8.1 debug_cms_certs</a><br>
+<a href="#debug:debug_http">2.8.2 debug_http</a><br>
+<a href="#debug:enable_ipv6_clients">2.8.3 enable_ipv6_clients</a><br>
+<a href="#debug:enable_ipv6_servers">2.8.4 enable_ipv6_servers</a><br>
+<a href="#debug:enable_tracebacks">2.8.5 enable_tracebacks</a><br>
+<a href="#debug:gc_debug">2.8.6 gc_debug</a><br>
+<a href="#debug:sql_debug">2.8.7 sql_debug</a><br>
+<a href="#debug:timer_debug">2.8.8 timer_debug</a><br>
+<a href="#debug:use_adns">2.8.9 use_adns</a><br>
+<a href="#debug:want_persistent_client">2.8.10 want_persistent_client</a><br>
+<a href="#debug:want_persistent_server">2.8.11 want_persistent_server</a><br><br>
+<a href="#cms-msg">2.9 CMS Message Options</a><br>
+<a href="#cms-msg:dump_inbound_cms">2.9.1 dump_inbound_cms</a><br>
+<a href="#cms-msg:dump_outbound_cms">2.9.2 dump_outbound_cms</a><br>
+<br>
+
+</tr>
+
+<tr><td width=300>&nbsp; <td width=300>&nbsp; <td width=300>&nbsp; </tr>
+
+<tr>
+<td align=center colspan=3> <a href="#rcynic.conf">3 rcynic.conf Configuration Options</a><br>
+
+<tr>
+<td valign=top>
+<a href="#rcynic:allow-crl-digest-mismatch">3.1 allow-crl-digest-mismatch</a><br>
+<a href="#rcynic:allow-digest-mismatch">3.2 allow-digest-mismatch</a><br>
+<a href="#rcynic:allow-non-self-signed-trust-anchor">3.3 allow-non-self-signed-trust-anchor</a><br>
+<a href="#rcynic:allow-object-not-in-manifest">3.4 allow-object-not-in-manifest</a><br>
+<a href="#rcynic:allow-stale-crl">3.5 allow-stale-crl</a><br>
+<a href="#rcynic:allow-stale-manifest">3.6 allow-stale-manifest</a><br>
+<a href="#rcynic:authenticated">3.7 authenticated</a><br>
+<a href="#rcynic:jitter">3.8 jitter</a><br>
+<a href="#rcynic:lockfile">3.9 lockfile</a><br>
+
+<td valign=top>
+<a href="#rcynic:log-level">3.10 log-level</a><br>
+<a href="#rcynic:max-parallel-fetches">3.11 max-parallel-fetches</a><br>
+<a href="#rcynic:prune">3.12 prune</a><br>
+<a href="#rcynic:require-crl-in-manifest">3.13 require-crl-in-manifest</a><br>
+<a href="#rcynic:rsync-early">3.14 rsync-early</a><br>
+<a href="#rcynic:rsync-program">3.15 rsync-program</a><br>
+<a href="#rcynic:rsync-timeout">3.16 rsync-timeout</a><br>
+<a href="#rcynic:run-rsync">3.17 run-rsync</a><br>
+<a href="#rcynic:syslog-facility">3.18 syslog-facility</a><br>
+
+<td valign=top>
+<a href="#rcynic:syslog-priority-xyz">3.19 syslog-priority-<i>xyz</i></a><br>
+<a href="#rcynic:trust-anchor">3.20 trust-anchor</a><br>
+<a href="#rcynic:trust-anchor-directory">3.21 trust-anchor-directory</a><br>
+<a href="#rcynic:trust-anchor-locator">3.22 trust-anchor-locator</a><br>
+<a href="#rcynic:unauthenticated">3.23 unauthenticated</a><br>
+<a href="#rcynic:use-links">3.24 use-links</a><br>
+<a href="#rcynic:use-stderr">3.25 use-stderr</a><br>
+<a href="#rcynic:use-syslog">3.26 use-syslog</a><br>
+<a href="#rcynic:xml-summary">3.27 xml-summary</a><br>
+<br>
+
+</tr>
+
+<tr><td width=300>&nbsp; <td width=300>&nbsp; <td width=300>&nbsp; </tr>
+
+<tr>
+<td align=center colspan=3><a href="#rsyncd.conf">4 rsyncd.conf Configuration Options</a>
+
+<tr>
+<td valign=top>
+<a href="#rsyncd:path">4.1 path Requirements</a><br>
+<td>&nbsp;
+<td>&nbsp;
+<br>
+
+</tr>
+</table>
+
+<p>
+
+<!*****************************************************************************>
+
+<hr>
+<p>
+
+Sections of this document are derived or taken verbatim from Dragon
+Research Lab's <a href="http://rpki.net/wiki/doc/RPKI">RPKI Tools Manual</a>.
+
+<p>
+
+Copyright (c) 2015, Parsons, Inc<br>
+All rights reserved
+
+<br><br>
+
+</div>
+</div>
+
+
+
+	</div>
+
+	
+      </div>
+    </div>
+  </body>
+
+  <script type="application/ld+json">
+   {
+     "@context": "http://schema.org",
+     "@type": "Organization",
+     "url": "https://securerouting.net",
+     "logo": "/images/secure-routing-cloud.svg"
+   }
+  </script>
+  <script type="application/ld+json">
+   {
+     "@context": "http://schema.org",
+     "@type": "Organization",
+     "url": "https://securerouting.net",
+     "name": "Secure Routing",
+     "sameAs" : [
+       "https://www.youtube.com/channel/UCVOrJW51e8uu6aO_qnkk6qA"
+     ],
+   }
+  </script>
+</html>
+
