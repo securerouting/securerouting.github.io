@@ -1,0 +1,442 @@
+A. Setup Virtual Machine
+=========================
+1. Configure a new host-only adapter in VirtualBox->Preferences->Network
+   IPv4 Address: 172.16.0.166
+   IPv4 Netmask: 255.255.255.0
+   DHCP Server: Not enabled
+
+2. Import the virtualbox appliance
+
+3. Ensure that Adapter4 in the Virtual Machine settings is mapped to
+   the Host-only network that was created in step1.
+
+4. Setup SSH access to guest and client6 using the following settings
+   in your .ssh/config file:
+   
+   Host rpki
+     Hostname 127.0.0.1
+     Port 2022
+     User alice
+
+   Host client6
+     User ubuntu
+     ProxyCommand ssh rpki -W 10.50.1.100:22
+     DynamicForward 8080
+   
+   The set of configuration lines for client6 enables us to
+   proxy our web traffic through 10.50.1.100 to make it appear as
+   though the traffic originates from 10.50.1.100
+
+ 5. Connect your host machine to a wireless network and power up the
+    virtual machine.
+
+
+B. Setting up and checking initial connections
+==============================================
+
+1. ssh to the main ubuntu guest:
+$ ssh rpki
+alice@127.0.0.1's password:rpkiworkshop
+
+2. Check the initial state of all running containers:
+alice@trusty:~$ sudo lxc-ls --fancy
+
+NAME     STATE    IPV4                         IPV6  AUTOSTART
+--------------------------------------------------------------
+b4       RUNNING  10.1.1.1, 172.16.0.4         -     YES
+b4-sec   STOPPED  -                            -     NO
+b5       RUNNING  172.16.0.5                   -     YES
+b5-sec   STOPPED  -                            -     NO
+client3  STOPPED  -                            -     NO
+client4  RUNNING  10.1.1.80                    -     YES
+client6  RUNNING  10.50.1.100                  -     YES
+r0       STOPPED  -                            -     NO
+r1       RUNNING  172.16.0.1, 192.168.200.254  -     YES
+r2       RUNNING  172.16.0.2, 192.168.1.11     -     YES
+r3       STOPPED  -                            -     NO
+r3-evil  STOPPED  -                            -     NO
+r6       RUNNING  10.50.1.1, 172.16.0.6        -     YES
+
+3. Check if r1 is able to connect to the outside world
+alice@trusty:~$ sudo lxc-attach -n r1 
+root@r1:/# ping 8.8.8.8
+PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+64 bytes from 8.8.8.8: icmp_seq=1 ttl=35 time=96.2 ms
+
+4. Setup a tunnel to client6
+host% ssh -N -f client6
+alice@127.0.0.1's password:rpkiworkshop
+ubuntu@client6’s password:ubuntu
+
+
+C. HTTP Mis-origination demo
+=============================
+
+1. Open a web browser and configure the SOCKS proxy setting. For example, 
+   on FoxyProxy set the host as 127.0.0.1, the port as 8080 
+   and the URL pattern to 10.1.1.80
+
+2. Connect the web browser to 10.1.1.80. You should see a page indicating
+   that you have reached the correct web site
+
+3. Check the routing table on r6. The route to 10.1.1.80 (10.1.1.0/25) should be
+   through b5->r4. Note that the direct route through b4 has a lower local 
+   preference value (50) compared to the default(100).
+
+alice@trusty:~$ ./scripts/check_r6_routes.sh 
+…
+*> 10.1.1.0/25      172.16.0.5                             0 65005 65004 65004 65004 65004 i
+*                   172.16.0.4                     50      0 65004 65004 65004 65004 i
+
+
+4. Start up the evil router and client3 containers
+alice@trusty:~$ sudo lxc-start -d -n r3-evil
+alice@trusty:~$ sudo lxc-start -d -n client3
+
+5. Confirm that the two containers have come up fine
+alice@trusty:~$ sudo lxc-ls --fancy
+
+NAME     STATE    IPV4                         IPV6  AUTOSTART
+--------------------------------------------------------------
+b4       RUNNING  10.1.1.1, 172.16.0.4         -     YES
+b4-sec   STOPPED  -                            -     NO
+b5       RUNNING  172.16.0.5                   -     YES
+b5-sec   STOPPED  -                            -     NO
+client3  RUNNING  10.1.1.80                    -     NO
+client4  RUNNING  10.1.1.80                    -     YES
+client6  RUNNING  10.50.1.100                  -     YES
+r0       STOPPED  -                            -     NO
+r1       RUNNING  172.16.0.1, 192.168.200.254  -     YES
+r2       RUNNING  172.16.0.2, 192.168.1.11     -     YES
+r3       STOPPED  -                            -     NO
+r3-evil  RUNNING  10.1.1.1, 172.16.0.3         -     NO
+r6       RUNNING  10.50.1.1, 172.16.0.6        -     YES
+
+
+6. Show the BGP routing table on one of the RPKI-capable routers to confirm that the 
+   mis-originated routes have no RPKI status
+
+root@r1:/# telnet 127.0.0.1 2605
+Trying 127.0.0.1...
+Connected to 127.0.0.1.
+Escape character is '^]'.
+
+Hello, this is QuaggaSRx (version 0.4.1.2).
+Copyright 1996-2005 Kunihiro Ishiguro, et al.
+
+
+User Access Verification
+
+Password:p1nn0ch10!
+r1> sh ip bgp
+
+…
+    Ident    SRxVal SRxLP Status Network          Next Hop            Metric  LocPrf Weight Path
+*  AE2C4985 n(n,-)              10.1.1.0/24      172.16.0.4                              0 65002 65004 i
+*> 0BEAB20C n(n,-)                               172.16.0.4                              0 65004 i
+*> 298A82C6 n(n,-)              10.1.1.0/25      172.16.0.3               0              0 65003 65004 i
+*  5EDCC416 n(n,-)                               172.16.0.3                              0 65002 65003 65004 i
+*  EE3F257C n(n,-)                               172.16.0.4                              0 65004 65004 65004 65004 i
+*> 7CA3AF7A n(n,-)              10.1.1.128/25    172.16.0.3               0              0 65003 65004 i
+*  A1BF4BE7 n(n,-)                               172.16.0.3                              0 65002 65003 65004 i
+*  E7A411CB n(n,-)                               172.16.0.4                              0 65004 65004 65004 65004 i
+
+
+7. Check the routing table on r6. The preferred route to 10.1.1.80 should be
+   through r3 (AS65003)
+
+alice@trusty:~$ ./scripts/check_r6_routes.sh
+…
+*> 10.1.1.0/25      172.16.0.5                             0 65005 65002 65003 65004 i
+*                   172.16.0.4                     50      0 65004 65004 65004 65004 i
+
+8. Capture packets in Wireshark
+
+- Start wireshark
+- Click on the 'capture options' icon
+- Select the vboxnetX interface that we created during initial setup and specify
+  ‘host 10.50.1.100' (or 'host 192.168.200.2' if demoing traffic
+  captured over en0) in the capture filter
+- click start
+
+The packets seen by wireshark are ones that were forwarded by
+r2. Point out that r2 is able to see packets between the specified
+host and other addresses that even though it was not supposed to be
+"on path"
+
+
+9. Connect the web browser to 10.1.1.80. You should see a page indicating
+   that you have reached the fake web site
+
+
+D. RPKI Validation
+===================
+
+1. Navigate to the rpki portal at https://127.0.0.1:2443
+
+2. Log in to the portal using the following credentials
+   Username: root
+   Password: rpkiworkshop
+
+3. Create an ROA for the target prefix
+   - Click on IANA
+   - Click on the ROA ’Create' button
+   - Specify prefix as 10.1.1.0, maxlen as 24 and ASN as 65004
+   - Click on Preview
+   - Click on Create
+
+4. Show that the route status for 10.1.1.{0,128}/25 on r1 changes to invalid (i) 
+
+[Note that this can take up to 2 minutes]
+
+root@r1:/# telnet 127.0.0.1 2605
+Trying 127.0.0.1...
+Connected to 127.0.0.1.
+Escape character is '^]'.
+
+Hello, this is QuaggaSRx (version 0.4.1.2).
+Copyright 1996-2005 Kunihiro Ishiguro, et al.
+
+
+User Access Verification
+
+Password:p1nn0ch10!
+r1> sh ip bgp
+
+…
+
+   Ident    SRxVal SRxLP Status Network          Next Hop            Metric  LocPrf Weight Path
+*  AE2C4985 v(v,-)              10.1.1.0/24      172.16.0.4                              0 65002 65004 i
+*> 0BEAB20C v(v,-)                               172.16.0.4                              0 65004 i
+*  298A82C6 i(i,-)          I   10.1.1.0/25      172.16.0.3               0              0 65003 65004 i
+*  EE3F257C i(i,-)          I                    172.16.0.4                              0 65004 65004 65004 65004 i
+*  7CA3AF7A i(i,-)          I   10.1.1.128/25    172.16.0.3               0              0 65003 65004 i
+*  E7A411CB i(i,-)          I                    172.16.0.4                              0 65004 65004 65004 65004 i
+
+
+
+5. Inspect the routing table on r6. The route to 10.1.1.80 should now again
+   be through b5->b4
+
+alice@trusty:~$ ./scripts/check_r6_routes.sh 
+…
+*> 10.1.1.0/25      172.16.0.5                             0 65005 65004 65004 65004 65004 i
+*                   172.16.0.4                     50      0 65004 65004 65004 65004 i
+
+
+Here we note that r6 and b5 do not see the mis-originated (through r3-evil) route for 10.1.1.0/25 even though they do not do RPKI validation themselves. This is because b5 peers with b4 and r2. Router b4 is the real originator for the 10.1.1.0/24 network and does ingress filtering of all routes in the range 10.1.1.0/24+ that are announced by its neighbors. r2 does AS origination validation so it does not propagate the mis-originated 10.1.1.0/25 either.
+
+
+6. Connect the web browser to 10.1.1.80. You should see a page indicating
+   that you have reached the correct web site. 
+
+7. Show that Wireshark is no longer able to capture packets through r2.
+
+
+
+E. EOM Test
+===========
+
+1 Observe from D.5 above that under normal conditions r6 would prefer the path to 10.1.1.80 via b5. This is because the direct path via b4 is configured with a lower local preference.
+
+
+2. However, if RPKI validation were to be enabled at r6, the /25s would become invalid (since they violate the maxlen constraint) and the only valid routes for 10.1.1.0 at r6 would be the following
+
+…
+*  10.1.1.0/24      172.16.0.5                             0 65005 65004 i
+*>                  172.16.0.4                             0 65004 i 
+
+
+Thus, when rpki validation is enabled, r6 would prefer the route via b4 (a less preferred route) rather than b5->b4
+
+
+3. The r6 router operator can gauge the impact of enabling validation on r6 by using the EOM tool.
+
+alice@trusty:~$ ./scripts/run_eom_check.sh
+…
+
+Router: 172.16.0.6
+   	Network   	Next Hop	Metric	LocPrf	Weight	Path
+V : *	10.1.1.0/24	172.16.0.5				65005 65004	i
+	(172.16.0.100:43779) 65004:10.1.1.0/[24-24]
+V : *>	10.1.1.0/24	172.16.0.4				65004	i
+	(172.16.0.100:43779) 65004:10.1.1.0/[24-24]
+I : *>	10.1.1.0/25	172.16.0.5				65005 65004 65004 65004 65004	i
+	(172.16.0.100:43779) 65004:10.1.1.0/[24-24]
+I : *	10.1.1.0/25	172.16.0.4		50		65004 65004 65004 65004	i
+	(172.16.0.100:43779) 65004:10.1.1.0/[24-24]
+I : *>	10.1.1.128/25	172.16.0.5				65005 65004 65004 65004 65004	i
+	(172.16.0.100:43779) 65004:10.1.1.0/[24-24]
+I : *	10.1.1.128/25	172.16.0.4		50		65004 65004 65004 65004	i
+	(172.16.0.100:43779) 65004:10.1.1.0/[24-24]
+
+
+The above output indicates that the route to the /25s are invalid (I) since they violated one of the ROA constraints listed in square brackets. In the current case we see that the maxlen constraint was violated.
+
+The EOM output also shows that there are two valid routes for the /24 and the preferred path is now through b4 (as opposed to b5). 
+
+Thus, by using the EOM tool the operator can become aware of potential routing changes that may occur as part of enabling RPKI validation, and take any actions to mitigate potential problems.
+
+
+F. Highlighting the Need for BGPSEC
+===================================
+
+
+1. Modify the ROA for 10.1.1.0/24 so that it now has a maxlen of 25.
+
+Since the 10.1.1.0 prefix is advertised as /25, the actual prefix maxlen should have been 25 in the first place. This should not be surprising.
+
+
+2. However, note that Route Origination validation no longer catches the mis-originated route through r3-evil (all routes, including the one through r3-evil) show up as valid (v).
+
+root@r1:/# telnet 127.0.0.1 2605
+Trying 127.0.0.1...
+Connected to 127.0.0.1.
+Escape character is '^]'.
+
+Hello, this is QuaggaSRx (version 0.4.1.2).
+Copyright 1996-2005 Kunihiro Ishiguro, et al.
+
+
+User Access Verification
+
+Password:p1nn0ch10!
+r1> sh ip bgp
+…
+   Ident    SRxVal SRxLP Status Network          Next Hop            Metric  LocPrf Weight Path
+*  AE2C4985 v(v,-)              10.1.1.0/24      172.16.0.4                              0 65002 65004 i
+*> 0BEAB20C v(v,-)                               172.16.0.4                              0 65004 i
+*  5EDCC416 v(v,-)              10.1.1.0/25      172.16.0.3                              0 65002 65003 65004 i
+*  EE3F257C v(v,-)                               172.16.0.4                              0 65004 65004 65004 65004 i
+*> 298A82C6 v(v,-)                               172.16.0.3               0              0 65003 65004 i
+*  A1BF4BE7 v(v,-)              10.1.1.128/25    172.16.0.3                              0 65002 65003 65004 i
+*  E7A411CB v(v,-)                               172.16.0.4                              0 65004 65004 65004 65004 i
+*> 7CA3AF7A v(v,-)                               172.16.0.3               0              0 65003 65004 i
+
+
+3. Furthermore, since the bogus route through AS 65003 is preferred, traffic from client6 to 10.1.1.80 will now be routed through AS 65003
+
+alice@trusty:~$ ./scripts/check_r6_routes.sh 
+…
+*  10.1.1.0/25      172.16.0.4                     50      0 65004 65004 65004 65004 i
+*>                  172.16.0.5                             0 65005 65002 65003 65004 i
+*  10.1.1.128/25    172.16.0.4                     50      0 65004 65004 65004 65004 i
+*>                  172.16.0.5                             0 65005 65002 65003 65004 i
+
+
+4. Connect the web browser to 10.1.1.80. You should see a page indicating that you have reached the fake web site
+
+
+5. Use BGPSEC capable versions of b4 and b5
+
+alice@trusty:~$ sudo lxc-stop -n b4
+alice@trusty:~$ sudo lxc-stop -n b5
+alice@trusty:~$ sudo lxc-start -d -n b4-sec
+alice@trusty:~$ sudo lxc-start -d -n b5-sec
+
+
+7. Show the BGPSEC protected routes are valid
+
+alice@trusty:~$ sudo lxc-attach -n b5-sec
+root@b5-sec:/# /usr/local/opt/sbin/birdc -s /var/run/bird/bird.ctl
+BIRD 1.5.0 ready.
+bird> sh route
+…
+10.1.1.0/24        via 172.16.0.4 on eth0 [bgp1 15:07:49] * (100) [AS65004i] (BSEC VALID: 65004)
+                   via 172.16.0.4 on eth0 [bgp2 15:07:50 from 172.16.0.2] (100) [AS65004i]
+                   via 172.16.0.4 on eth0 [bgp3 15:07:47 from 172.16.0.6] (100) [AS65004i]
+10.1.1.0/25        via 172.16.0.4 on eth0 [bgp1 15:07:49] * (100) [AS65004i] (BSEC VALID: 65004 65004 65004 65004)
+                   via 172.16.0.3 on eth0 [bgp2 15:07:50 from 172.16.0.2] (100) [AS65004i]
+10.1.1.128/25      via 172.16.0.4 on eth0 [bgp1 15:07:49] * (100) [AS65004i] (BSEC VALID: 65004 65004 65004 65004)
+                   via 172.16.0.3 on eth0 [bgp2 15:07:50 from 172.16.0.2] (100) [AS65004i]
+…
+
+8. Show the value of enabling BGPSEC
+
+Connect the web browser to 10.1.1.80. You should see a page indicating that you have reached the correct web site.
+
+Why?
+——
+
+First note that RPKI validation only protects the route origination, so the above attack could not be prevented using route origin authentication alone. 
+
+When the path between b4 and b5 is protected using BGPSEC, then the route for the BGPSEC protected prefix received from b4 at b5 is given greater precedence than the route received by b5 from r2-r3 for that same prefix. Note that it would not be possible for r3-evil to create a valid BGPSEC-protected message for the 10.1.1.0/25 prefix even if all routers in the above topology were configured to speak BGPSEC with their peers. 
+
+alice@trusty:~$ ./scripts/check_r6_routes.sh 
+
+*  10.1.1.0/24      172.16.0.5                             0 65005 65004 i
+*>                  172.16.0.4                             0 65004 i
+*> 10.1.1.0/25      172.16.0.5                             0 65005 65004 65004 65004 65004 i
+*                   172.16.0.4                     50      0 65004 65004 65004 65004 i
+*> 10.1.1.128/25    172.16.0.5                             0 65005 65004 65004 65004 65004 i
+*                   172.16.0.4                     50      0 65004 65004 65004 65004 i
+
+
+G. GUI Components
+=================
+
+
+1. RPKI Dashboard
+
+    - Landing Page
+      https://127.0.0.1:2443/rpki/
+
+
+2. RPKIViz
+
+    - Main Page
+      https://127.0.0.1:2443/rpkiviz/
+      (Search for 147.28.0.0/16)
+
+
+3. RPKIMonitor
+
+    - Note that we need b4-sec and b5-sec (rather than b4 and b5) to be running
+
+    - Landing page
+      https://127.0.0.1:2443/rpkimonitor/
+
+    - Monitor rpki-rtr status
+      https://127.0.0.1:2443/rpkimonitor/rpki-rtr-client-monitor
+
+    - Monitor rcynic status
+      https://127.0.0.1:2443/rpkimonitor/rcynic-status
+
+
+4. EOM
+
+    - Status Page
+      https://127.0.0.1:2443/eom/status/
+
+    - Detail Page
+      https://127.0.0.1:2443/eom/status/1/
+
+    - Device Status
+      https://127.0.0.1:2443/eom/status/devices/
+
+    - RSS Feed
+      https://127.0.0.1:2443/eom/status/feed/
+
+
+
+H. Demo cleanup
+===============
+
+1. Delete any ROAs that were created.
+
+2. Delete the EOM database file:
+alice@trusty:~$ \rm ~/EOM/eom-data/eom_db.sqlite
+
+3. Stop r3-evil and client3
+alice@trusty:~$ sudo lxc-stop -n r3-evil
+alice@trusty:~$ sudo lxc-stop -n client3
+
+4. Stop b4-sec and b5-sec
+alice@trusty:~$ sudo lxc-stop -n b4-sec
+alice@trusty:~$ sudo lxc-stop -n b5-sec
+
+5. Bring down the tunnel to client6
+
+6. Power down the VM
+alice@trusty:~$ sudo poweroff
+
